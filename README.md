@@ -27,13 +27,20 @@ credentials. Everything is measured on real scroll data: PHerc. 1667, segment
 Same checkpoint, same tiles, `TILE_SIZE=256`, `STRIDE=128`, layers 1 to 63,
 loaded through villa's own `model_resnet3d_3d_decoder.load_model`.
 
-| path | seconds per tile | forward memory |
-|---|---|---|
-| CPU, what a Mac gets today | 3.377 | **9.52 GB** |
-| MPS, with villa's current autocast line | 0.528 | 2.59 GB |
-| MPS, with the autocast device type fixed | **0.458** | 7.85 GB at batch 4 |
+Nine timed repetitions per MPS configuration and three for CPU, after an
+untimed warmup, reported as min / median / max per villa's `AGENTS.md` rule
+1.4 rather than as a bare mean.
 
-**7.85x faster.** The memory number matters more than the speed one. The CPU
+| path | min | **median** | max | forward memory |
+|---|---|---|---|---|
+| CPU, fp32, what a Mac gets today | 3.259 | **3.261** | 3.278 | **9.52 GB** |
+| MPS, autocast off | 0.524 | 0.525 | 0.526 | 2.59 GB |
+| MPS, villa's current `amp_device` | 0.525 | 0.526 | 0.527 | 2.59 GB |
+| MPS, `amp_device` corrected | 0.426 | **0.427** | 0.428 | 7.85 GB at batch 4 |
+
+Seconds per tile. **7.63x faster.** Note rows two and three: villa's current
+autocast line times identically to autocast being switched off, which is the
+same no-op shown numerically below. The memory number matters more than the speed one. The CPU
 path costs about **9.9 GB per tile** (9.52 GB at batch 1, 19.89 GB at batch 2),
 so on a 16 GB Mac one tile barely fits and two do not. MPS at batch 4 needs
 7.85 GB. For most Macs this is the difference between running the inference and
@@ -48,9 +55,36 @@ memory column was meaningless.
 
 Sampling the CPU run shows the time going into
 `at::native::slow_conv3d_forward_out_cpu` and `cpublas_gemm_impl`. PyTorch has
-no optimised 3D convolution kernel for this case on ARM, so it falls back to
-the reference implementation. This is not something the patch fixes; it is the
-reason the MPS path is worth having.
+no optimised 3D convolution kernel for this case on arm64, so it falls back to
+the reference implementation. The patch does not fix that; it is the reason the
+MPS path is worth having.
+
+### A separate finding, worth its own look: CPU autocast is catastrophic on arm64
+
+This one is not about Apple Silicon specifically and the patch deliberately
+does **not** change it, because changing CPU behaviour would alter what every
+existing CPU user gets.
+
+`inference.py` wraps the forward in `torch.autocast(device_type=amp_device,
+enabled=True)`, and on any non-CUDA device `amp_device` is `"cpu"`. On arm64
+that routes the 3D convolutions into a **bfloat16** reference kernel:
+
+| CPU forward, one tile, batch 1 | seconds |
+|---|---|
+| fp32, autocast off | **3.47** |
+| bf16, via `torch.autocast(device_type="cpu")` | **killed at 714, still running** |
+
+That is a penalty of **at least 206x**, and it is a lower bound rather than a
+measurement because the run was killed rather than completed. Attributed by
+sampling, not assumed: the stack shows `BFloat16` symbols above
+`at::native::slow_conv3d_forward_out_cpu` and `cpublas_gemm_impl`, so bf16 uses
+the same reference convolution with no optimised GEMM behind it.
+
+The practical effect is that a 49-tile crop that takes 21 s on MPS did not
+finish in 33 minutes on CPU. Anyone running this on an arm64 CPU is likely to
+read that as a hang. Whether the right fix is to disable autocast on CPU, gate
+it on architecture, or leave it is a call for the maintainers, so this is
+reported rather than patched.
 
 ### The autocast line is a silent no-op, not just mis-specified
 

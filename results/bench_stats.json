@@ -1,0 +1,63 @@
+{
+  "reps": 9,
+  "batch": 1,
+  "frames": 62,
+  "tile": 256,
+  "torch": "2.14.0",
+  "ckpt": "r152_3ddec_v2_l5_epoch13.ckpt",
+  "rows": [
+    {
+      "device": "mps",
+      "amp_device": "off",
+      "label": "MPS, autocast off",
+      "n": 9,
+      "min_s": 0.5238,
+      "median_s": 0.525,
+      "max_s": 0.5265,
+      "mean_s": 0.5251,
+      "tiles_per_second_median": 1.905,
+      "speedup_vs_cpu_median": 6.21
+    },
+    {
+      "device": "mps",
+      "amp_device": "cpu",
+      "label": "MPS, villa's current amp_device (a no-op)",
+      "n": 9,
+      "min_s": 0.5251,
+      "median_s": 0.5257,
+      "max_s": 0.5272,
+      "mean_s": 0.5259,
+      "tiles_per_second_median": 1.902,
+      "speedup_vs_cpu_median": 6.2
+    },
+    {
+      "device": "mps",
+      "amp_device": "mps",
+      "label": "MPS, amp_device corrected",
+      "n": 9,
+      "min_s": 0.4265,
+      "median_s": 0.4272,
+      "max_s": 0.4278,
+      "mean_s": 0.4271,
+      "tiles_per_second_median": 2.341,
+      "speedup_vs_cpu_median": 7.63
+    },
+    {
+      "device": "cpu",
+      "amp_device": "off",
+      "label": "CPU, autocast off (today's Apple Silicon path, fp32)",
+      "n": 3,
+      "min_s": 3.2593,
+      "median_s": 3.2612,
+      "max_s": 3.2782,
+      "mean_s": 3.2662,
+      "tiles_per_second_median": 0.307,
+      "speedup_vs_cpu_median": 1.0
+    }
+  ],
+  "headline": {
+    "cpu_median_s": 3.2612,
+    "best_median_s": 0.4272,
+    "speedup": 7.63
+  }
+}

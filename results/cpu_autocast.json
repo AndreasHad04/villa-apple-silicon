@@ -1,0 +1,15 @@
+{
+  "fp32_no_autocast": {
+    "seconds_per_tile": 3.47,
+    "out_dtype": "torch.float32",
+    "n": 1
+  },
+  "cpu_autocast_bf16": {
+    "seconds_per_tile_LOWER_BOUND": 714,
+    "completed": false,
+    "note": "killed, still running; this is a LOWER BOUND not a measurement"
+  },
+  "penalty_lower_bound_x": 205.8,
+  "attribution": "sampled: BFloat16 symbols above at::native::slow_conv3d_forward_out_cpu and cpublas_gemm_impl, so the bf16 path uses the same reference 3D conv kernel with no optimised GEMM",
+  "machine": "M1 Max, macOS 26.6, torch 2.14.0, python 3.11.15"
+}
