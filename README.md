@@ -139,22 +139,26 @@ Comparing to the published map for the same segment
 same grid as the level-0 surface so crops map one to one, the agreement
 depends almost entirely on `START_LAYER`:
 
-| scroll, segment | r at START_LAYER **1** (this README's suggestion) | best START_LAYER | r there |
-|---|---|---|---|
-| PHerc. 1667, 20240304141531 | 0.8521 | 25 | **0.9851** |
-| PHerc. 0139, 20250108000000 | 0.9054 | 23 | **0.9900** |
-| PHercParis4, 20230702185753 | 0.6240 | 24 | **0.9698** |
-| PHerc. 0814, 20250925161630 | 0.8263 | 21 | **0.9005** |
+| scroll | measurements | r at START_LAYER **1** | best START_LAYER | r there |
+|---|---|---|---|---|
+| PHerc0139 | 3 | 0.1591 to 0.9054 | 23, 24 | 0.8525 to 0.9900 |
+| PHerc0814 | 3 | 0.4324 to 0.8263 | 21, 24 | 0.8708 to 0.9239 |
+| PHerc1667 | 6 | 0.6414 to 0.9039 | 24, 25 | 0.8886 to 0.9851 |
+| PHercParis4 | 3 | 0.6240 to 0.9522 | 21, 24 | 0.9698 to 0.9848 |
 
-Four independent scrolls, each with its own published canonical prediction,
-each with its ink-rich window chosen automatically from the reference rather
-than by hand. All four volumes are 109 layers, so the centred window is
-`(109-62)//2 = 23`. **Best START_LAYER is 21, 23, 24, 25. START_LAYER 1 is
-worse on every one**, by 0.07 to 0.35 in r.
+**15 independent measurements across 4 scrolls, and the best window beats
+`START_LAYER=1` in 15 of 15.** Best START_LAYER is 21 to 25, median
+24, and 11 of 15 land exactly on **24**. All the volumes are 109
+layers, so the centred window is `(109-62)//2 = 23`.
 
-Every offset on every scroll was also scored against a **shuffled** copy of
-that scroll's reference. That floor never exceeds **0.0017**, so this is depth
-alignment and not marginal statistics.
+Agreement at the documented setting ranges from **0.1591 to 0.9522** (median
+0.7474); at the best window it is 0.8525 to 0.99 (median 0.9698). On the worst
+segment the documented window drops agreement to **0.1591**.
+
+Each comparison window was chosen automatically as a high-variance region of
+villa's own reference, never by hand, and every offset on every segment was
+also scored against a **shuffled** copy of that reference. That floor never
+exceeds **0.0022**.
 
 ![agreement against START_LAYER](figures/start_layer_vs_reference.png)
 
