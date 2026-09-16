@@ -340,6 +340,32 @@ visible to someone looking only at their prediction image.
     python bench/inkdiag.py --y0 20480 --x0 16384 --size 1024 \
       --offsets=-1,0,9,18,23,25,28,34,46
 
+## hecate, their newest model, on Apple Silicon
+
+`scrollprize/hecate` was released 2026-09-15 and is built from the same
+`ink_canonical_2um`. It ships its own `hecate.py`, and it **already writes its
+autocast correctly** as `torch.autocast(device_type=device.type, ...)`, which
+is exactly the change this patch makes to `optimized_inference`.
+
+Run at 2.4 um on a real PHerc. 1667 crop (109 x 1024 x 1024, 49 patches):
+
+| | |
+|---|---|
+| `--device mps` | **29.3 s** and **29.1 s** |
+| `--device cpu` | 167.7 s |
+| speedup | **5.76x** |
+| MPS against CPU output | 13 pixels of 1048576 differ, by one quantisation step |
+| MPS run to run | bit identical, 0 pixels differ |
+
+So hecate needs no patch to run on Apple Silicon. Its one remaining gap is the
+same one this repo fixes for `optimized_inference`: `--device` defaults to
+`'cuda' if torch.cuda.is_available() else 'cpu'`, so a Mac silently takes the
+5.76x slower path unless the user knows to pass `--device mps`.
+
+A caution found the hard way: `hecate.py` refuses to overwrite an existing
+output file. A rerun that "finishes" in under a second has not run, it has
+printed an error. Read the log, not the wall clock.
+
 ## Also here: running it locally
 
 `entrypoint.py` assumes `/workspace` and a credentialed `boto3` client, so it
