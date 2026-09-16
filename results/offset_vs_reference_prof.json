@@ -1,0 +1,210 @@
+{
+  "crop": [
+    20480,
+    16384,
+    1024
+  ],
+  "n_offsets": 17,
+  "rows": [
+    {
+      "offset": -1,
+      "z_window": [
+        0,
+        62
+      ],
+      "pearson_vs_reference": 0.8361,
+      "pearson_vs_shuffled_reference": 0.0008,
+      "separation": 0.65463,
+      "mean": 0.39141273498535156
+    },
+    {
+      "offset": 0,
+      "z_window": [
+        1,
+        63
+      ],
+      "pearson_vs_reference": 0.8521,
+      "pearson_vs_shuffled_reference": 0.0008,
+      "separation": 0.664255,
+      "mean": 0.39646780490875244
+    },
+    {
+      "offset": 3,
+      "z_window": [
+        4,
+        66
+      ],
+      "pearson_vs_reference": 0.8597,
+      "pearson_vs_shuffled_reference": 0.0012,
+      "separation": 0.667639,
+      "mean": 0.4424710273742676
+    },
+    {
+      "offset": 6,
+      "z_window": [
+        7,
+        69
+      ],
+      "pearson_vs_reference": 0.9128,
+      "pearson_vs_shuffled_reference": 0.0008,
+      "separation": 0.675116,
+      "mean": 0.47061726450920105
+    },
+    {
+      "offset": 9,
+      "z_window": [
+        10,
+        72
+      ],
+      "pearson_vs_reference": 0.9571,
+      "pearson_vs_shuffled_reference": 0.0011,
+      "separation": 0.700653,
+      "mean": 0.47776395082473755
+    },
+    {
+      "offset": 12,
+      "z_window": [
+        13,
+        75
+      ],
+      "pearson_vs_reference": 0.9539,
+      "pearson_vs_shuffled_reference": 0.0012,
+      "separation": 0.71153,
+      "mean": 0.47747209668159485
+    },
+    {
+      "offset": 15,
+      "z_window": [
+        16,
+        78
+      ],
+      "pearson_vs_reference": 0.9769,
+      "pearson_vs_shuffled_reference": 0.001,
+      "separation": 0.714517,
+      "mean": 0.4712485074996948
+    },
+    {
+      "offset": 18,
+      "z_window": [
+        19,
+        81
+      ],
+      "pearson_vs_reference": 0.9629,
+      "pearson_vs_shuffled_reference": 0.0011,
+      "separation": 0.709221,
+      "mean": 0.48133301734924316
+    },
+    {
+      "offset": 21,
+      "z_window": [
+        22,
+        84
+      ],
+      "pearson_vs_reference": 0.9781,
+      "pearson_vs_shuffled_reference": 0.0009,
+      "separation": 0.714071,
+      "mean": 0.4718405604362488
+    },
+    {
+      "offset": 24,
+      "z_window": [
+        25,
+        87
+      ],
+      "pearson_vs_reference": 0.9851,
+      "pearson_vs_shuffled_reference": 0.001,
+      "separation": 0.714395,
+      "mean": 0.45964837074279785
+    },
+    {
+      "offset": 27,
+      "z_window": [
+        28,
+        90
+      ],
+      "pearson_vs_reference": 0.9751,
+      "pearson_vs_shuffled_reference": 0.0012,
+      "separation": 0.72096,
+      "mean": 0.4578873813152313
+    },
+    {
+      "offset": 30,
+      "z_window": [
+        31,
+        93
+      ],
+      "pearson_vs_reference": 0.9758,
+      "pearson_vs_shuffled_reference": 0.001,
+      "separation": 0.716422,
+      "mean": 0.4475170373916626
+    },
+    {
+      "offset": 33,
+      "z_window": [
+        34,
+        96
+      ],
+      "pearson_vs_reference": 0.9605,
+      "pearson_vs_shuffled_reference": 0.0012,
+      "separation": 0.704169,
+      "mean": 0.43337786197662354
+    },
+    {
+      "offset": 36,
+      "z_window": [
+        37,
+        99
+      ],
+      "pearson_vs_reference": 0.9465,
+      "pearson_vs_shuffled_reference": 0.0013,
+      "separation": 0.696067,
+      "mean": 0.4290587902069092
+    },
+    {
+      "offset": 39,
+      "z_window": [
+        40,
+        102
+      ],
+      "pearson_vs_reference": 0.8835,
+      "pearson_vs_shuffled_reference": 0.0011,
+      "separation": 0.671186,
+      "mean": 0.3936077654361725
+    },
+    {
+      "offset": 42,
+      "z_window": [
+        43,
+        105
+      ],
+      "pearson_vs_reference": 0.795,
+      "pearson_vs_shuffled_reference": 0.0009,
+      "separation": 0.667002,
+      "mean": 0.35254940390586853
+    },
+    {
+      "offset": 46,
+      "z_window": [
+        47,
+        109
+      ],
+      "pearson_vs_reference": 0.671,
+      "pearson_vs_shuffled_reference": 0.0011,
+      "separation": 0.594476,
+      "mean": 0.2881087362766266
+    }
+  ],
+  "verdict": {
+    "best_offset": 24,
+    "best_z_window": [
+      25,
+      87
+    ],
+    "best_pearson": 0.9851,
+    "worst_pearson": 0.671,
+    "spread": 0.3141,
+    "max_abs_shuffle_floor": 0.0013,
+    "is_peaked": true,
+    "note": "a recovery needs a PEAK. A flat profile means the metric is reading marginal statistics, not depth alignment."
+  }
+}

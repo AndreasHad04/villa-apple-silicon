@@ -1,0 +1,26 @@
+{
+  "idle_fan_before": 1,
+  "rows": [
+    {
+      "duty": 1.0,
+      "tiles_per_second": 2.333,
+      "fan_rpm": 1632
+    },
+    {
+      "duty": 0.5,
+      "tiles_per_second": 1.107,
+      "fan_rpm": 1638
+    },
+    {
+      "duty": 0.33,
+      "tiles_per_second": 0.733,
+      "fan_rpm": 1639
+    },
+    {
+      "duty": 0.25,
+      "tiles_per_second": 0.493,
+      "fan_rpm": 1660
+    }
+  ],
+  "idle_fan_after_settle": 1635
+}

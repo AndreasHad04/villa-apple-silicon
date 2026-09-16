@@ -131,37 +131,60 @@ So the precision relaxation is real and it is small: 138 pixels in a million
 change side of the 0.5 threshold. That is the trade, stated so it can be judged
 rather than assumed.
 
-### 3. Does the output match villa's published prediction? Partly, and this is
-### NOT a reproduction claim.
+### 3. Does the output match villa's published prediction? Yes, at r = 0.99,
+### once the depth window is right. That turned out to be the real finding.
 
-Compared against the published map for the same segment
-(`...new_canon_autoresearch_recipe-tile256-stride128.tif`), which is on the
-same 41600 x 79600 grid as the level-0 surface, so crops map one to one:
+Comparing to the published map for the same segment
+(`...new_canon_autoresearch_recipe-tile256-stride128.tif`), which sits on the
+same grid as the level-0 surface so crops map one to one, the agreement
+depends almost entirely on `START_LAYER`:
 
-| crop | aligned Pearson | aligned Spearman | best negative control |
+| scroll, segment | r at START_LAYER **1** (this README's suggestion) | best START_LAYER | r there |
 |---|---|---|---|
-| 4096x4096, 961 tiles | **0.608** | **0.275** | 0.047 |
-| 1024x1024, 49 tiles | 0.852 | 0.835 | 0.423 |
+| PHerc. 1667, 20240304141531 | 0.8521 | 25 | **0.9851** |
+| PHerc. 0139, 20250108000000 | 0.9054 | 23 | **0.9900** |
+| PHercParis4, 20230702185753 | 0.6240 | 24 | **0.9698** |
+| PHerc. 0814, 20250925161630 | 0.8263 | 21 | **0.9005** |
 
-Aligned beats every control at both sizes (controls: the reference shifted one
-crop right, one crop down, a far region, and the same crop shuffled). But the
-agreement is clearly weaker on the larger and more representative region, and
-the Spearman value says the correlation is carried by a few high-signal areas
-rather than by consistent ranking everywhere.
+Four independent scrolls, each with its own published canonical prediction,
+each with its ink-rich window chosen automatically from the reference rather
+than by hand. All four volumes are 109 layers, so the centred window is
+`(109-62)//2 = 23`. **Best START_LAYER is 21, 23, 24, 25. START_LAYER 1 is
+worse on every one**, by 0.07 to 0.35 in r.
 
-**The larger crop is the honest number. Both are given because quoting only the
-1024 result after having seen the 4096 one would be selection.**
+Every offset on every scroll was also scored against a **shuffled** copy of
+that scroll's reference. That floor never exceeds **0.0017**, so this is depth
+alignment and not marginal statistics.
 
-The most likely reason is that the published file is named
-`new_canon_autoresearch_recipe`, which is probably not the `ink_canonical_2um`
-checkpoint used here, so this is a sanity check that the pipeline puts ink-like
-output in ink-like places, not evidence about the patch. **Question 1 is the one
-that speaks to the patch, and it answers cleanly.**
+![agreement against START_LAYER](figures/start_layer_vs_reference.png)
+
+**`START_LAYER=1` does not reproduce villa's own production output. About 21
+to 25 does, and 23 is a reasonable single default for a 109-layer volume.**
+
+Corroborated by a metric that never looks at the reference: the ink separation
+of our own output (mean of pixels above 0.5 minus mean of those below) also
+peaks in that region, 0.7210 at START_LAYER 28 against 0.6643 at START_LAYER 1.
+
+**What is NOT established, stated plainly.** The mechanism is unknown. The
+obvious story, that these volumes are centred on the writing surface, is
+**refuted by the data**: a model-free depth profile of the voxels
+(`bench/surface_depth.py`, no model involved, so it cannot be circular) shows
+in-plane gradient energy peaking at z=19 and falling monotonically, and mean
+intensity dropping from 82 to 87 through z~48 down to 53 to 57 beyond z~66.
+The volume is not symmetric about its centre at z=54.
+
+And the discriminating experiment does not exist in the public data: to
+separate "centred window" from "a constant near 23" you need a 2.4 um volume
+whose layer count is not 109, and **of the 156 segments in the open-data
+bucket carrying a canonical prediction at 2.4 um, none has one**
+(`results/canon_fixtures.json`). Both hypotheses give identical advice on all
+public data, so the recommendation is safe and the explanation is open.
 
 ![prediction vs reference](figures/prediction_vs_reference_big.png)
 
 Left is the published prediction, middle is the same pixels through this patch
-on MPS, right is the absolute difference.
+on MPS, right is the absolute difference. That figure was made at
+`START_LAYER=1` and therefore shows the WORST case, r = 0.608 on a 4096 crop.
 
 ## Also here: running it locally
 
