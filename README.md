@@ -457,3 +457,39 @@ git -C villa apply ../villa-apple-silicon.patch
 Measured on an M1 Max, 64 GB, macOS 26.6, torch 2.14.0, python 3.11.15.
 
 MIT licensed, same as villa.
+
+### bf16 on Apple Silicon: measured, and it is the wrong thing to want
+
+`hecate.py:322` refuses bf16 on anything but CUDA:
+
+```python
+if precision not in ('fp32', 'bf16') or (precision == 'bf16' and device.type != 'cuda'):
+    raise ValueError('bf16 requires CUDA; otherwise use fp32')
+```
+
+MPS does support bfloat16, so that guard looks like something to relax. The
+model card is careful to say only that "Float32 and CUDA bfloat16 were tested",
+leaving MPS bf16 as an open cell rather than claiming anything about it. Filling
+it in says leave the guard alone.
+
+`bench/hecate_bf16.py` changes exactly that one line to
+`device.type not in ('cuda', 'mps')` and changes nothing else, then runs the
+same pipeline both ways on the same 109 x 1024 x 1024 PHerc. 1667 crop, one
+untimed warmup and three timed repetitions each.
+
+| `--precision` on MPS | min | median | max |
+|---|---|---|---|
+| `fp32` | 26.255 | **26.284** | 26.374 |
+| `bf16` | 40.301 | **40.356** | 41.110 |
+
+**bf16 is 1.54x slower**, and it is also less accurate: max absolute difference
+6 of 255, mean 0.190, 14.58% of pixels differ, and **813 of 1,048,576 pixels
+cross the 0.5 ink threshold**. Slower and worse on both axes, so the CUDA-only
+guard costs Apple Silicon nothing and is correct as written.
+
+The negative control runs first and is asserted, not printed: the unmodified
+module must refuse bf16 on MPS, and it does, with its own message. Without that,
+a variant that silently fell back to fp32 would produce two identical timings
+and look like a pass.
+
+Raw numbers in `results/hecate_bf16.json`.

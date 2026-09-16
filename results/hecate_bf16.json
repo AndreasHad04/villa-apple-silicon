@@ -1,0 +1,39 @@
+{
+ "volume_shape": [
+  109,
+  1024,
+  1024
+ ],
+ "reps": 3,
+ "upstream_refuses_bf16_on_mps": true,
+ "upstream_refusal_message": "bf16 requires CUDA; otherwise use fp32",
+ "fp32_mps": {
+  "min": 26.255,
+  "median": 26.284,
+  "max": 26.374,
+  "all": [
+   26.374,
+   26.255,
+   26.284
+  ]
+ },
+ "bf16_mps": {
+  "min": 40.301,
+  "median": 40.356,
+  "max": 41.11,
+  "all": [
+   41.11,
+   40.356,
+   40.301
+  ]
+ },
+ "speedup_median": 0.651,
+ "bf16_vs_fp32": {
+  "max_abs_diff_255": 6,
+  "mean_abs_diff_255": 0.18957901000976562,
+  "pixels_differing": 152924,
+  "total_pixels": 1048576,
+  "frac_differing": 0.14583969116210938,
+  "pixels_crossing_0.5": 813
+ }
+}
