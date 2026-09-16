@@ -1,0 +1,59 @@
+diff --git a/ink-detection/optimized_inference/entrypoint.py b/ink-detection/optimized_inference/entrypoint.py
+index 7e27c2d..d3281ea 100644
+--- a/ink-detection/optimized_inference/entrypoint.py
++++ b/ink-detection/optimized_inference/entrypoint.py
+@@ -696,6 +696,7 @@ def run_inference_step(inputs: Inputs, profiler: Optional[WorkflowProfiler] = No
+     """Execute the inference step (either standard or partitioned mode)."""
+     # Import torch and related dependencies only when doing inference
+     import torch
++from device_utils import select_device, amp_device_type
+     from torch.nn import DataParallel
+     from inference import run_inference, CFG
+     from processing import path_exists
+@@ -762,7 +763,7 @@ def run_inference_step(inputs: Inputs, profiler: Optional[WorkflowProfiler] = No
+     s3_client = boto3.client("s3")
+ 
+     # Device
+-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
++    device = select_device()
+     logger.info(f"Using device: {device}")
+ 
+     # Resolve and download model weights (S3-first, then HF fallback)
+@@ -818,7 +819,7 @@ def run_inference_step(inputs: Inputs, profiler: Optional[WorkflowProfiler] = No
+             try:
+                 dummy = torch.zeros((1, 1, CFG.in_chans, CFG.size, CFG.size), device=device)
+                 with torch.inference_mode():
+-                    with torch.autocast(device_type=("cuda" if device.type == "cuda" else "cpu"), enabled=True):
++                    with torch.autocast(device_type=amp_device_type(device), enabled=True):
+                         _ = model.forward(dummy)
+                 del dummy
+             except Exception as e:
+diff --git a/ink-detection/optimized_inference/inference.py b/ink-detection/optimized_inference/inference.py
+index 9b80c85..4ad8ba7 100644
+--- a/ink-detection/optimized_inference/inference.py
++++ b/ink-detection/optimized_inference/inference.py
+@@ -19,6 +19,7 @@ from contextlib import suppress
+ 
+ import numpy as np
+ import torch
++from device_utils import amp_device_type, empty_cache
+ import torch.nn as nn
+ import torch.nn.functional as F
+ from torch.utils.data import DataLoader, Dataset
+@@ -435,7 +436,7 @@ def predict_fn(
+                 with scoped_timer(profiler, "host_to_device_seconds", cuda_sync=detailed_sync):
+                     images = images.to(device, non_blocking=True)
+ 
+-                amp_device = "cuda" if device.type == "cuda" else "cpu"
++                amp_device = amp_device_type(device)
+                 with scoped_timer(profiler, "forward_seconds", cuda_sync=detailed_sync):
+                     with torch.autocast(device_type=amp_device, enabled=True):
+                         y_preds = model.forward(images)  # Model-specific forward
+@@ -605,6 +606,5 @@ def run_inference(
+             del test_loader
+         except Exception:
+             pass
+-        if torch.cuda.is_available():
+-            torch.cuda.empty_cache()
++        empty_cache(device)
+         gc.collect()

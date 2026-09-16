@@ -1,0 +1,89 @@
+{
+  "checks": [
+    {
+      "name": "amp_device_type(cuda) is still cuda",
+      "ok": true,
+      "got": "'cuda'",
+      "want": "'cuda'",
+      "note": "this is the line villa had; changing it would alter every existing GPU run"
+    },
+    {
+      "name": "amp_device_type(cpu) is still cpu",
+      "ok": true,
+      "got": "'cpu'",
+      "want": "'cpu'",
+      "note": ""
+    },
+    {
+      "name": "an unknown backend falls back to cpu",
+      "ok": true,
+      "got": "'cpu'",
+      "want": "'cpu'",
+      "note": "fail CLOSED: never hand autocast a device_type it does not know"
+    },
+    {
+      "name": "select_device prefers cuda when present",
+      "ok": true,
+      "got": "'cuda'",
+      "want": "'cuda'",
+      "note": "monkeypatched; no CUDA hardware here, so this is the only way to assert it"
+    },
+    {
+      "name": "select_device picks mps on this machine",
+      "ok": true,
+      "got": "'mps'",
+      "want": "'mps'",
+      "note": ""
+    },
+    {
+      "name": "INK_DEVICE overrides",
+      "ok": true,
+      "got": "'cpu'",
+      "want": "'cpu'",
+      "note": ""
+    },
+    {
+      "name": "amp_device_type(mps) is mps, not cpu",
+      "ok": true,
+      "got": "'mps'",
+      "want": "'mps'",
+      "note": "the whole bug: villa passed 'cpu' here and autocast silently did nothing"
+    },
+    {
+      "name": "old code returns cpu for an mps device (the defect)",
+      "ok": true,
+      "got": "'cpu'",
+      "want": "'cpu'",
+      "note": "if this ever returns 'mps', the bug is gone and this control is vacuous"
+    },
+    {
+      "name": "and the new code disagrees with it exactly there",
+      "ok": true,
+      "got": "True",
+      "want": "True",
+      "note": ""
+    },
+    {
+      "name": "villa's device_type='cpu' is a NO-OP on mps (bit-identical to fp32)",
+      "ok": true,
+      "got": "0.0",
+      "want": "0.0",
+      "note": "so Apple Silicon users never got autocast at all"
+    },
+    {
+      "name": "device_type='mps' actually casts (differs from fp32)",
+      "ok": true,
+      "got": "True",
+      "want": "True",
+      "note": "max|diff| = 1.24e-03, fp16 magnitude"
+    },
+    {
+      "name": "import device_utils",
+      "ok": true,
+      "got": "True",
+      "want": "True",
+      "note": ""
+    }
+  ],
+  "failed": 0
+}

@@ -1,0 +1,56 @@
+{
+  "when": "2026-09-16T19:51:57",
+  "torch": "2.14.0",
+  "batch": 1,
+  "reps": 2,
+  "frames": 62,
+  "tile": 256,
+  "ckpt": "r152_3ddec_v2_l5_epoch13.ckpt",
+  "cpu": {
+    "ok": true,
+    "load_seconds": 1.78,
+    "seconds_per_batch": 3.332,
+    "tiles_per_second": 0.3,
+    "out_shape": [
+      1,
+      1,
+      64,
+      64
+    ],
+    "out_mean": -1.7548599243164062,
+    "out_std": 0.09040272235870361
+  },
+  "mps": {
+    "ok": true,
+    "load_seconds": 2.05,
+    "seconds_per_batch": 0.528,
+    "tiles_per_second": 1.895,
+    "out_shape": [
+      1,
+      1,
+      64,
+      64
+    ],
+    "out_mean": -1.7548599243164062,
+    "out_std": 0.0904027670621872
+  },
+  "villa_amp_cpu": {
+    "ok": true,
+    "seconds_per_batch": 0.527,
+    "tiles_per_second": 1.899,
+    "max_abs_diff_vs_fp32": 0.0
+  },
+  "correct_amp_mps": {
+    "ok": true,
+    "seconds_per_batch": 0.428,
+    "tiles_per_second": 2.338,
+    "max_abs_diff_vs_fp32": 0.0012352466583251953
+  },
+  "correctness": {
+    "max_abs_diff_same_input": 9.5367431640625e-07,
+    "max_abs_diff_DIFFERENT_input_negative_control": 0.16547811031341553,
+    "control_discriminates": true,
+    "note": "the negative control must be far larger, or an agreement of ~0 would prove nothing but that the model ignores input"
+  },
+  "speedup_mps_over_cpu": 6.31
+}

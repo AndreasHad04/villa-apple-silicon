@@ -1,0 +1,95 @@
+{
+  "when": "2026-09-16T19:52:50",
+  "frames": 62,
+  "tile": 256,
+  "rows": [
+    {
+      "device": "mps",
+      "batch": 1,
+      "autocast": "mps",
+      "seconds_per_batch": 0.4289,
+      "tiles_per_second": 2.331,
+      "peak_rss_gb": 2.3,
+      "mps_allocated_gb": 0.52
+    },
+    {
+      "device": "mps",
+      "batch": 2,
+      "autocast": "mps",
+      "seconds_per_batch": 0.8935,
+      "tiles_per_second": 2.239,
+      "peak_rss_gb": 2.3,
+      "mps_allocated_gb": 0.52
+    },
+    {
+      "device": "mps",
+      "batch": 4,
+      "autocast": "mps",
+      "seconds_per_batch": 1.6766,
+      "tiles_per_second": 2.386,
+      "peak_rss_gb": 2.3,
+      "mps_allocated_gb": 0.52
+    },
+    {
+      "device": "mps",
+      "batch": 8,
+      "autocast": "mps",
+      "seconds_per_batch": 3.3861,
+      "tiles_per_second": 2.363,
+      "peak_rss_gb": 2.3,
+      "mps_allocated_gb": 0.52
+    },
+    {
+      "device": "mps",
+      "batch": 16,
+      "autocast": "mps",
+      "seconds_per_batch": 6.7682,
+      "tiles_per_second": 2.364,
+      "peak_rss_gb": 2.3,
+      "mps_allocated_gb": 0.52
+    },
+    {
+      "device": "mps",
+      "batch": 1,
+      "autocast": "off",
+      "seconds_per_batch": 0.6024,
+      "tiles_per_second": 1.66,
+      "peak_rss_gb": 2.3,
+      "mps_allocated_gb": 0.52
+    },
+    {
+      "device": "mps",
+      "batch": 8,
+      "autocast": "off",
+      "seconds_per_batch": 4.4235,
+      "tiles_per_second": 1.809,
+      "peak_rss_gb": 2.3,
+      "mps_allocated_gb": 0.52
+    },
+    {
+      "device": "cpu",
+      "batch": 1,
+      "autocast": "off",
+      "seconds_per_batch": 3.2918,
+      "tiles_per_second": 0.304,
+      "peak_rss_gb": 12.06
+    },
+    {
+      "device": "cpu",
+      "batch": 2,
+      "autocast": "off",
+      "seconds_per_batch": 9.8367,
+      "tiles_per_second": 0.203,
+      "peak_rss_gb": 26.12
+    }
+  ],
+  "headline": {
+    "cpu_b1_tiles_per_second": 0.304,
+    "best_mps": {
+      "batch": 4,
+      "autocast": "mps",
+      "tiles_per_second": 2.386
+    },
+    "speedup": 7.85
+  }
+}
