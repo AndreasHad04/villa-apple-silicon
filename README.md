@@ -161,6 +161,22 @@ alignment and not marginal statistics.
 **`START_LAYER=1` does not reproduce villa's own production output. About 21
 to 25 does, and 23 is a reasonable single default for a 109-layer volume.**
 
+### Adversarial checks on that finding
+
+A peak alone is not evidence, so four things were checked that could each have
+explained it away. All are in `results/stress_window.json`.
+
+| check | question | result |
+|---|---|---|
+| S1 | is r merely tracking how much ink the output has? | **no.** r peaks at START_LAYER 25, mean ink at 19, separation at 28. They do not coincide |
+| S2 | does it survive rank correlation? | **yes.** Spearman peaks at 22, invariant to any monotone recalibration |
+| S3 | is the peak carried by only one side of the reference? | **no.** Scoring only the pixels the reference calls ink peaks at 25, the same place |
+| S4 | shuffled-reference floor | 0.0013 |
+
+S3 is the most direct of the four. On the pixels that actually contain ink,
+agreement goes from **0.4993 at START_LAYER 1** to
+**0.8592 at START_LAYER 25**.
+
 Corroborated by a metric that never looks at the reference: the ink separation
 of our own output (mean of pixels above 0.5 minus mean of those below) also
 peaks in that region, 0.7210 at START_LAYER 28 against 0.6643 at START_LAYER 1.
@@ -185,6 +201,59 @@ public data, so the recommendation is safe and the explanation is open.
 Left is the published prediction, middle is the same pixels through this patch
 on MPS, right is the absolute difference. That figure was made at
 `START_LAYER=1` and therefore shows the WORST case, r = 0.608 on a 4096 crop.
+
+## Is it reading ink, or inventing it?
+
+Same crop, same model, at the corrected window `START_LAYER=25`. Each null
+destroys structure while preserving something stated, and `frac>0.5` is the
+share of pixels called confident ink. Real input gives **0.4138**.
+
+| input | frac>0.5 | Pearson vs the real prediction |
+|---|---|---|
+| **real data** | **0.4138** | 1.000 |
+| `depth_shuffle` | 0.0000 | -0.069 |
+| `per_column_shuffle` | 0.0000 | +0.031 |
+| `single_layer_repeat` | 0.0000 | +0.008 |
+| `voxel_shuffle` | 0.0000 | +0.006 |
+| `phase_scramble` | 0.0112 | +0.244 |
+| `depth_reverse` | 0.0131 | +0.313 |
+| `depth_roll_half` | 0.1429 | +0.423 |
+
+What each null preserves:
+
+- `single_layer_repeat` every layer replaced by a copy of the middle one, so
+  in-plane texture is perfect and **all** depth information is gone
+- `depth_shuffle` layer order permuted, every voxel value kept
+- `per_column_shuffle` independent depth permutation per column
+- `voxel_shuffle` global histogram only
+- `phase_scramble` amplitude spectrum kept, in-plane phase randomised
+- `depth_reverse` everything kept except direction
+- `depth_roll_half` cyclic depth shift, local adjacency mostly kept
+
+**The decisive one is `single_layer_repeat`: perfect 2D texture, no depth
+information, and the model calls no ink at all.** So it is not a 2D texture
+reader, which is the simplest version of the hallucination worry and it is
+ruled out. `depth_shuffle`, `per_column_shuffle` and `voxel_shuffle` are also
+exactly zero.
+
+`depth_reverse` collapsing to 0.0131 says the model is strongly
+**directional**: flipping the depth axis, which preserves every other
+property, nearly removes the detection.
+
+### The window changes the hallucination rate, which makes this a diagnostic
+
+Running the identical nulls at `START_LAYER=1` instead of 25:
+
+| null | frac>0.5 at START_LAYER **25** | at START_LAYER **1** |
+|---|---|---|
+| `depth_shuffle` | **0.0000** | **0.0732**, and anti-correlated with the real prediction (-0.175) |
+| `phase_scramble` | 0.0112 | 0.0084 |
+| `voxel_shuffle` | 0.0000 | 0.0000 |
+
+**Operating outside the right window does not merely lower agreement, it makes
+the model assert confident ink on input whose depth ordering has been
+destroyed.** That is a usable signal: if your nulls come back with confident
+ink, suspect your window before you suspect the scan.
 
 ## Also here: running it locally
 

@@ -1,0 +1,53 @@
+{
+  "crop": [
+    20480,
+    16384,
+    4096
+  ],
+  "aligned": {
+    "pearson": 0.9685,
+    "spearman": 0.7702,
+    "mine_mean": 0.2196,
+    "theirs_mean": 0.2195,
+    "mine_std": 0.2277,
+    "theirs_std": 0.2274
+  },
+  "shift_down_1_crop": {
+    "pearson": -0.157,
+    "spearman": -0.1746,
+    "mine_mean": 0.2196,
+    "theirs_mean": 0.2825,
+    "mine_std": 0.2277,
+    "theirs_std": 0.2773
+  },
+  "shift_right_1_crop": {
+    "pearson": 0.0558,
+    "spearman": 0.084,
+    "mine_mean": 0.2196,
+    "theirs_mean": 0.149,
+    "mine_std": 0.2277,
+    "theirs_std": 0.0747
+  },
+  "far_region": {
+    "pearson": 0.0485,
+    "spearman": 0.0452,
+    "mine_mean": 0.2196,
+    "theirs_mean": 0.16,
+    "mine_std": 0.2277,
+    "theirs_std": 0.1007
+  },
+  "shuffled_theirs": {
+    "pearson": -0.0,
+    "spearman": 0.0105,
+    "mine_mean": 0.2196,
+    "theirs_mean": 0.2195,
+    "mine_std": 0.2277,
+    "theirs_std": 0.2274
+  },
+  "verdict": {
+    "aligned_pearson": 0.9685,
+    "best_negative_control": 0.0558,
+    "aligned_beats_every_control": true,
+    "note": "aligned must beat every control. If it does not, the run is not reproducing their map at these pixels and the port is NOT verified."
+  }
+}

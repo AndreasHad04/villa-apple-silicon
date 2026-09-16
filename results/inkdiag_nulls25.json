@@ -1,0 +1,103 @@
+{
+  "crop": [
+    20480,
+    16384,
+    1024
+  ],
+  "offsets": [
+    0
+  ],
+  "chans": 62,
+  "nominal_start": 25,
+  "device": "mps",
+  "pace": 1.0,
+  "zarr": "PHerc1667/segments/20240304141531-w013_20240304141531_flatboi/surface-volumes/2.399um-0.22m-78keV-volume-20251217075048.zarr",
+  "depth_profile": [
+    {
+      "offset": 0,
+      "z_window": [
+        25,
+        87
+      ],
+      "seconds": 20.9,
+      "mean": 0.45964837074279785,
+      "std": 0.36238405108451843,
+      "max": 0.9558836221694946,
+      "frac_above_0.5": 0.4138298034667969,
+      "separation": 0.714395,
+      "pearson_vs_offset0": 1.0
+    }
+  ],
+  "nulls": [
+    {
+      "null": "depth_shuffle",
+      "seconds": 20.8,
+      "mean": 0.13599520921707153,
+      "std": 0.013404441066086292,
+      "max": 0.2294921875,
+      "frac_above_0.5": 0.0,
+      "separation": -0.135995,
+      "pearson_vs_real": -0.06911157841290812
+    },
+    {
+      "null": "phase_scramble",
+      "seconds": 20.7,
+      "mean": 0.1600097268819809,
+      "std": 0.0670442059636116,
+      "max": 0.6611471772193909,
+      "frac_above_0.5": 0.011155128479003906,
+      "separation": 0.400934,
+      "pearson_vs_real": 0.24440130285039052
+    },
+    {
+      "null": "voxel_shuffle",
+      "seconds": 20.7,
+      "mean": 0.1407230794429779,
+      "std": 0.010001123882830143,
+      "max": 0.1899433135986328,
+      "frac_above_0.5": 0.0,
+      "separation": -0.140723,
+      "pearson_vs_real": 0.006397390701724467
+    },
+    {
+      "null": "depth_reverse",
+      "seconds": 20.6,
+      "mean": 0.18316935002803802,
+      "std": 0.07600515335798264,
+      "max": 0.6679626703262329,
+      "frac_above_0.5": 0.013141632080078125,
+      "separation": 0.388717,
+      "pearson_vs_real": 0.31255440847599736
+    },
+    {
+      "null": "depth_roll_half",
+      "seconds": 20.8,
+      "mean": 0.25885578989982605,
+      "std": 0.24808330833911896,
+      "max": 0.9454538226127625,
+      "frac_above_0.5": 0.14290428161621094,
+      "separation": 0.675237,
+      "pearson_vs_real": 0.4234183550078758
+    },
+    {
+      "null": "per_column_shuffle",
+      "seconds": 20.8,
+      "mean": 0.15162521600723267,
+      "std": 0.013479008339345455,
+      "max": 0.2125641256570816,
+      "frac_above_0.5": 0.0,
+      "separation": -0.151625,
+      "pearson_vs_real": 0.03056615587406314
+    },
+    {
+      "null": "single_layer_repeat",
+      "seconds": 20.8,
+      "mean": 0.12943750619888306,
+      "std": 0.011163536459207535,
+      "max": 0.18799245357513428,
+      "frac_above_0.5": 0.0,
+      "separation": -0.129438,
+      "pearson_vs_real": 0.0077875883783122875
+    }
+  ]
+}

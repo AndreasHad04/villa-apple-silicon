@@ -1,0 +1,221 @@
+{
+  "crop": [
+    20480,
+    16384,
+    1024
+  ],
+  "rows": [
+    {
+      "offset": -1,
+      "start_layer": 0,
+      "pearson": 0.8361,
+      "spearman": 0.8102,
+      "pearson_ink_only": 0.4711,
+      "pearson_bg_only": 0.5235,
+      "mean_ink": 0.3914,
+      "separation": 0.6546,
+      "pearson_shuffled": 0.0008
+    },
+    {
+      "offset": 0,
+      "start_layer": 1,
+      "pearson": 0.8521,
+      "spearman": 0.835,
+      "pearson_ink_only": 0.4993,
+      "pearson_bg_only": 0.538,
+      "mean_ink": 0.3965,
+      "separation": 0.6643,
+      "pearson_shuffled": 0.0008
+    },
+    {
+      "offset": 3,
+      "start_layer": 4,
+      "pearson": 0.8597,
+      "spearman": 0.8334,
+      "pearson_ink_only": 0.4678,
+      "pearson_bg_only": 0.4992,
+      "mean_ink": 0.4425,
+      "separation": 0.6676,
+      "pearson_shuffled": 0.0012
+    },
+    {
+      "offset": 6,
+      "start_layer": 7,
+      "pearson": 0.9128,
+      "spearman": 0.8833,
+      "pearson_ink_only": 0.5707,
+      "pearson_bg_only": 0.4924,
+      "mean_ink": 0.4706,
+      "separation": 0.6751,
+      "pearson_shuffled": 0.0008
+    },
+    {
+      "offset": 9,
+      "start_layer": 10,
+      "pearson": 0.9571,
+      "spearman": 0.8888,
+      "pearson_ink_only": 0.7099,
+      "pearson_bg_only": 0.6254,
+      "mean_ink": 0.4778,
+      "separation": 0.7007,
+      "pearson_shuffled": 0.0011
+    },
+    {
+      "offset": 12,
+      "start_layer": 13,
+      "pearson": 0.9539,
+      "spearman": 0.8885,
+      "pearson_ink_only": 0.6916,
+      "pearson_bg_only": 0.6212,
+      "mean_ink": 0.4775,
+      "separation": 0.7115,
+      "pearson_shuffled": 0.0012
+    },
+    {
+      "offset": 15,
+      "start_layer": 16,
+      "pearson": 0.9769,
+      "spearman": 0.9254,
+      "pearson_ink_only": 0.7405,
+      "pearson_bg_only": 0.8038,
+      "mean_ink": 0.4712,
+      "separation": 0.7145,
+      "pearson_shuffled": 0.001
+    },
+    {
+      "offset": 18,
+      "start_layer": 19,
+      "pearson": 0.9629,
+      "spearman": 0.9123,
+      "pearson_ink_only": 0.7325,
+      "pearson_bg_only": 0.6457,
+      "mean_ink": 0.4813,
+      "separation": 0.7092,
+      "pearson_shuffled": 0.0011
+    },
+    {
+      "offset": 21,
+      "start_layer": 22,
+      "pearson": 0.9781,
+      "spearman": 0.9336,
+      "pearson_ink_only": 0.7649,
+      "pearson_bg_only": 0.7799,
+      "mean_ink": 0.4718,
+      "separation": 0.7141,
+      "pearson_shuffled": 0.0009
+    },
+    {
+      "offset": 24,
+      "start_layer": 25,
+      "pearson": 0.9851,
+      "spearman": 0.9298,
+      "pearson_ink_only": 0.8592,
+      "pearson_bg_only": 0.7863,
+      "mean_ink": 0.4596,
+      "separation": 0.7144,
+      "pearson_shuffled": 0.001
+    },
+    {
+      "offset": 27,
+      "start_layer": 28,
+      "pearson": 0.9751,
+      "spearman": 0.9208,
+      "pearson_ink_only": 0.8125,
+      "pearson_bg_only": 0.6693,
+      "mean_ink": 0.4579,
+      "separation": 0.721,
+      "pearson_shuffled": 0.0012
+    },
+    {
+      "offset": 30,
+      "start_layer": 31,
+      "pearson": 0.9758,
+      "spearman": 0.9128,
+      "pearson_ink_only": 0.8245,
+      "pearson_bg_only": 0.7591,
+      "mean_ink": 0.4475,
+      "separation": 0.7164,
+      "pearson_shuffled": 0.001
+    },
+    {
+      "offset": 33,
+      "start_layer": 34,
+      "pearson": 0.9605,
+      "spearman": 0.8956,
+      "pearson_ink_only": 0.792,
+      "pearson_bg_only": 0.6473,
+      "mean_ink": 0.4334,
+      "separation": 0.7042,
+      "pearson_shuffled": 0.0012
+    },
+    {
+      "offset": 36,
+      "start_layer": 37,
+      "pearson": 0.9465,
+      "spearman": 0.8853,
+      "pearson_ink_only": 0.7292,
+      "pearson_bg_only": 0.6027,
+      "mean_ink": 0.4291,
+      "separation": 0.6961,
+      "pearson_shuffled": 0.0013
+    },
+    {
+      "offset": 39,
+      "start_layer": 40,
+      "pearson": 0.8835,
+      "spearman": 0.8597,
+      "pearson_ink_only": 0.6068,
+      "pearson_bg_only": 0.5557,
+      "mean_ink": 0.3936,
+      "separation": 0.6712,
+      "pearson_shuffled": 0.0011
+    },
+    {
+      "offset": 42,
+      "start_layer": 43,
+      "pearson": 0.795,
+      "spearman": 0.7784,
+      "pearson_ink_only": 0.4646,
+      "pearson_bg_only": 0.4845,
+      "mean_ink": 0.3525,
+      "separation": 0.667,
+      "pearson_shuffled": 0.0009
+    },
+    {
+      "offset": 46,
+      "start_layer": 47,
+      "pearson": 0.671,
+      "spearman": 0.7008,
+      "pearson_ink_only": 0.3469,
+      "pearson_bg_only": 0.3961,
+      "mean_ink": 0.2881,
+      "separation": 0.5945,
+      "pearson_shuffled": 0.0011
+    }
+  ],
+  "checks": {
+    "S1_peaks_do_not_coincide": {
+      "argmax_pearson": 25,
+      "argmax_mean_ink": 19,
+      "argmax_separation": 28,
+      "pass": true,
+      "note": "if r merely tracked ink quantity these would be the same offset"
+    },
+    "S2_spearman_agrees": {
+      "argmax_spearman": 22,
+      "argmax_pearson": 25,
+      "pass": true,
+      "note": "rank correlation is invariant to monotone recalibration"
+    },
+    "S3_both_sides": {
+      "argmax_ink_only": 25,
+      "argmax_bg_only": 16,
+      "pass": true,
+      "note": "a peak carried by only one side of the reference would be a contrast artefact"
+    },
+    "S4_shuffle_floor": {
+      "max_abs": 0.0013,
+      "pass": true
+    }
+  }
+}
