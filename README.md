@@ -279,6 +279,52 @@ the model assert confident ink on input whose depth ordering has been
 destroyed.** That is a usable signal: if your nulls come back with confident
 ink, suspect your window before you suspect the scan.
 
+## inkdiag: which failure mode am I fighting?
+
+The 2026 open problems put it directly: when a model shows no ink, "the right
+conclusion is neither 'the scan failed' nor 'the model failed'", six
+explanations stay open, and "better diagnostics matter just as much as better
+models". `bench/inkdiag.py` measures two things that separate them.
+
+**Sweep the window.** Slide the 62-plane input through depth and record the
+output at each position. Then:
+
+| what you see | what it means | what to do |
+|---|---|---|
+| peak at the centred window, high separation | real signal, correctly located | nothing |
+| peak displaced by N planes from centred | the surface is mislocalised by about N | re-localise the surface |
+| no confident ink at ANY window | no detectable signal here | scan or chemistry, not the model |
+| confident ink only at wrong windows, none at the centred one | **false positives from misconfiguration** | fix the window before blaming the scan |
+
+**Run the nulls.** Destroy structure while preserving stated properties and
+see what survives. If confident ink survives `single_layer_repeat`, which
+keeps in-plane texture perfectly and removes all depth information, the output
+is 2D texture and not ink.
+
+### The two signatures, measured on the same segment
+
+PHerc. 1667, 20240304141531, two 1024 crops: one ink-rich (reference std
+0.362) and one blank (reference std 0.0116).
+
+| | ink region | blank region |
+|---|---|---|
+| confident ink at the centred window | **0.4138** | **0.0000** |
+| confident ink at `START_LAYER=1` | 0.3323 | 0.0167 |
+| separation at the centred window | 0.7144 | negative, nothing above 0.5 |
+| best agreement with the published map | 0.9851 | 0.2660 |
+
+The blank region produces **no** confident ink at the centred window and at
+every window from 10 to 103. It produces 1.67% at `START_LAYER=1`.
+
+**So the wrong window manufactures false positives twice over**: on blank
+papyrus, and on structurally destroyed input (the `depth_shuffle` null goes
+from 0.0000 at the centred window to 0.0732 at `START_LAYER=1`, anti-correlated
+with the real prediction). Both point the same way, and neither would be
+visible to someone looking only at their prediction image.
+
+    python bench/inkdiag.py --y0 20480 --x0 16384 --size 1024 \
+      --offsets=-1,0,9,18,23,25,28,34,46
+
 ## Also here: running it locally
 
 `entrypoint.py` assumes `/workspace` and a credentialed `boto3` client, so it
