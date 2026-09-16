@@ -192,32 +192,36 @@ Corroborated by a metric that never looks at the reference: the ink separation
 of our own output (mean of pixels above 0.5 minus mean of those below) also
 peaks in that region, 0.7210 at START_LAYER 28 against 0.6643 at START_LAYER 1.
 
-### Why: villa's own documentation says these volumes are centred
+### This is villa's own convention everywhere else
 
-`vesuvius/docs/ink_detection.md` states it twice, for these exact volumes:
+Centring is not an inference from my measurements. It is what the rest of the
+repo and the model cards already do, and `START_LAYER=1` in this one document
+is the outlier.
 
-> For a 2.399 um OME-Zarr, read XY pyramid level 2, **select the centered 84 Z
-> planes**, and mean-pool every four planes to 21 slices
+- **`scrollprize/hecate`** (released 2026-09-15, built from `ink_canonical_2um`),
+  on its own inference script: "The script **selects the central input depth**,
+  slides over XY with half-patch overlap, and blends probabilities using a
+  floored Hann window." Its `--reverse` flag "reverse[s] the **full render
+  depth before selecting the central planes**".
+- **The same card on why the centre is the reference at all:** "A
+  surface-conditioned render (surface volume) is a CT scan **resampled around a
+  mesh** that follows a papyrus sheet... The intended sheet can also **wander
+  above and below the centre of the render**."
+- **`vesuvius/docs/ink_detection.md`**, for a 2.399 um OME-Zarr: "**select the
+  centered 84 Z planes**", and "**Labels occupy Z slice 32 of a 65-plane
+  volume**", which is the exact centre.
+- **`scrollprize/ink_9um`**: "the z window **jitters over 17 of the 21 slices**
+  so the models don't lock onto one exact depth", which is the same fact
+  handled as a training augmentation.
 
-> **Labels occupy Z slice 32 of a 65-plane volume**
+The wandering sheet also explains why the measured optima scatter over 21 to 25
+instead of sitting exactly on the centred 23: the centre is where the mesh is,
+and the sheet is near it rather than on it. That per-segment offset is worth
+measuring rather than assuming, which is what `bench/inkdiag.py` does.
 
-Slice 32 of 65 is the exact centre. So the writing surface sits at the middle
-of these volumes, and a 62-plane inference window has to be centred on it.
-For a 109-plane volume that is `START_LAYER = (109-62)//2 = 23`, which is
-where the measurements land.
-
-Put the other way: with `START_LAYER=1`, the surface at plane 54 falls at
-position 53 of a 62-plane window, about 85% of the way through it, instead of
-in the middle.
-
-**A wrong turn worth recording, because the same mistake is easy to repeat.**
-I first tried to locate the surface from the voxels directly, using in-plane
-gradient energy and mean intensity, and concluded from their asymmetry that
-the volume was not centred. **That test cannot work.** Carbon ink on
-carbonised papyrus has almost no attenuation contrast, which is the premise of
-the whole challenge, so intensity statistics locate bulk papyrus structure and
-say nothing about where the writing surface is. The profile is in
-`results/surface_depth.json` and it is a measurement of the wrong quantity.
+Separately, my `depth_reverse` null puts a number on the directionality their
+`--reverse` flag exists for: flipping the depth axis takes confident ink from
+0.4138 to 0.0131 on the same crop.
 
 ### Stability
 
