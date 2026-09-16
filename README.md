@@ -199,8 +199,10 @@ public data, so the recommendation is safe and the explanation is open.
 ![prediction vs reference](figures/prediction_vs_reference_big.png)
 
 Left is the published prediction, middle is the same pixels through this patch
-on MPS, right is the absolute difference. That figure was made at
-`START_LAYER=1` and therefore shows the WORST case, r = 0.608 on a 4096 crop.
+on MPS, right is the absolute difference. 4096x4096, 961 tiles, at the
+corrected `START_LAYER=25`: **Pearson 0.9685, Spearman 0.7702**, against
+**0.608 / 0.275** on the identical pixels at `START_LAYER=1`. Best negative
+control 0.056, shuffled reference 0.000.
 
 ## Is it reading ink, or inventing it?
 
