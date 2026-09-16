@@ -158,6 +158,13 @@ alignment and not marginal statistics.
 
 ![agreement against START_LAYER](figures/start_layer_vs_reference.png)
 
+The same pixels at both settings, so the cost is visible rather than only
+numerical. Top row is the full 4096 crop, bottom row is the same detail from
+each:
+
+![what the documented window costs](figures/window_cost.png)
+
+
 **`START_LAYER=1` does not reproduce villa's own production output. About 21
 to 25 does, and 23 is a reasonable single default for a 109-layer volume.**
 
