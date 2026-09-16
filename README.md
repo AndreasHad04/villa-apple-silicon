@@ -384,6 +384,18 @@ ever fixed upstream the control fails loudly instead of passing vacuously.
 - MPS refuses `float64`. Nothing in this path hits it, but anything that does
   will need casting.
 
+## Everything here is machine-checked
+
+`bench/verify_claims.py` re-derives every number quoted in this README from the
+raw JSON in `results/` and fails if any of them drifts. **44 claims, 0
+disagreements.** It also refuses em dashes and refuses any claim this work has
+since withdrawn, so a superseded figure cannot survive an edit.
+
+It has been watched failing: planting a stale speedup into this README makes it
+exit 1 and name the two checks that catch it.
+
+    python bench/verify_claims.py
+
 ## Reproducing
 
 ```bash

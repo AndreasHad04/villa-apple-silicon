@@ -1,0 +1,225 @@
+{
+  "checks": [
+    {
+      "name": "CPU median matches bench_stats",
+      "ok": true,
+      "detail": "3.261"
+    },
+    {
+      "name": "MPS corrected median matches",
+      "ok": true,
+      "detail": "0.427"
+    },
+    {
+      "name": "speedup is 7.63 and is quoted in every artifact that claims it",
+      "ok": true,
+      "detail": "7.63"
+    },
+    {
+      "name": "the superseded mean-based 7.85x speedup appears nowhere as a SPEEDUP",
+      "ok": true,
+      "detail": "7.85 survives only as the 7.85 GB memory figure"
+    },
+    {
+      "name": "PHerc1667 r at START_LAYER 1",
+      "ok": true,
+      "detail": "0.8521"
+    },
+    {
+      "name": "PHerc1667 best",
+      "ok": true,
+      "detail": "0.9851"
+    },
+    {
+      "name": "g0139: r@1 0.9054, best 23, r 0.99",
+      "ok": true,
+      "detail": "0.9054 / 23 / 0.99"
+    },
+    {
+      "name": "gparis: r@1 0.624, best 24, r 0.9698",
+      "ok": true,
+      "detail": "0.624 / 24 / 0.9698"
+    },
+    {
+      "name": "g0814: r@1 0.8263, best 21, r 0.9005",
+      "ok": true,
+      "detail": "0.8263 / 21 / 0.9005"
+    },
+    {
+      "name": "three further PHerc1667 regions all peak at 24",
+      "ok": true,
+      "detail": "[24, 24, 24]"
+    },
+    {
+      "name": "all seven optima lie in 21..25",
+      "ok": true,
+      "detail": "[25, 23, 24, 21, 24, 24, 24]"
+    },
+    {
+      "name": "seven measurements claimed in the text",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no shuffle floor exceeds 0.0017",
+      "ok": true,
+      "detail": "max 0.0017"
+    },
+    {
+      "name": "0.0017 is the figure quoted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stress S1_peaks_do_not_coincide",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stress S2_spearman_agrees",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stress S3_both_sides",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stress S4_shuffle_floor",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ink-only 0.4993 -> 0.8592",
+      "ok": true,
+      "detail": "0.4993 -> 0.8592"
+    },
+    {
+      "name": "Pearson between the two outputs is 0.9999995",
+      "ok": true,
+      "detail": "0.9999995"
+    },
+    {
+      "name": "decision flip rate is 0.014 percent",
+      "ok": true,
+      "detail": "0.014%"
+    },
+    {
+      "name": "real input at the centred window is 0.4138",
+      "ok": true,
+      "detail": "0.4138"
+    },
+    {
+      "name": "single_layer_repeat gives exactly zero confident ink",
+      "ok": true,
+      "detail": "0.0"
+    },
+    {
+      "name": "depth_shuffle gives exactly zero confident ink",
+      "ok": true,
+      "detail": "0.0"
+    },
+    {
+      "name": "voxel_shuffle gives exactly zero confident ink",
+      "ok": true,
+      "detail": "0.0"
+    },
+    {
+      "name": "per_column_shuffle gives exactly zero confident ink",
+      "ok": true,
+      "detail": "0.0"
+    },
+    {
+      "name": "depth_shuffle at START_LAYER 1 is 0.0732 and anti-correlated",
+      "ok": true,
+      "detail": "0.0732 / r=-0.1753"
+    },
+    {
+      "name": "blank at START_LAYER 1 gives 0.0167",
+      "ok": true,
+      "detail": "0.0167"
+    },
+    {
+      "name": "blank gives exactly zero at every other window",
+      "ok": true,
+      "detail": "[0.016656875610351562, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]"
+    },
+    {
+      "name": "corrected 4096 aligned r is 0.9685",
+      "ok": true,
+      "detail": "0.9685"
+    },
+    {
+      "name": "the same pixels at START_LAYER 1 were 0.608",
+      "ok": true,
+      "detail": "0.6080"
+    },
+    {
+      "name": "156 canonical 2.4um segments, none off 109 layers",
+      "ok": true,
+      "detail": "156 segments"
+    },
+    {
+      "name": "README: no em or en dashes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README: no AI attribution",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README: no withdrawn mechanism claim",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1812: no em or en dashes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1812: no AI attribution",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1812: no withdrawn mechanism claim",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1813: no em or en dashes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1813: no AI attribution",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1813: no withdrawn mechanism claim",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SUBMISSION: no em or en dashes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SUBMISSION: no AI attribution",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SUBMISSION: no withdrawn mechanism claim",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "failed": 0
+}
