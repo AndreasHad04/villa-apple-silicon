@@ -181,20 +181,42 @@ Corroborated by a metric that never looks at the reference: the ink separation
 of our own output (mean of pixels above 0.5 minus mean of those below) also
 peaks in that region, 0.7210 at START_LAYER 28 against 0.6643 at START_LAYER 1.
 
-**What is NOT established, stated plainly.** The mechanism is unknown. The
-obvious story, that these volumes are centred on the writing surface, is
-**refuted by the data**: a model-free depth profile of the voxels
-(`bench/surface_depth.py`, no model involved, so it cannot be circular) shows
-in-plane gradient energy peaking at z=19 and falling monotonically, and mean
-intensity dropping from 82 to 87 through z~48 down to 53 to 57 beyond z~66.
-The volume is not symmetric about its centre at z=54.
+### Why: villa's own documentation says these volumes are centred
 
-And the discriminating experiment does not exist in the public data: to
-separate "centred window" from "a constant near 23" you need a 2.4 um volume
-whose layer count is not 109, and **of the 156 segments in the open-data
-bucket carrying a canonical prediction at 2.4 um, none has one**
-(`results/canon_fixtures.json`). Both hypotheses give identical advice on all
-public data, so the recommendation is safe and the explanation is open.
+`vesuvius/docs/ink_detection.md` states it twice, for these exact volumes:
+
+> For a 2.399 um OME-Zarr, read XY pyramid level 2, **select the centered 84 Z
+> planes**, and mean-pool every four planes to 21 slices
+
+> **Labels occupy Z slice 32 of a 65-plane volume**
+
+Slice 32 of 65 is the exact centre. So the writing surface sits at the middle
+of these volumes, and a 62-plane inference window has to be centred on it.
+For a 109-plane volume that is `START_LAYER = (109-62)//2 = 23`, which is
+where the measurements land.
+
+Put the other way: with `START_LAYER=1`, the surface at plane 54 falls at
+position 53 of a 62-plane window, about 85% of the way through it, instead of
+in the middle.
+
+**A wrong turn worth recording, because the same mistake is easy to repeat.**
+I first tried to locate the surface from the voxels directly, using in-plane
+gradient energy and mean intensity, and concluded from their asymmetry that
+the volume was not centred. **That test cannot work.** Carbon ink on
+carbonised papyrus has almost no attenuation contrast, which is the premise of
+the whole challenge, so intensity statistics locate bulk papyrus structure and
+say nothing about where the writing surface is. The profile is in
+`results/surface_depth.json` and it is a measurement of the wrong quantity.
+
+### Stability
+
+| | best START_LAYER |
+|---|---|
+| four scrolls, one region each | 25, 23, 24, 21 |
+| PHerc. 1667, three further regions | 24, 24, 24 |
+
+Seven independent measurements, all within 21 to 25, against a centred value
+of 23.
 
 ![prediction vs reference](figures/prediction_vs_reference_big.png)
 
