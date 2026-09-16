@@ -96,36 +96,72 @@ autocast, they are getting none at all, with no error and no warning.
 
 ## Correctness
 
-The ported path was checked against villa's own published prediction for the
-same segment
-(`...new_canon_autoresearch_recipe-tile256-stride128.tif` in the open-data
-bucket), which is on the same 41600 x 79600 grid as the level-0 surface, so a
-crop maps onto it one to one.
+Three separate questions, kept separate because they have different answers.
 
-| comparison | Pearson | Spearman |
-|---|---|---|
-| **aligned, same pixels** | **0.8521** | **0.8350** |
-| reference shifted right one crop | 0.4232 | 0.3991 |
-| reference shifted down one crop | 0.2283 | 0.2510 |
-| a far region of the reference | -0.0597 | -0.0687 |
-| same crop, pixels shuffled | 0.0008 | -0.0052 |
+### 1. Does the patch change what the model computes? No.
 
-The shifted comparisons score above zero because neighbouring crops share
-papyrus sheet structure, which is why the shuffle is also there.
+Same fixed input, CPU against MPS, single forward:
 
-**This is a reproduction, not bit-equality, and the gap is not explained.** The
-published file is named `new_canon_autoresearch_recipe`, which may not be the
-`ink_canonical_2um` checkpoint used here, and crop-edge blending differs from a
-whole-segment run.
+| comparison | max absolute difference |
+|---|---|
+| CPU vs MPS, same input | **9.54e-07** |
+| CPU vs MPS, DIFFERENT input (negative control) | 0.165 |
 
-**The first comparison run was worthless and nearly passed.** A crop at
-y=20000, x=40000 gave an aligned r of 0.0688 while still beating every control.
-The reference has a standard deviation of 0.0116 there: a blank region with no
-ink cannot tell a correct port from a broken one. Scanning 100 windows of the
-reference put the ink-bearing regions at up to 0.3664, about 30x higher, and
-the numbers above come from one of those.
+The negative control is there because an agreement of ~0 with nothing to
+compare it against would only prove the model ignores its input. It
+discriminates by five orders of magnitude.
 
-![prediction vs reference](figures/prediction_vs_reference.png)
+### 2. How much does correcting `amp_device` change the real output?
+
+This is the question `AGENTS.md` 1.3 asks, so it is measured end to end on a
+real crop rather than on a single tensor. villa's full pipeline, same 1024x1024
+crop, 49 tiles, run twice on MPS with only the autocast device type differing:
+
+| | |
+|---|---|
+| wall clock, current `amp_device` | 25.37 s |
+| wall clock, corrected | 20.84 s (**1.217x**) |
+| Pearson between the two outputs | **0.9999995** |
+| mean absolute difference | 1.37e-04 |
+| 99th percentile absolute difference | 1.78e-03 |
+| max absolute difference | 3.17e-03 |
+| **pixels whose ink/no-ink decision at 0.5 flips** | **0.014%** |
+
+So the precision relaxation is real and it is small: 138 pixels in a million
+change side of the 0.5 threshold. That is the trade, stated so it can be judged
+rather than assumed.
+
+### 3. Does the output match villa's published prediction? Partly, and this is
+### NOT a reproduction claim.
+
+Compared against the published map for the same segment
+(`...new_canon_autoresearch_recipe-tile256-stride128.tif`), which is on the
+same 41600 x 79600 grid as the level-0 surface, so crops map one to one:
+
+| crop | aligned Pearson | aligned Spearman | best negative control |
+|---|---|---|---|
+| 4096x4096, 961 tiles | **0.608** | **0.275** | 0.047 |
+| 1024x1024, 49 tiles | 0.852 | 0.835 | 0.423 |
+
+Aligned beats every control at both sizes (controls: the reference shifted one
+crop right, one crop down, a far region, and the same crop shuffled). But the
+agreement is clearly weaker on the larger and more representative region, and
+the Spearman value says the correlation is carried by a few high-signal areas
+rather than by consistent ranking everywhere.
+
+**The larger crop is the honest number. Both are given because quoting only the
+1024 result after having seen the 4096 one would be selection.**
+
+The most likely reason is that the published file is named
+`new_canon_autoresearch_recipe`, which is probably not the `ink_canonical_2um`
+checkpoint used here, so this is a sanity check that the pipeline puts ink-like
+output in ink-like places, not evidence about the patch. **Question 1 is the one
+that speaks to the patch, and it answers cleanly.**
+
+![prediction vs reference](figures/prediction_vs_reference_big.png)
+
+Left is the published prediction, middle is the same pixels through this patch
+on MPS, right is the absolute difference.
 
 ## Also here: running it locally
 

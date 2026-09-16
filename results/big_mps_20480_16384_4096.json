@@ -1,0 +1,28 @@
+{
+  "device": "mps",
+  "crop": [
+    20480,
+    16384,
+    4096
+  ],
+  "level": "0",
+  "layers": [
+    1,
+    63
+  ],
+  "tile": 256,
+  "stride": 128,
+  "batch": 4,
+  "read_seconds": 287.35,
+  "inference_seconds": 400.63,
+  "tiles_nominal": 961,
+  "tiles_per_second": 2.399,
+  "pred_shape": [
+    4096,
+    4096
+  ],
+  "pred_min": 0.0,
+  "pred_max": 0.9487981796264648,
+  "pred_mean": 0.24915245175361633,
+  "frac_above_0.5": 0.13120520114898682
+}

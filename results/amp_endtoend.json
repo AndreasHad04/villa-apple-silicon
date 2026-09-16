@@ -1,0 +1,16 @@
+{
+  "crop": [
+    20480,
+    16384,
+    1024
+  ],
+  "tiles": 49,
+  "villa_current_amp_seconds": 25.37,
+  "corrected_amp_seconds": 20.84,
+  "speedup_end_to_end": 1.217,
+  "max_abs_diff": 0.0031679868698120117,
+  "mean_abs_diff": 0.00013730666250921786,
+  "p99_abs_diff": 0.0017786622047424316,
+  "pearson_between_the_two": 0.999999511858424,
+  "frac_pixels_crossing_0.5_decision": 0.00013828277587890625
+}
