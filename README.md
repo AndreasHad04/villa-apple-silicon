@@ -61,7 +61,7 @@ processes into `results/mem_probe_summary.json`.
 
 `bench/verify_claims.py` re-derives every number quoted here from the JSON in
 `results/` and exits nonzero if any artifact and result file disagree:
-**57 claims, 0 disagreements**. It needs nothing but this repo.
+**51 claims, 0 disagreements**. It needs nothing but this repo.
 
 Re-running the MEASUREMENTS additionally needs a villa checkout and the
 1.55 GB `r152_3ddec_v2_l5_epoch13.ckpt`, neither of which is redistributed
