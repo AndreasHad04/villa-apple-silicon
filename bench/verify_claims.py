@@ -18,11 +18,21 @@ def ck(name, ok, detail=""):
 def has(text, *frags):
     return all(f in text for f in frags)
 
-README = (R/"public"/"README.md").read_text()
-PR1 = (R/"results"/"PR_BODY.md").read_text()
-PR2 = (R/"results"/"PR2_BODY.md").read_text()
-SUB = (R/"SUBMISSION.md").read_text()
-ALL = {"README": README, "PR1812": PR1, "PR1813": PR2, "SUBMISSION": SUB}
+# ONE file, TWO homes: ~/money/vesuv/ops/ in the working tree, and bench/ in the
+# published repo. Resolve the layout instead of keeping two copies, because the
+# published copy silently diverged and then crashed on its own paths.
+_PUB = R/"public"/"README.md"
+README = (_PUB if _PUB.exists() else R/"README.md").read_text()
+def _opt(p): return p.read_text() if p.exists() else None
+PR1 = _opt(R/"results"/"PR_BODY.md")
+PR2 = _opt(R/"results"/"PR2_BODY.md")
+SUB = _opt(R/"SUBMISSION.md")
+ALL = {k: v for k, v in (("README", README), ("PR1812", PR1),
+                         ("PR1813", PR2), ("SUBMISSION", SUB)) if v is not None}
+_absent = [k for k, v in (("PR1812", PR1), ("PR1813", PR2), ("SUBMISSION", SUB)) if v is None]
+if _absent:
+    print(f"  NOTE: not published in this repo, so not checked here: {', '.join(_absent)}")
+def present(*texts): return [t for t in texts if t is not None]
 
 print("SPEED AND MEMORY")
 bs = J("bench_stats.json")
@@ -33,13 +43,31 @@ ck("MPS corrected median matches", f"{fix['median_s']:.3f}" == "0.427", f"{fix['
 sp = fix["speedup_vs_cpu_median"]
 # PR1813 is the window PR and deliberately does not quote the port speedup,
 # so requiring it there was a defect in this check, not in the artifact.
-SPEED_ARTIFACTS = {k: ALL[k] for k in ("README", "PR1812", "SUBMISSION")}
+SPEED_ARTIFACTS = {k: ALL[k] for k in ("README", "PR1812", "SUBMISSION") if k in ALL}
 ck("speedup is 7.63 and is quoted in every artifact that claims it", sp == 7.63 and
    all(str(sp) in t for t in SPEED_ARTIFACTS.values()), f"{sp}")
 ck("the superseded mean-based 7.85x speedup appears nowhere as a SPEEDUP",
    all(not re.search(r"7\.85\s*x|speedup[^.]{0,40}7\.85", t) for t in ALL.values()),
    "7.85 survives only as the 7.85 GB memory figure")
-mp = J("mem_probe_summary.json") if (R/"results"/"mem_probe_summary.json").exists() else None
+# This used to load mem_probe_summary.json and never use it, and the file was
+# never written, so every memory figure in the artifacts was typed text that
+# nothing checked. bench/mem_summary.py now generates it.
+mp = J("mem_probe_summary.json")
+_m = {f"{r['device']}{r['batch']}": r for r in mp["rows"]}
+for _k, _label in (("cpu1", "CPU batch 1"), ("cpu2", "CPU batch 2"),
+                   ("mps1", "MPS batch 1"), ("mps4", "MPS batch 4")):
+    _g = f"{_m[_k]['forward_memory_gb']} GB"
+    ck(f"{_label} forward memory {_g} is quoted in the README", _g in README, _g)
+ck("each row measured in its own process (ru_maxrss is a process high-water mark)",
+   mp["fresh_process_per_row"] is True)
+ck("CPU and MPS memory are labelled as the different quantities they are",
+   {r["forward_memory_is"] for r in mp["rows"]} ==
+   {"forward_rss_delta_gb", "mps_driver_allocated_gb"})
+_lean = mp["leaner_x_at_batch1"]
+ck(f"leaner factor at batch 1 is {_lean}x and no artifact claims the superseded ~6x",
+   abs(_lean - round(_m["cpu1"]["forward_memory_gb"]/_m["mps1"]["forward_memory_gb"], 2)) < 1e-9
+   and all("6x less memory" not in t and "~6x leaner" not in t for t in ALL.values()),
+   f"{_lean}x")
 
 print("\nWINDOW RECOVERY")
 o = J("offset_vs_reference_prof.json")
@@ -59,15 +87,19 @@ regions = [J(f"window_generalise_r1667_{i}.json")["verdict"]["best_start_layer"]
 ck("three further PHerc1667 regions all peak at 24", regions == [24,24,24], str(regions))
 allbest = [25,23,24,21] + regions
 ck("all seven optima lie in 21..25", all(21 <= b <= 25 for b in allbest), str(allbest))
-ck("seven measurements claimed in the text",
-   all("21 to 25" in t or "21, 23, 24, 25" in t for t in (README, PR2, SUB)))
+ck("the 21 to 25 range is stated", all("21 to 25" in t for t in present(README, PR2, SUB)))
 
 print("\nSHUFFLE FLOORS (the null that makes the peak meaningful)")
-floors = [o["verdict"]["max_abs_shuffle_floor"]] + [
-    J(f"window_generalise_{t}.json")["verdict"]["max_abs_shuffle_floor"]
-    for t in ("g0139","gparis","g0814")]
-ck("no shuffle floor exceeds 0.0017", max(floors) <= 0.0017, f"max {max(floors)}")
-ck("0.0017 is the figure quoted", all("0.0017" in t for t in (README, PR2, SUB)), "")
+ty = J("window_tally.json")["summary"]
+ck(f"shuffle floor is {ty['max_shuffle_floor']} and is quoted as such",
+   all(str(ty["max_shuffle_floor"]) in t for t in present(README, PR2, SUB)),
+   f"{ty['max_shuffle_floor']}")
+ck(f"{ty['n']} measurements, best beats START_LAYER 1 in all of them",
+   ty["best_beats_one"] == ty["n"], f"{ty['best_beats_one']}/{ty['n']}")
+ck("every optimum lies in 21..25", 21 <= ty["best_min"] and ty["best_max"] <= 25,
+   f"{ty['best_min']}..{ty['best_max']}")
+ck("the N is quoted consistently", all(f"{ty['n']} independent measurements" in t
+   or f"{ty['n']} measurements" in t for t in (README,)), f"n={ty['n']}")
 
 print("\nSTRESS CHECKS")
 st = J("stress_window.json")["checks"]
@@ -121,6 +153,14 @@ print("\nFIXTURE COVERAGE")
 fx = J("canon_fixtures.json")
 ck("156 canonical 2.4um segments, none off 109 layers",
    len(fx) == 156 and all(h["layers"] == 109 for h in fx), f"{len(fx)} segments")
+
+print("\nINTERNAL CONSISTENCY (a document must not contradict itself)")
+_ty = J("window_tally.json")["summary"]
+_stale_floors = {"0.0017", "0.0013"}
+for _k, _t in ALL.items():
+    _bad = sorted(f for f in _stale_floors if f"exceeds {f}" in _t or f"floor never exceeds {f}" in _t)
+    ck(f"{_k}: quotes only one shuffle floor", not _bad,
+       f"also quotes {_bad}" if _bad else f"{_ty['max_shuffle_floor']}")
 
 print("\nHYGIENE")
 for k, t in ALL.items():

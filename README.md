@@ -33,7 +33,7 @@ untimed warmup, reported as min / median / max per villa's `AGENTS.md` rule
 
 | path | min | **median** | max | forward memory |
 |---|---|---|---|---|
-| CPU, fp32, what a Mac gets today | 3.259 | **3.261** | 3.278 | **9.52 GB** |
+| CPU, fp32, what a Mac gets today | 3.259 | **3.261** | 3.278 | **9.53 GB** |
 | MPS, autocast off | 0.524 | 0.525 | 0.526 | 2.59 GB |
 | MPS, villa's current `amp_device` | 0.525 | 0.526 | 0.527 | 2.59 GB |
 | MPS, `amp_device` corrected | 0.426 | **0.427** | 0.428 | 7.85 GB at batch 4 |
@@ -41,15 +41,32 @@ untimed warmup, reported as min / median / max per villa's `AGENTS.md` rule
 Seconds per tile. **7.63x faster.** Note rows two and three: villa's current
 autocast line times identically to autocast being switched off, which is the
 same no-op shown numerically below. The memory number matters more than the speed one. The CPU
-path costs about **9.9 GB per tile** (9.52 GB at batch 1, 19.89 GB at batch 2),
+path costs about **9.9 GB per tile** (9.53 GB at batch 1, 19.89 GB at batch 2),
 so on a 16 GB Mac one tile barely fits and two do not. MPS at batch 4 needs
 7.85 GB. For most Macs this is the difference between running the inference and
 not running it.
 
 Each configuration was measured in a **fresh process**, because `ru_maxrss` is
 a process-wide high-water mark and a single-process sweep reports the maximum
-of everything that ran before it. A first attempt did exactly that and its
-memory column was meaningless.
+of everything that ran before it.
+
+**The two memory figures are different quantities**, and the column is only
+meaningful if you read them as such: the CPU rows are `forward_rss_delta_gb`,
+the host RSS the forward pass adds, and the MPS rows are
+`mps_driver_allocated_gb`, what the Metal driver holds for it. Both come from
+`bench/mem_probe.py`; `bench/mem_summary.py` regenerates all four rows in fresh
+processes into `results/mem_probe_summary.json`.
+
+### Reproducing
+
+`bench/verify_claims.py` re-derives every number quoted here from the JSON in
+`results/` and exits nonzero if any artifact and result file disagree:
+**57 claims, 0 disagreements**. It needs nothing but this repo.
+
+Re-running the MEASUREMENTS additionally needs a villa checkout and the
+1.55 GB `r152_3ddec_v2_l5_epoch13.ckpt`, neither of which is redistributed
+here. Point `VESUV_ROOT` at a directory holding `villa/` and `models/` and the
+bench scripts will find them.
 
 ### Why the CPU path is so expensive
 

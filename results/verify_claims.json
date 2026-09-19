@@ -21,6 +21,41 @@
       "detail": "7.85 survives only as the 7.85 GB memory figure"
     },
     {
+      "name": "CPU batch 1 forward memory 9.53 GB is quoted in the README",
+      "ok": true,
+      "detail": "9.53 GB"
+    },
+    {
+      "name": "CPU batch 2 forward memory 19.89 GB is quoted in the README",
+      "ok": true,
+      "detail": "19.89 GB"
+    },
+    {
+      "name": "MPS batch 1 forward memory 2.59 GB is quoted in the README",
+      "ok": true,
+      "detail": "2.59 GB"
+    },
+    {
+      "name": "MPS batch 4 forward memory 7.85 GB is quoted in the README",
+      "ok": true,
+      "detail": "7.85 GB"
+    },
+    {
+      "name": "each row measured in its own process (ru_maxrss is a process high-water mark)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "CPU and MPS memory are labelled as the different quantities they are",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "leaner factor at batch 1 is 3.68x and no artifact claims the superseded ~6x",
+      "ok": true,
+      "detail": "3.68x"
+    },
+    {
       "name": "PHerc1667 r at START_LAYER 1",
       "ok": true,
       "detail": "0.8521"
@@ -56,19 +91,29 @@
       "detail": "[25, 23, 24, 21, 24, 24, 24]"
     },
     {
-      "name": "seven measurements claimed in the text",
+      "name": "the 21 to 25 range is stated",
       "ok": true,
       "detail": ""
     },
     {
-      "name": "no shuffle floor exceeds 0.0017",
+      "name": "shuffle floor is 0.0022 and is quoted as such",
       "ok": true,
-      "detail": "max 0.0017"
+      "detail": "0.0022"
     },
     {
-      "name": "0.0017 is the figure quoted",
+      "name": "15 measurements, best beats START_LAYER 1 in all of them",
       "ok": true,
-      "detail": ""
+      "detail": "15/15"
+    },
+    {
+      "name": "every optimum lies in 21..25",
+      "ok": true,
+      "detail": "21..25"
+    },
+    {
+      "name": "the N is quoted consistently",
+      "ok": true,
+      "detail": "n=15"
     },
     {
       "name": "stress S1_peaks_do_not_coincide",
@@ -161,6 +206,11 @@
       "detail": "156 segments"
     },
     {
+      "name": "README: quotes only one shuffle floor",
+      "ok": true,
+      "detail": "0.0022"
+    },
+    {
       "name": "README: no em or en dashes",
       "ok": true,
       "detail": ""
@@ -172,51 +222,6 @@
     },
     {
       "name": "README: no withdrawn mechanism claim",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "PR1812: no em or en dashes",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "PR1812: no AI attribution",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "PR1812: no withdrawn mechanism claim",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "PR1813: no em or en dashes",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "PR1813: no AI attribution",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "PR1813: no withdrawn mechanism claim",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "SUBMISSION: no em or en dashes",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "SUBMISSION: no AI attribution",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "SUBMISSION: no withdrawn mechanism claim",
       "ok": true,
       "detail": ""
     }

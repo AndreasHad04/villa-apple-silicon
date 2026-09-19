@@ -1,0 +1,64 @@
+{
+  "torch": "2.14.0",
+  "python": "3.11.15",
+  "fresh_process_per_row": true,
+  "rows": [
+    {
+      "device": "cpu",
+      "batch": 1,
+      "amp": "off",
+      "rss_start_gb": 0.2,
+      "rss_after_load_gb": 2.29,
+      "rss_peak_gb": 11.81,
+      "forward_rss_delta_gb": 9.53,
+      "seconds": 3.457,
+      "out_mean": -1.75486,
+      "forward_memory_gb": 9.53,
+      "forward_memory_is": "forward_rss_delta_gb"
+    },
+    {
+      "device": "cpu",
+      "batch": 2,
+      "amp": "off",
+      "rss_start_gb": 0.2,
+      "rss_after_load_gb": 2.29,
+      "rss_peak_gb": 22.17,
+      "forward_rss_delta_gb": 19.89,
+      "seconds": 7.394,
+      "out_mean": -1.751156,
+      "forward_memory_gb": 19.89,
+      "forward_memory_is": "forward_rss_delta_gb"
+    },
+    {
+      "device": "mps",
+      "batch": 1,
+      "amp": "mps",
+      "rss_start_gb": 0.2,
+      "rss_after_load_gb": 2.3,
+      "rss_peak_gb": 2.3,
+      "forward_rss_delta_gb": 0.0,
+      "seconds": 0.551,
+      "out_mean": -1.75469,
+      "mps_driver_allocated_gb": 2.59,
+      "mps_current_allocated_gb": 0.52,
+      "forward_memory_gb": 2.59,
+      "forward_memory_is": "mps_driver_allocated_gb"
+    },
+    {
+      "device": "mps",
+      "batch": 4,
+      "amp": "mps",
+      "rss_start_gb": 0.2,
+      "rss_after_load_gb": 2.3,
+      "rss_peak_gb": 2.3,
+      "forward_rss_delta_gb": 0.0,
+      "seconds": 1.835,
+      "out_mean": -1.754396,
+      "mps_driver_allocated_gb": 7.85,
+      "mps_current_allocated_gb": 0.52,
+      "forward_memory_gb": 7.85,
+      "forward_memory_is": "mps_driver_allocated_gb"
+    }
+  ],
+  "leaner_x_at_batch1": 3.68
+}

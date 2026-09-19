@@ -13,7 +13,24 @@ Reports three things and refuses to conflate them:
 import argparse, json, os, sys, time, pathlib
 import numpy as np, torch
 
-R = pathlib.Path(__file__).resolve().parent.parent
+def _find_root(start):
+    """Walk up for the tree that actually holds villa/ and models/.
+
+    bench/ lives at <repo>/bench in the published repo and at
+    ~/money/vesuv/public/bench in the working tree, and villa/ and models/ are
+    NOT published (upstream clone, 1.55 GB checkpoint). A fixed parent.parent
+    resolved to the wrong tree the moment bench/ was moved, and every script
+    here inherited it. VESUV_ROOT overrides.
+    """
+    env = os.environ.get("VESUV_ROOT")
+    if env:
+        return pathlib.Path(env).expanduser().resolve()
+    for d in [start, *start.parents]:
+        if (d / "villa").is_dir() and (d / "models").is_dir():
+            return d
+    return start.parent
+
+R = _find_root(pathlib.Path(__file__).resolve().parent)
 sys.path.insert(0, str(R / "villa" / "ink-detection" / "optimized_inference"))
 CKPT = R / "models" / "r152_3ddec_v2_l5_epoch13.ckpt"
 
