@@ -127,6 +127,33 @@ for n in ("single_layer_repeat","depth_shuffle","voxel_shuffle","per_column_shuf
     ck(f"{n} gives exactly zero confident ink", nl[n]["frac_above_0.5"] == 0.0,
        f"{nl[n]['frac_above_0.5']}")
 old = {n["null"]: n for n in J("inkdiag_prof.json")["nulls"]}
+# The battery must be reported WHOLE. A public comment once listed the five
+# nulls that return zero at the centred window and omitted depth_roll_half,
+# which returns 0.1429, i.e. the only one that does not support the reading.
+# Selective omission is not catchable by checking the quoted numbers, so the
+# test is structural: any artifact that discusses the battery must name EVERY
+# null in it.
+n1f = J("inkdiag_nulls1.json")
+n1 = {n["null"]: n for n in n1f["nulls"]}
+ck("the battery was run at BOTH windows on the same crop",
+   set(n1) == set(nl) and n1f["crop"] == J("inkdiag_nulls25.json")["crop"],
+   f"{len(n1)} nulls, crop {n1f['crop']}")
+ck("START_LAYER 1 real input is 0.3323",
+   f"{n1f['depth_profile'][0]['frac_above_0.5']:.4f}" == "0.3323",
+   f"{n1f['depth_profile'][0]['frac_above_0.5']:.4f}")
+for _n in ("single_layer_repeat", "per_column_shuffle"):
+    ck(f"{_n} is exactly zero at START_LAYER 1, so the 7.32% is not a texture reader",
+       n1[_n]["frac_above_0.5"] == 0.0, f"{n1[_n]['frac_above_0.5']}")
+ck("depth_roll_half is the null that SURVIVES at the centred window",
+   nl["depth_roll_half"]["frac_above_0.5"] > 0.1,
+   f"{nl['depth_roll_half']['frac_above_0.5']:.4f}")
+for _k, _t in ALL.items():
+    if "depth_shuffle" not in _t:
+        continue
+    _miss = sorted(x for x in nl if x not in _t)
+    ck(f"{_k}: reports the WHOLE battery, no null omitted", not _miss,
+       f"omits {_miss}" if _miss else f"all {len(nl)} named")
+
 ck("depth_shuffle at START_LAYER 1 is 0.0732 and anti-correlated",
    f"{old['depth_shuffle']['frac_above_0.5']:.4f}" == "0.0732"
    and old["depth_shuffle"]["pearson_vs_real"] < 0,

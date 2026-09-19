@@ -1,0 +1,103 @@
+{
+  "crop": [
+    20480,
+    16384,
+    1024
+  ],
+  "offsets": [
+    0
+  ],
+  "chans": 62,
+  "nominal_start": 1,
+  "device": "mps",
+  "pace": 1.0,
+  "zarr": "PHerc1667/segments/20240304141531-w013_20240304141531_flatboi/surface-volumes/2.399um-0.22m-78keV-volume-20251217075048.zarr",
+  "depth_profile": [
+    {
+      "offset": 0,
+      "z_window": [
+        1,
+        63
+      ],
+      "seconds": 21.3,
+      "mean": 0.39646780490875244,
+      "std": 0.32762837409973145,
+      "max": 0.9482149481773376,
+      "frac_above_0.5": 0.33234691619873047,
+      "separation": 0.664255,
+      "pearson_vs_offset0": 1.0
+    }
+  ],
+  "nulls": [
+    {
+      "null": "depth_shuffle",
+      "seconds": 21.1,
+      "mean": 0.19429907202720642,
+      "std": 0.1571028232574463,
+      "max": 0.8656123280525208,
+      "frac_above_0.5": 0.07316207885742188,
+      "separation": 0.572058,
+      "pearson_vs_real": -0.17529688686013575
+    },
+    {
+      "null": "phase_scramble",
+      "seconds": 20.8,
+      "mean": 0.15027548372745514,
+      "std": 0.055715832859277725,
+      "max": 0.658624529838562,
+      "frac_above_0.5": 0.008414268493652344,
+      "separation": 0.422998,
+      "pearson_vs_real": 0.1318277423444817
+    },
+    {
+      "null": "voxel_shuffle",
+      "seconds": 20.8,
+      "mean": 0.13959050178527832,
+      "std": 0.010180588811635971,
+      "max": 0.1874561458826065,
+      "frac_above_0.5": 0.0,
+      "separation": -0.139591,
+      "pearson_vs_real": 0.00930193412380823
+    },
+    {
+      "null": "depth_reverse",
+      "seconds": 20.8,
+      "mean": 0.15927812457084656,
+      "std": 0.05193858593702316,
+      "max": 0.45474156737327576,
+      "frac_above_0.5": 0.0,
+      "separation": -0.159278,
+      "pearson_vs_real": -0.1774984468983894
+    },
+    {
+      "null": "depth_roll_half",
+      "seconds": 21.2,
+      "mean": 0.25671154260635376,
+      "std": 0.264739066362381,
+      "max": 0.9616549015045166,
+      "frac_above_0.5": 0.15120220184326172,
+      "separation": 0.71389,
+      "pearson_vs_real": 0.7360393764159036
+    },
+    {
+      "null": "per_column_shuffle",
+      "seconds": 20.7,
+      "mean": 0.14786234498023987,
+      "std": 0.011940684169530869,
+      "max": 0.19676315784454346,
+      "frac_above_0.5": 0.0,
+      "separation": -0.147862,
+      "pearson_vs_real": -0.024030483137783987
+    },
+    {
+      "null": "single_layer_repeat",
+      "seconds": 20.8,
+      "mean": 0.12787780165672302,
+      "std": 0.00887312088161707,
+      "max": 0.17634601891040802,
+      "frac_above_0.5": 0.0,
+      "separation": -0.127878,
+      "pearson_vs_real": 0.08137345138343591
+    }
+  ]
+}

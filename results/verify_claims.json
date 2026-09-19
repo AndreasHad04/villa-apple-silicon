@@ -176,6 +176,36 @@
       "detail": "0.0"
     },
     {
+      "name": "the battery was run at BOTH windows on the same crop",
+      "ok": true,
+      "detail": "7 nulls, crop [20480, 16384, 1024]"
+    },
+    {
+      "name": "START_LAYER 1 real input is 0.3323",
+      "ok": true,
+      "detail": "0.3323"
+    },
+    {
+      "name": "single_layer_repeat is exactly zero at START_LAYER 1, so the 7.32% is not a texture reader",
+      "ok": true,
+      "detail": "0.0"
+    },
+    {
+      "name": "per_column_shuffle is exactly zero at START_LAYER 1, so the 7.32% is not a texture reader",
+      "ok": true,
+      "detail": "0.0"
+    },
+    {
+      "name": "depth_roll_half is the null that SURVIVES at the centred window",
+      "ok": true,
+      "detail": "0.1429"
+    },
+    {
+      "name": "README: reports the WHOLE battery, no null omitted",
+      "ok": true,
+      "detail": "all 7 named"
+    },
+    {
       "name": "depth_shuffle at START_LAYER 1 is 0.0732 and anti-correlated",
       "ok": true,
       "detail": "0.0732 / r=-0.1753"

@@ -28,10 +28,22 @@ D2, SUBSTRATE NULLS (the hallucination controls).
     voxel_shuffle  permutes all voxels in the crop. Preserves the global
                    histogram only. The weakest null and the easiest to beat.
 """
-import argparse, json, sys, time, pathlib
+import argparse, json, os, sys, time, pathlib
 import numpy as np, torch, zarr
 
-R = pathlib.Path(__file__).resolve().parent.parent
+def _find_root(start):
+    """Walk up for the tree holding villa/ and models/, so this file works both
+    at ops/ and at bench/ in the published repo. A fixed parent.parent resolved
+    to the wrong tree the moment the file was copied. VESUV_ROOT overrides."""
+    env = os.environ.get("VESUV_ROOT")
+    if env:
+        return pathlib.Path(env).expanduser().resolve()
+    for d in [start, *start.parents]:
+        if (d / "villa").is_dir() and (d / "models").is_dir():
+            return d
+    return start.parent
+
+R = _find_root(pathlib.Path(__file__).resolve().parent)
 D = R/"villa"/"ink-detection"/"optimized_inference"
 sys.path.insert(0, str(D)); sys.path.insert(0, str(R/"ops"))
 import inference as vinf
@@ -80,6 +92,21 @@ def nulls(vol, seed=0):
     out["phase_scramble"] = sc.astype(np.uint8)
     fl = vol.ravel().copy(); rng.shuffle(fl)
     out["voxel_shuffle"] = fl.reshape(vol.shape)
+    # depth_reverse: preserves EVERYTHING except direction. If ink morphology
+    # is directional (ink on one face of the sheet) this must cost something.
+    out["depth_reverse"] = vol[::-1].copy()
+    # depth_roll: preserves adjacency almost everywhere, moves absolute depth.
+    out["depth_roll_half"] = np.roll(vol, vol.shape[0]//2, axis=0)
+    # per_column_shuffle: independent permutation per (y,x). Kills depth order
+    # AND in-plane coherence, so it sits between depth_shuffle and voxel_shuffle.
+    idx = np.argsort(rng.random(vol.shape), axis=0)
+    out["per_column_shuffle"] = np.take_along_axis(vol, idx, axis=0)
+    # single_layer_repeat: THE sharpest one. Every layer replaced by a copy of
+    # the middle layer. In-plane texture is preserved perfectly and ALL depth
+    # information is destroyed. Confident ink here means the model is reading
+    # 2D texture, not 3D morphology.
+    mid = vol[vol.shape[0]//2]
+    out["single_layer_repeat"] = np.repeat(mid[None], vol.shape[0], axis=0)
     return out
 
 
