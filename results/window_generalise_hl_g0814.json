@@ -1,0 +1,31 @@
+{
+  "scroll": "PHerc0814",
+  "seg": "20250925161630-auto_grown_20250925161630635",
+  "layers": 109,
+  "crop": [
+    14292,
+    18224,
+    1024
+  ],
+  "rows": [
+    {
+      "offset": 22,
+      "start_layer": 23,
+      "pearson_vs_reference": 0.9059,
+      "pearson_vs_shuffled": -0.0007
+    },
+    {
+      "offset": 23,
+      "start_layer": 24,
+      "pearson_vs_reference": 0.8865,
+      "pearson_vs_shuffled": -0.001
+    }
+  ],
+  "verdict": {
+    "best_start_layer": 23,
+    "best_pearson": 0.9059,
+    "readme_start_layer_1_pearson": null,
+    "spread": 0.0194,
+    "max_abs_shuffle_floor": 0.001
+  }
+}

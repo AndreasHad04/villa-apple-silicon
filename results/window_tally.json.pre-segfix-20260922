@@ -198,7 +198,7 @@
     },
     {
       "scroll": "PHerc1667",
-      "seg": "20240304141531-w013_20240304141531_flatboi",
+      "seg": "20240304141531-w013 (offset sweep)",
       "crop": [
         20480,
         16384,
@@ -208,8 +208,7 @@
       "r_at_1": 0.8521,
       "best_start_layer": 25,
       "r_at_best": 0.9851,
-      "shuffle_floor": 0.0013,
-      "seg_note": "was the label '20240304141531-w013 (offset sweep)', not a segment id; corrected 2026-09-22"
+      "shuffle_floor": 0.0013
     }
   ],
   "summary": {
