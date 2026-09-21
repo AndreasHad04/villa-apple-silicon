@@ -165,7 +165,9 @@ depends almost entirely on `START_LAYER`:
 
 **15 independent measurements across 4 scrolls, and the best window beats
 `START_LAYER=1` in 15 of 15.** Best START_LAYER is 21 to 25, median
-24, and 11 of 15 land exactly on **24**. All the volumes are 109
+24. That grid does not separate 23 from 24; measured PAIRED on the same
+15 crops they are level, **23 wins 8, 24 wins 7, sign test p = 1.0000**,
+median paired difference +0.0017 in r. All the volumes are 109
 layers, so the centred window is `(109-62)//2 = 23`.
 
 Agreement at the documented setting ranges from **0.1591 to 0.9522** (median

@@ -241,6 +241,11 @@
       "detail": "0.0022"
     },
     {
+      "name": "PR1813: quotes only one shuffle floor",
+      "ok": true,
+      "detail": "0.0022"
+    },
+    {
       "name": "halflayer: wins sum to the crop count",
       "ok": true,
       "detail": "n=15"
@@ -372,6 +377,21 @@
     },
     {
       "name": "README: no withdrawn mechanism claim",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1813: no em or en dashes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1813: no AI attribution",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1813: no withdrawn mechanism claim",
       "ok": true,
       "detail": ""
     }
