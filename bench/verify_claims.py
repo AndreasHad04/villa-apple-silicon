@@ -246,6 +246,35 @@ if (R/"results"/"mps_model_coverage.json").exists():
         ck("PR1812 comment reports the non finite cell rather than smoothing it",
            "not finite" in _C12 and "undecided" in _C12.lower())
 
+if (R/"results"/"window_selector_tally.json").exists():
+    print("\nARM W, REFERENCE FREE WINDOW SELECTION")
+    ws = J("window_selector_tally.json")
+    _m = ws["median_regret"]
+    ck("ARM W: 15 crops on 4 scrolls", ws["n_crops"] == 15, f"{ws['n_crops']} crops")
+    ck("ARM W: the shuffled reference floor stays near zero",
+       ws["shuffle_floor"] < 0.01, f"{ws['shuffle_floor']}")
+    ck("ARM W: the PRE-REGISTERED primary S4 is reported as FAILING",
+       ws["primary_S4_works"] is False,
+       f"S4 median regret {_m['S4_null_collapse']}, bar {ws['bar']}")
+    ck("ARM W: S4 genuinely does not beat random, which is why it is worthless",
+       _m["S4_null_collapse"] >= _m["C1_random"],
+       f"{_m['S4_null_collapse']} vs random {_m['C1_random']}")
+    ck("ARM W: the winning selector is named from the data, not asserted",
+       ws["best_selector"] == min(
+           (k for k in _m if k.startswith("S")), key=lambda k: _m[k]),
+       ws["best_selector"])
+    ck("ARM W: the winner beats random",
+       _m[ws["best_selector"]] < _m["C1_random"],
+       f"{_m[ws['best_selector']]} vs {_m['C1_random']}")
+    if SUB is not None:
+        for f in (f"{_m['S1_separation']:.4f}", f"{_m['S4_null_collapse']:.4f}",
+                  f"{_m['C1_random']:.4f}", f"{_m['C2_readme_sl1']:.4f}"):
+            ck(f"SUBMISSION quotes ARM W's {f!r} from source", f in SUB)
+        ck("SUBMISSION reports the primary as a FAILURE rather than burying it",
+           "PRIMARY FAILED" in SUB.upper() and "worthless" in SUB)
+        ck("SUBMISSION states the scroll where the winner fails",
+           "PHerc. 0814" in SUB and "0.1732" in SUB)
+
 print("\nHYGIENE")
 for k, t in ALL.items():
     ck(f"{k}: no em or en dashes",

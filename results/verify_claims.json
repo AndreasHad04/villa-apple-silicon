@@ -366,6 +366,36 @@
       "detail": ""
     },
     {
+      "name": "ARM W: 15 crops on 4 scrolls",
+      "ok": true,
+      "detail": "15 crops"
+    },
+    {
+      "name": "ARM W: the shuffled reference floor stays near zero",
+      "ok": true,
+      "detail": "0.0022"
+    },
+    {
+      "name": "ARM W: the PRE-REGISTERED primary S4 is reported as FAILING",
+      "ok": true,
+      "detail": "S4 median regret 0.0692, bar 0.02"
+    },
+    {
+      "name": "ARM W: S4 genuinely does not beat random, which is why it is worthless",
+      "ok": true,
+      "detail": "0.0692 vs random 0.0639"
+    },
+    {
+      "name": "ARM W: the winning selector is named from the data, not asserted",
+      "ok": true,
+      "detail": "S1_separation"
+    },
+    {
+      "name": "ARM W: the winner beats random",
+      "ok": true,
+      "detail": "0.0088 vs 0.0639"
+    },
+    {
       "name": "README: no em or en dashes",
       "ok": true,
       "detail": ""
