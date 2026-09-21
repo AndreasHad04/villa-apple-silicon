@@ -1,0 +1,110 @@
+{
+  "torch": "2.14.0",
+  "mps_available": true,
+  "trained_weight_control": {
+    "what": "resnet3d-152-3d-decoder with the REAL checkpoint, autocast on MPS",
+    "fp32_finite": true,
+    "autocast_finite": true,
+    "max_abs_diff": 0.001018,
+    "verdict": "trained weights are finite on the autocast path, so the non finite random weight cell is a float16 overflow from untrained weights, not a defect in the patch"
+  },
+  "note": "random weights: this measures MPS OP COVERAGE and numeric agreement, not accuracy",
+  "rows": [
+    {
+      "model_type": "timesformer",
+      "num_frames": 26,
+      "size": 64,
+      "cpu_s": 0.077,
+      "mps_fp32_s": 0.217,
+      "mps_fp32_shape_matches": true,
+      "mps_fp32_output_finite": true,
+      "cpu_output_finite": true,
+      "mps_fp32_max_abs_diff": 1e-06,
+      "mps_fp32_status": "OK",
+      "mps_amp_s": 0.032,
+      "mps_amp_shape_matches": true,
+      "mps_amp_output_finite": true,
+      "mps_amp_max_abs_diff": 0.000566,
+      "mps_amp_status": "OK",
+      "cpu_status": "OK",
+      "out_shape": [
+        1,
+        1,
+        4,
+        4
+      ]
+    },
+    {
+      "model_type": "resnet3d-50",
+      "num_frames": 30,
+      "size": 64,
+      "cpu_s": 0.06,
+      "mps_fp32_s": 0.245,
+      "mps_fp32_shape_matches": true,
+      "mps_fp32_output_finite": true,
+      "cpu_output_finite": true,
+      "mps_fp32_max_abs_diff": 0.0,
+      "mps_fp32_status": "OK",
+      "mps_amp_s": 0.066,
+      "mps_amp_shape_matches": true,
+      "mps_amp_output_finite": true,
+      "mps_amp_max_abs_diff": 0.000143,
+      "mps_amp_status": "OK",
+      "cpu_status": "OK",
+      "out_shape": [
+        1,
+        1,
+        16,
+        16
+      ]
+    },
+    {
+      "model_type": "resnet3d-152",
+      "num_frames": 30,
+      "size": 64,
+      "cpu_s": 0.11,
+      "mps_fp32_s": 0.336,
+      "mps_fp32_shape_matches": true,
+      "mps_fp32_output_finite": true,
+      "cpu_output_finite": true,
+      "mps_fp32_max_abs_diff": 1e-06,
+      "mps_fp32_status": "OK",
+      "mps_amp_s": 0.06,
+      "mps_amp_shape_matches": true,
+      "mps_amp_output_finite": true,
+      "mps_amp_max_abs_diff": 0.000705,
+      "mps_amp_status": "OK",
+      "cpu_status": "OK",
+      "out_shape": [
+        1,
+        1,
+        16,
+        16
+      ]
+    },
+    {
+      "model_type": "resnet3d-152-3d-decoder",
+      "num_frames": 62,
+      "size": 64,
+      "cpu_s": 0.219,
+      "mps_fp32_s": 0.789,
+      "mps_fp32_shape_matches": true,
+      "mps_fp32_output_finite": true,
+      "cpu_output_finite": true,
+      "mps_fp32_max_abs_diff": 1e-06,
+      "mps_fp32_status": "OK",
+      "mps_amp_s": 0.275,
+      "mps_amp_shape_matches": true,
+      "mps_amp_output_finite": false,
+      "mps_amp_max_abs_diff": null,
+      "mps_amp_status": "RUNS but output not finite: UNDECIDED",
+      "cpu_status": "OK",
+      "out_shape": [
+        1,
+        1,
+        16,
+        16
+      ]
+    }
+  ]
+}
