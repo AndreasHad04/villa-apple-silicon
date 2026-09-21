@@ -241,6 +241,126 @@
       "detail": "0.0022"
     },
     {
+      "name": "halflayer: wins sum to the crop count",
+      "ok": true,
+      "detail": "n=15"
+    },
+    {
+      "name": "halflayer: every crop really carries both windows",
+      "ok": true,
+      "detail": "15 rows"
+    },
+    {
+      "name": "halflayer: the sign test agrees with the recounted wins",
+      "ok": true,
+      "detail": "8 to 7"
+    },
+    {
+      "name": "halflayer: the shuffled reference floor stays near zero",
+      "ok": true,
+      "detail": "0.0012"
+    },
+    {
+      "name": "halflayer: the window fix dwarfs the half layer",
+      "ok": true,
+      "detail": "+0.2224 against +0.0017"
+    },
+    {
+      "name": "PR1813 comment quotes '23 wins 8, 24 wins 7' from source",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1813 comment quotes 'p = 1.0000' from source",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1813 comment quotes '0.7474' from source",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1813 comment quotes '0.9698' from source",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1813 comment quotes '+0.2224' from source",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1813 comment quotes '0.0012' from source",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1813 comment states the grid defect rather than hiding it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1813 comment does not claim the window finding as ours",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "coverage: all four model types are present",
+      "ok": true,
+      "detail": "4 types"
+    },
+    {
+      "name": "coverage: every type RUNS on MPS in fp32 and autocast",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "coverage: a non finite output is UNDECIDED, never OK",
+      "ok": true,
+      "detail": "fail open on nan would break this"
+    },
+    {
+      "name": "coverage: fp32 agrees with the CPU to 1e-06 or better",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "coverage: the trained weight control ran and is finite",
+      "ok": true,
+      "detail": "max abs diff 0.001018"
+    },
+    {
+      "name": "PR1812 comment quotes 'torch 2.14.0' from source",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1812 comment quotes '0.001018' from source",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1812 comment quotes '#1764' from source",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1812 comment quotes '#1770' from source",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1812 comment quotes 'timesformer' from source",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PR1812 comment reports the non finite cell rather than smoothing it",
+      "ok": true,
+      "detail": ""
+    },
+    {
       "name": "README: no em or en dashes",
       "ok": true,
       "detail": ""

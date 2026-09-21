@@ -189,6 +189,63 @@ for _k, _t in ALL.items():
     ck(f"{_k}: quotes only one shuffle floor", not _bad,
        f"also quotes {_bad}" if _bad else f"{_ty['max_shuffle_floor']}")
 
+# ---- the two 2026-09-22 comments: every figure they quote, re-derived ----
+_C13 = _opt(R/"results"/"PR1813_COMMENT_halflayer.md")
+_C12 = _opt(R/"results"/"PR1812_COMMENT_coverage.md")
+_HL = (R/"results"/"halflayer.json")
+if _HL.exists():
+    print("\nHALF LAYER, 23 AGAINST 24")
+    h = J("halflayer.json")
+    ck("halflayer: wins sum to the crop count",
+       h["wins_23"] + h["wins_24"] + h["ties"] == h["n"], f"n={h['n']}")
+    ck("halflayer: every crop really carries both windows",
+       all("r23" in x and "r24" in x for x in h["rows"]), f"{len(h['rows'])} rows")
+    ck("halflayer: the sign test agrees with the recounted wins",
+       h["wins_23"] == sum(1 for x in h["rows"] if x["diff"] > 0) and
+       h["wins_24"] == sum(1 for x in h["rows"] if x["diff"] < 0),
+       f"{h['wins_23']} to {h['wins_24']}")
+    ck("halflayer: the shuffled reference floor stays near zero",
+       h["worst_shuffle_floor"] < 0.01, f"{h['worst_shuffle_floor']}")
+    ck("halflayer: the window fix dwarfs the half layer",
+       abs(h["window_fix_worth"]) > 20 * abs(h["median_diff"]),
+       f"{h['window_fix_worth']:+.4f} against {h['median_diff']:+.4f}")
+    if _C13:
+        for f in (f"23 wins {h['wins_23']}, 24 wins {h['wins_24']}",
+                  f"p = {h['sign_test_p']:.4f}",
+                  f"{h['median_r_at_1']:.4f}", f"{h['median_r_at_best_half']:.4f}",
+                  f"{h['window_fix_worth']:+.4f}", f"{h['worst_shuffle_floor']:.4f}"):
+            ck(f"PR1813 comment quotes {f!r} from source", f in _C13)
+        ck("PR1813 comment states the grid defect rather than hiding it",
+           has(_C13, "14 contained", "not 23"))
+        ck("PR1813 comment does not claim the window finding as ours",
+           "flummoxjr" in _C13 and "priority" in _C13.lower())
+if (R/"results"/"mps_model_coverage.json").exists():
+    print("\nMPS MODEL COVERAGE, ALL FOUR TYPES")
+    mc = J("mps_model_coverage.json")
+    _r = {x["model_type"]: x for x in mc["rows"]}
+    ck("coverage: all four model types are present",
+       set(_r) == {"timesformer", "resnet3d-50", "resnet3d-152",
+                   "resnet3d-152-3d-decoder"}, f"{len(_r)} types")
+    ck("coverage: every type RUNS on MPS in fp32 and autocast",
+       all(str(x.get("mps_fp32_status","")).startswith(("OK","RUNS")) and
+           str(x.get("mps_amp_status","")).startswith(("OK","RUNS")) for x in _r.values()))
+    ck("coverage: a non finite output is UNDECIDED, never OK",
+       all((x.get("mps_amp_status") == "OK") == bool(x.get("mps_amp_output_finite"))
+           for x in _r.values()),
+       "fail open on nan would break this")
+    ck("coverage: fp32 agrees with the CPU to 1e-06 or better",
+       all(x["mps_fp32_max_abs_diff"] <= 1e-6 for x in _r.values()))
+    _ct = mc["trained_weight_control"]
+    ck("coverage: the trained weight control ran and is finite",
+       _ct.get("autocast_finite") is True and _ct.get("max_abs_diff") is not None,
+       f"max abs diff {_ct.get('max_abs_diff')}")
+    if _C12:
+        for f in (f"torch {mc['torch']}", str(_ct["max_abs_diff"]),
+                  "#1764", "#1770", "timesformer"):
+            ck(f"PR1812 comment quotes {f!r} from source", f in _C12)
+        ck("PR1812 comment reports the non finite cell rather than smoothing it",
+           "not finite" in _C12 and "undecided" in _C12.lower())
+
 print("\nHYGIENE")
 for k, t in ALL.items():
     ck(f"{k}: no em or en dashes",
