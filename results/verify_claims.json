@@ -396,6 +396,206 @@
       "detail": "0.0088 vs 0.0639"
     },
     {
+      "name": "ARM X: README states the C1 gate as the data decided it",
+      "ok": true,
+      "detail": "FAIL"
+    },
+    {
+      "name": "ARM X: README verdict is the pre-registered verdict, verbatim",
+      "ok": true,
+      "detail": "UNDECIDED: C1 failed, or a primary segme"
+    },
+    {
+      "name": "ARM X: nothing claims TRANSFERS unless the verdict is TRANSFERS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: quotes the C1 primary AUC 0.7740",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: quotes the pipeline diagnostic 0.9123",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: c1_p0139_w016 primary AUC 0.7740 quoted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: p0500p2a primary AUC 0.4912 quoted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: p0841_ag144 primary AUC 0.6989 quoted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: p0841_ag174 primary AUC 0.6743 quoted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: p0841_w00 primary AUC 0.6931 quoted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: ensemble_seed42+43_final held-out median 0.6889",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed42_step-010000 held-out median 0.6618",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed42_step-020000 held-out median 0.6528",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed42_step-030000 held-out median 0.6616",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed42_step-040000 held-out median 0.6741",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed42_step-050000 held-out median 0.6589",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed42_step-060000 held-out median 0.6708",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed42_step-075000 held-out median 0.6837",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed43_step-010000 held-out median 0.6366",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed43_step-020000 held-out median 0.6613",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed43_step-030000 held-out median 0.6198",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed43_step-040000 held-out median 0.6433",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed43_step-050000 held-out median 0.6764",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed43_step-060000 held-out median 0.6492",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: seed43_step-075000 held-out median 0.6738",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0500p2a k=-4 0.4760",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0500p2a k=-2 0.4839",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0500p2a k=0 0.4912",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0500p2a k=2 0.4859",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0500p2a k=4 0.4628",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0841_ag144 k=-4 0.7051",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0841_ag144 k=-2 0.6975",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0841_ag144 k=0 0.6989",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0841_ag144 k=2 0.6915",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0841_ag144 k=4 0.6366",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0841_ag174 k=-4 0.6955",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0841_ag174 k=-2 0.6863",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0841_ag174 k=0 0.6743",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0841_ag174 k=2 0.6974",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: depth check p0841_ag174 k=4 0.6962",
+      "ok": true,
+      "detail": ""
+    },
+    {
       "name": "README quotes bf16 table value 26.255 from hecate_bf16.json",
       "ok": true,
       "detail": ""

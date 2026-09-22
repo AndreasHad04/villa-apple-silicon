@@ -1,0 +1,260 @@
+[
+ {
+  "dir": "ink/unused/500p2a",
+  "labels": [
+   "500p2a_inklabels.tif"
+  ],
+  "masks": [
+   "500p2a_supervision_mask.tif"
+  ],
+  "ct_zarr": [
+   "500p2a.zarr"
+  ],
+  "volume": "202506011949-0500P_116KeV_4.32_bin_1m_090_4um_ds1",
+  "scroll": "0500P2",
+  "has_validation": false,
+  "shape": [
+   26239,
+   16182
+  ],
+  "sup_px": 34871346,
+  "ink_px": 12230762,
+  "ink_frac": 0.3507,
+  "sup_bbox": [
+   6424,
+   25418,
+   3303,
+   12314
+  ],
+  "label_values": [
+   0,
+   255
+  ]
+ },
+ {
+  "dir": "ink/unused/P343p/20250511003658",
+  "labels": [
+   "20250511003658_inklabels.tif"
+  ],
+  "masks": [
+   "20250511003658_supervision_mask.tif"
+  ],
+  "ct_zarr": [
+   "20250511003658.zarr"
+  ],
+  "volume": null,
+  "scroll": null,
+  "has_validation": false,
+  "shape": [
+   13491,
+   8099
+  ],
+  "sup_px": 866331,
+  "ink_px": 866331,
+  "ink_frac": 1.0,
+  "sup_bbox": [
+   2388,
+   3699,
+   4597,
+   6605
+  ],
+  "label_values": [
+   0,
+   255
+  ]
+ },
+ {
+  "dir": "ink/841/auto_grown_20260220144552896",
+  "labels": [
+   "auto_grown_20260220144552896_inklabels.tif"
+  ],
+  "masks": [
+   "auto_grown_20260220144552896_supervision_mask.tif"
+  ],
+  "ct_zarr": [
+   "auto_grown_20260220144552896.zarr"
+  ],
+  "volume": "4.681um_113keV_1.2m_binmean_2_PHerc_0841",
+  "scroll": "PHerc0841",
+  "has_validation": true,
+  "shape": [
+   16763,
+   18712
+  ],
+  "sup_px": 7682871,
+  "ink_px": 2548406,
+  "ink_frac": 0.3317,
+  "sup_bbox": [
+   2321,
+   4931,
+   8819,
+   13689
+  ],
+  "label_values": [
+   0,
+   255
+  ]
+ },
+ {
+  "dir": "ink/841/auto_grown_20260220174252405",
+  "labels": [
+   "auto_grown_20260220174252405_inklabels.tif"
+  ],
+  "masks": [
+   "auto_grown_20260220174252405_supervision_mask.tif"
+  ],
+  "ct_zarr": [
+   "auto_grown_20260220174252405.zarr"
+  ],
+  "volume": "4.681um_113keV_1.2m_binmean_2_PHerc_0841",
+  "scroll": "PHerc0841",
+  "has_validation": true,
+  "shape": [
+   14268,
+   19413
+  ],
+  "sup_px": 7791693,
+  "ink_px": 2516443,
+  "ink_frac": 0.323,
+  "sup_bbox": [
+   4727,
+   7389,
+   8061,
+   13006
+  ],
+  "label_values": [
+   0,
+   255
+  ]
+ },
+ {
+  "dir": "ink/841/w00",
+  "labels": [
+   "w00_inklabels.tif"
+  ],
+  "masks": [
+   "w00_supervision_mask.tif"
+  ],
+  "ct_zarr": [
+   "w00.zarr"
+  ],
+  "volume": "4.681um_113keV_1.2m_binmean_2_PHerc_0841",
+  "scroll": "PHerc0841",
+  "has_validation": true,
+  "shape": [
+   15872,
+   18944
+  ],
+  "sup_px": 17134476,
+  "ink_px": 5464797,
+  "ink_frac": 0.3189,
+  "sup_bbox": [
+   2502,
+   13408,
+   10227,
+   16293
+  ],
+  "label_values": [
+   0,
+   255
+  ]
+ },
+ {
+  "dir": "ink/man5/MAN5_outer_3",
+  "labels": [
+   "MAN5_outer_3_inklabels.tif"
+  ],
+  "masks": [
+   "MAN5_outer_3_supervision_mask.tif"
+  ],
+  "ct_zarr": [
+   "MAN5_outer_3.zarr"
+  ],
+  "volume": null,
+  "scroll": null,
+  "has_validation": true,
+  "shape": [
+   24061,
+   29841
+  ],
+  "sup_px": 11217139,
+  "ink_px": 3199163,
+  "ink_frac": 0.2852,
+  "sup_bbox": [
+   3857,
+   14472,
+   10626,
+   14119
+  ],
+  "label_values": [
+   0,
+   255
+  ]
+ },
+ {
+  "dir": "ink/0009b/auto_grown_20250919055754487_inp_hr_2um",
+  "labels": [
+   "auto_grown_20250919055754487_inp_hr_2um_inklabels.tif",
+   "auto_grown_20250919055754487_inp_hr_inklabels.tif"
+  ],
+  "masks": [
+   "auto_grown_20250919055754487_inp_hr_2um_supervision_mask.tif",
+   "auto_grown_20250919055754487_inp_hr_supervision_mask.tif"
+  ],
+  "ct_zarr": [
+   "auto_grown_20250919055754487_inp_hr_2um.zarr"
+  ],
+  "volume": null,
+  "scroll": null,
+  "has_validation": true,
+  "shape": [
+   25984,
+   21248
+  ],
+  "sup_px": 25432012,
+  "ink_px": 8116717,
+  "ink_frac": 0.3192,
+  "sup_bbox": [
+   18792,
+   23663,
+   6810,
+   16888
+  ],
+  "label_values": [
+   0,
+   255
+  ]
+ },
+ {
+  "dir": "ink/0500p2/-1",
+  "labels": [
+   "-1_inklabels.tif"
+  ],
+  "masks": [
+   "-1_supervision_mask.tif"
+  ],
+  "ct_zarr": [
+   "-1.zarr"
+  ],
+  "volume": null,
+  "scroll": null,
+  "has_validation": true,
+  "shape": [
+   24659,
+   13696
+  ],
+  "sup_px": 25914492,
+  "ink_px": 9518929,
+  "ink_frac": 0.3673,
+  "sup_bbox": [
+   8431,
+   21416,
+   158,
+   10440
+  ],
+  "label_values": [
+   0,
+   255
+  ]
+ }
+]

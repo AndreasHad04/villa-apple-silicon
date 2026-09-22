@@ -275,6 +275,53 @@ if (R/"results"/"window_selector_tally.json").exists():
         ck("SUBMISSION states the scroll where the winner fails",
            "PHerc. 0814" in SUB and "0.1732" in SUB)
 
+print("\nARM X, CROSS-SCROLL TRANSFER OF ink_9um")
+_ax = R / "results" / "xs" / "armx_scores.json"
+_f5 = R / "results" / "FORM_FIELD5_ARMX.txt"
+if not _ax.exists() or "<!-- armx:start -->" not in README:
+    print("  NOTE: ARM X not published here, not checked")
+else:
+    _S = json.loads(_ax.read_text()); _V, _G = _S["verdict"], _S["segments"]
+    _sec = README[README.index("<!-- armx:start -->"):README.index("<!-- armx:end -->")]
+    _docs = {"README": _sec}
+    if _f5.exists(): _docs["FORM"] = _f5.read_text()
+    _gate = "PASS" if _V["C1_pass"] else "FAIL"
+    ck("ARM X: README states the C1 gate as the data decided it", f"bar 0.85: **{_gate}**" in _sec, _gate)
+    ck("ARM X: README verdict is the pre-registered verdict, verbatim", f"Verdict: **{_V['verdict']}**" in _sec, _V["verdict"][:40])
+    ck("ARM X: nothing claims TRANSFERS unless the verdict is TRANSFERS",
+       _V["verdict"] == "TRANSFERS" or all("TRANSFERS" not in t for t in _docs.values()))
+    for _n, _t in _docs.items():
+        ck(f"ARM X {_n}: quotes the C1 primary AUC {_V['C1_auc_chosen_direction']:.4f}", f"{_V['C1_auc_chosen_direction']:.4f}" in _t)
+        _dg = _V.get("C1_diagnostic_seed43_step060000_forward")
+        if _dg is not None:
+            ck(f"ARM X {_n}: quotes the pipeline diagnostic {_dg:.4f}", f"{_dg:.4f}" in _t)
+    for _s, _r in _G.items():
+        _pp = _r["rows"].get("hybrid_3d2d-seed42_step-075000", {})
+        if "auc_chosen" in _pp:
+            ck(f"ARM X README: {_s} primary AUC {_pp['auc_chosen']:.4f} quoted", f"**{_pp['auc_chosen']:.4f}**" in _sec)
+    _PRIM = ["p0841_w00", "p0841_ag144", "p0841_ag174", "p0500p2a"]
+    for _k in sorted({k for r in _G.values() for k in r["rows"]}):
+        _held = [_G[s]["rows"][_k]["auc_chosen"] for s in _PRIM if s in _G and _k in _G[s]["rows"] and "auc_chosen" in _G[s]["rows"][_k]]
+        if len(_held) == len(_PRIM):
+            _m = f"{float(sorted(_held)[1] + sorted(_held)[2]) / 2:.4f}"
+            ck(f"ARM X README: {_k.replace('hybrid_3d2d-', '')} held-out median {_m}", f"| {_m} (4 of 4) |" in _sec)
+    for _f in sorted((R / "results" / "xs" / "depthcheck").glob("*.json")):
+        _j = json.loads(_f.read_text())
+        if len(_j["auc_by_shift"]) >= 2:
+            for _k, _v in _j["auc_by_shift"].items():
+                ck(f"ARM X README: depth check {_j['segment']} k={_k} {_v:.4f}", f"{_v:.4f}" in _sec)
+    _iss = R / "results" / "ARMX_ISSUE.md"
+    if _iss.exists(): _docs["ISSUE"] = _iss.read_text()
+    for _n in ("FORM", "ISSUE"):
+        if _n in _docs:
+            _miss = sorted({x for x in re.findall(r"(?<![\d.])-?\d\.\d{3,4}(?![\d])", _docs[_n]) if x not in _sec})
+            for _h, _t in re.findall(r"in (\d+) of (\d+) (?:\(segment, checkpoint\) )?cases", _docs[_n]):
+                ck(f"ARM X {_n}: direction-rule count {_h} of {_t} matches the README", f"in {_h} of {_t} (segment, checkpoint) cases" in _sec)
+            ck(f"ARM X {_n}: every 4-decimal number also appears in the README section generated from the JSON", not _miss, ", ".join(_miss[:5]))
+            ck(f"ARM X {_n}: no em or en dashes, no AI attribution", not any(chr(c) in _docs[_n] for c in (0x2014, 0x2013)) and "claude" not in _docs[_n].lower())
+    if "primary_median" in _V and "FORM" in _docs:
+        ck("ARM X FORM: quotes the primary median", f"{_V['primary_median']:.4f}" in _docs["FORM"])
+
 print("\nHECATE PRECISION ON MPS")
 # Added 2026-09-23: the README's bf16 table had NO check until now.
 for _n, _mode in (("hecate_bf16.json", "bf16"), ("hecate_fp16.json", "fp16")):

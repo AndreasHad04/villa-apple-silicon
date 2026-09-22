@@ -1,0 +1,13 @@
+{
+ "segment": "c1_p0139_w016",
+ "ckpt": "hybrid_3d2d-seed42/step-075000.pth",
+ "direction": "forward",
+ "window_base": [
+  0,
+  21
+ ],
+ "auc_by_shift": {
+  "0": 0.7740156267213227
+ },
+ "exploratory": true
+}
