@@ -512,3 +512,30 @@ a variant that silently fell back to fp32 would produce two identical timings
 and look like a pass.
 
 Raw numbers in `results/hecate_bf16.json`.
+
+<!-- hecate-fp16:start -->
+### fp16 on Apple Silicon: the half precision that does help
+
+The opposite result for fp16. `bench/hecate_fp16.py` runs the same pipeline on
+the same crop, in one process, fp32 then fp16, one untimed warmup and three timed
+repetitions each. The only change to `hecate.py` is three lines: accept `fp16`
+in the precision check for cuda or mps, pass `dtype=torch.float16` to the
+existing autocast when it is selected, and add it to the `--precision` choices.
+fp32 stays the default.
+
+| `--precision` on MPS | min | median | max |
+|---|---|---|---|
+| `fp32` | 30.280 | **30.313** | 30.545 |
+| `fp16` | 22.391 | **22.581** | 25.248 |
+
+**fp16 is 1.34x faster on the median.** Against the fp32 output
+the largest difference is 1 of 255, 1.67% of pixels move by
+one quantisation step, and **66 of 1,048,576 pixels cross the 0.5 ink
+threshold**, against 813 for bf16. Both precisions ran in the same process under
+the same machine load, which is why fp32 here reads slower than in the bf16 table
+above: compare within a table, not across them.
+
+The unmodified module is asserted to refuse `fp16` first, so a variant that
+silently ran fp32 twice could not pass as a speedup. Raw numbers in
+`results/hecate_fp16.json`.
+<!-- hecate-fp16:end -->

@@ -275,6 +275,23 @@ if (R/"results"/"window_selector_tally.json").exists():
         ck("SUBMISSION states the scroll where the winner fails",
            "PHerc. 0814" in SUB and "0.1732" in SUB)
 
+print("\nHECATE PRECISION ON MPS")
+# Added 2026-09-23: the README's bf16 table had NO check until now.
+for _n, _mode in (("hecate_bf16.json", "bf16"), ("hecate_fp16.json", "fp16")):
+    if not (R / "results" / _n).exists():
+        print(f"  NOTE: {_n} not published here, not checked"); continue
+    _h = J(_n); _a, _b, _c = _h["fp32_mps"], _h[f"{_mode}_mps"], _h[f"{_mode}_vs_fp32"]
+    for _v in (_a["min"], _a["median"], _a["max"], _b["min"], _b["median"], _b["max"]):
+        ck(f"README quotes {_mode} table value {_v:.3f} from {_n}", f"{_v:.3f}" in README)
+    _x = f"{_c['pixels_crossing_0.5']:,} of {_c['total_pixels']:,}"
+    ck(f"README quotes the {_mode} decision flips {_x!r}", _x in README, _x)
+    if _mode == "bf16":
+        _r = round(float(_a["median"]) / float(_b["median"]), 2)
+        ck("README calls bf16 1.54x SLOWER and the data agree", _r == 0.65 and "**bf16 is 1.54x slower**" in README, f"ratio {_r}")
+    else:
+        _r = f"{_h['speedup_median']:.2f}x"
+        ck(f"README quotes the fp16 speedup {_r}", f"**fp16 is {_r} faster on the median.**" in README, _r)
+
 print("\nHYGIENE")
 for k, t in ALL.items():
     ck(f"{k}: no em or en dashes",

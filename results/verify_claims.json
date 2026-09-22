@@ -396,6 +396,86 @@
       "detail": "0.0088 vs 0.0639"
     },
     {
+      "name": "README quotes bf16 table value 26.255 from hecate_bf16.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README quotes bf16 table value 26.284 from hecate_bf16.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README quotes bf16 table value 26.374 from hecate_bf16.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README quotes bf16 table value 40.301 from hecate_bf16.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README quotes bf16 table value 40.356 from hecate_bf16.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README quotes bf16 table value 41.110 from hecate_bf16.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README quotes the bf16 decision flips '813 of 1,048,576'",
+      "ok": true,
+      "detail": "813 of 1,048,576"
+    },
+    {
+      "name": "README calls bf16 1.54x SLOWER and the data agree",
+      "ok": true,
+      "detail": "ratio 0.65"
+    },
+    {
+      "name": "README quotes fp16 table value 30.280 from hecate_fp16.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README quotes fp16 table value 30.313 from hecate_fp16.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README quotes fp16 table value 30.545 from hecate_fp16.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README quotes fp16 table value 22.391 from hecate_fp16.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README quotes fp16 table value 22.581 from hecate_fp16.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README quotes fp16 table value 25.248 from hecate_fp16.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "README quotes the fp16 decision flips '66 of 1,048,576'",
+      "ok": true,
+      "detail": "66 of 1,048,576"
+    },
+    {
+      "name": "README quotes the fp16 speedup 1.34x",
+      "ok": true,
+      "detail": "1.34x"
+    },
+    {
       "name": "README: no em or en dashes",
       "ok": true,
       "detail": ""
