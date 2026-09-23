@@ -80,9 +80,12 @@ if dc:
         L.append(f"| {NAMES.get(j['segment'], j['segment'])} | {j['direction']} | " + " | ".join(f4(a_.get(str(k))) for k in (-4, -2, 0, 2, 4)) + " |")
 pairs = [(s, k) for s in SEG for k in SEG[s]["rows"] if k.startswith("hybrid") and SEG[s]["rows"][k].get("chosen")]
 if pairs:
-    hits = sum(SEG[s]["rows"][k]["auc_chosen"] == SEG[s]["rows"][k]["auc_oracle"] for s, k in pairs)
+    EXPL = {s for s, n in NAMES.items() if "(exploratory)" in n}
+    kept = lambda ps: sum(SEG[s]["rows"][k]["auc_chosen"] == SEG[s]["rows"][k]["auc_oracle"] for s, k in ps)
+    pre = [(s, k) for s, k in pairs if s not in EXPL]; ex = len(pairs) - len(pre)
     gap = max(abs(SEG[s]["rows"][k]["forward"]["auc"] - SEG[s]["rows"][k]["reverse"]["auc"]) for s, k in pairs if s in PRIM)
-    L += ["", f"Direction: the label-free rule kept the better direction in {hits} of {len(pairs)} (segment, checkpoint) cases; "
+    both = f" ({kept(pairs)} of {len(pairs)} including the {len({s for s, _ in pairs} & EXPL)} exploratory segments)" if ex else ""
+    L += ["", f"Direction: over the pre-registered segments the label-free rule kept the better direction in {kept(pre)} of {len(pre)} (segment, checkpoint) cases{both}; "
           f"the largest forward-reverse gap on a held-out segment is {gap:.4f}."]
     jj = [json.loads(f.read_text()) for f in dc]; jj = [j for j in jj if len(j["auc_by_shift"]) >= 2]
     if jj:
