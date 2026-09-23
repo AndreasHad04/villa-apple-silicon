@@ -322,6 +322,47 @@ else:
     if "primary_median" in _V and "FORM" in _docs:
         ck("ARM X FORM: quotes the primary median", f"{_V['primary_median']:.4f}" in _docs["FORM"])
 
+print("\nARM Y AND ARM Z, THE SAME PHerc0841 SEGMENTS ON THREE ORGANISER ARRAYS")
+_ay, _az = R / "results" / "ys" / "army_scores.json", R / "results" / "zs" / "armz_scores.json"
+if not (_ay.exists() and _az.exists()) or "<!-- armyz:start -->" not in README:
+    print("  NOTE: ARM Y/Z not published here, not checked")
+else:
+    _Y, _Z = json.loads(_ay.read_text()), json.loads(_az.read_text()); _P = "hybrid_3d2d-seed42_step-075000"
+    _ysec = README[README.index("<!-- armyz:start -->"):README.index("<!-- armyz:end -->")]
+    _xsec = README[README.index("<!-- armx:start -->"):README.index("<!-- armx:end -->")]
+    for _k in ("w00", "ag144", "ag174"):
+        _w = f"w{_Y['segments'][_k]['prep']['production_window'][0]:02d}"; _ry = _Y["segments"][_k]["windows"][_w][_P]; _rz = _Z["segments"][_k]["rows"][_P]
+        for _lab, _v in (("2.403 um forward", _ry["forward"]["auc"]), ("2.403 um reverse", _ry["reverse"]["auc"]), ("9.366 um forward", _rz["forward"]["auc"]),
+                         ("9.366 um reverse", _rz["reverse"]["auc"]), ("C3", _Y["segments"][_k]["C3"]["auc"])):
+            ck(f"ARM Y/Z README: {_k} {_lab} {_v:.4f}", f"{_v:.4f}" in _ysec)
+        ck(f"ARM Y/Z README: C4 PASS on {_k}", _Y["segments"][_k]["prep"]["C4"]["pass_"] and f"{_k} PASS" in _ysec)
+    for _name, _v in (("Y1", _Y["Y1"]["verdict"]), ("Y2", _Y["Y2"]["verdict"]), ("Z1", _Z["Z1"]["verdict"])) + ((("Y3", _Y["Y3"]["verdict"]),) if "Y3" in _Y else ()):
+        ck(f"ARM Y/Z README: {_name} verdict verbatim", f"**{_v}**" in _ysec, _v[:40])
+    for _v in (_Y["Y2"]["published_median"], _Y["Y2"]["render_median"], _Z["Z1"]["eligible_median"], _Y["Y2"]["c1_in_distribution"]):
+        ck(f"ARM Y/Z README: median {_v:.4f}", f"{_v:.4f}" in _ysec)
+    if "ALLCKPT" in _Y:
+        _A = _Y["ALLCKPT"]
+        for _lab, _v in (("C1 vs 2.403 Spearman", _A["spearman_c1_vs_published"]), ("C1 correct-direction vs 2.403 Spearman", _A["spearman_c1oracle_vs_published"]),
+                         ("render vs 2.403 Spearman", _A["spearman_render_vs_published"]), ("best single 2.403", _A["best_single_median"])):
+            ck(f"ARM Y/Z README: {_lab} {_v:.4f}", f"{_v:.4f}" in _ysec)
+        for _c, _v in _A["published_median"].items():
+            ck(f"ARM Y/Z README: {_c.replace('hybrid_3d2d-', '')} 2.403 median {_v:.4f}", f"| {_v:.4f} |" in _ysec)
+        ck("ARM Y/Z README: the two wrong-direction C1 rows are named", all(c.replace("hybrid_3d2d-", "") in _ysec for c in _A["c1_rule_wrong"]))
+        _dk = _A["direction_rule_kept_better"]; ck(f"ARM Y/Z README: direction rule {_dk[0]} of {_dk[1]}", f"**{_dk[0]} of {_dk[1]}**" in _ysec)
+    if "ALLCKPT" in _Z:
+        _B = _Z["ALLCKPT"]
+        for _lab, _v in (("C1 vs eligible", _B["Z2_spearman_c1_vs_eligible"]), ("C1 correct vs eligible", _B["Z2_spearman_c1oracle_vs_eligible"]),
+                         ("render vs eligible", _B["Z3_spearman_render_vs_eligible"]), ("best single eligible", _B["Z4_best_single_median"]), ("finals averaged eligible", _B["Z4_ensemble_finals"])):
+            ck(f"ARM Y/Z README: {_lab} {_v:.4f}", f"{_v:.4f}" in _ysec)
+    ck("ARM X README section carries the render note generated from ARM Y/Z",
+       "as a property of the organisers' 4.681 um renders, not of the scroll" in _xsec and f"{_Z['Z1']['eligible_median']:.4f}" in _xsec)
+    _docs2 = {n: (R / "results" / f).read_text() for n, f in (("REPLY", "ys/REPLY_1867_armyz.md"), ("FORM", "FORM_FIELD5_ARMYZ.txt"), ("C1582", "ys/COMMENT_1582_family.md")) if (R / "results" / f).exists()}
+    for _n, _t in _docs2.items():
+        _miss = sorted({x for x in re.findall(r"(?<![\d.])-?\d\.\d{3,4}(?![\d])", _t) if x not in _ysec and x not in _xsec})
+        ck(f"ARM Y/Z {_n}: every 4-decimal number appears in the generated README sections", not _miss, ", ".join(_miss[:5]))
+        ck(f"ARM Y/Z {_n}: no em or en dashes, no AI attribution", not any(chr(c) in _t for c in (0x2014, 0x2013)) and "claude" not in _t.lower())
+        ck(f"ARM Y/Z {_n}: does not repeat the retracted 'weaker on PHerc0841' reading", "weaker signal on" not in _t and "weaker evidence than" not in _t)
+
 print("\nHECATE PRECISION ON MPS")
 # Added 2026-09-23: the README's bf16 table had NO check until now.
 for _n, _mode in (("hecate_bf16.json", "bf16"), ("hecate_fp16.json", "fp16")):
