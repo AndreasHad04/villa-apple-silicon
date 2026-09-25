@@ -844,6 +844,7 @@ P conditions are compared with P0, N conditions with N0. Every condition's trans
 - F5 (NSH), per segment w030 -0.0046, w045 +0.0014; median over w030 and w045: -0.0016, does not transfer.
 - F5b (NSDH), per segment w030 +0.0004, w045 +0.0038; median over w030 and w045: +0.0021, does not transfer.
 - F5c (NDH), per segment w030 +0.0140, w045 +0.0043; median over w030 and w045: +0.0092, small, as measured.
+- w043, descriptive (its 2.399 um render is a training representation): NDH -0.0182, ND -0.0122, NSDH -0.0244, NSH -0.0220.
 - Sensitivity (pre-registered, not an endpoint): labels placed by a per-axis scale and offset fitted to the four quadrant alignment peaks instead of one shift: F5 (NSH) -0.0011, F5b (NSDH) +0.0035, F5c (NDH) +0.0097.
 
 w030 and w045 are in no ink_9um training representation; w043's 2.399 um render is a training representation, its native render is not. F5b and F5c share these segments (two tests).

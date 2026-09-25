@@ -28,6 +28,7 @@ corr_n = float(np.mean([np.mean(P[s]["layer_corr_native"]) for s in SEGS])); cor
 corr_800 = float(np.mean(p800["adjacent_corr"]))
 f5c = F5.get("F5c"); f6 = F6.get("F6")
 fresh = []
+w043 = F5["auc"]["w043"]["NDH"] - F5["auc"]["w043"]["N0"]
 if f5c: fresh.append(("PHerc0139 (a training scroll, whose native scan supplied 5 training representations)", f5c["per_segment"], f5c["median_gain"], f5c["verdict"]))
 if f6: fresh.append(("PHerc0009B (8.64 um, 116 keV) and PHerc0500P2 (9.362 um, 113 keV), never in training", f6["per_segment"], f6["mean_gain"], f6["verdict"]))
 f6ok = bool(f6 and f6["verdict"] == "transfers"); f5ok = bool(f5c and f5c["verdict"] == "transfers")
@@ -46,7 +47,9 @@ nd6 = {n: v["ND"] - v["N0"] for n, v in F6["auc"].items() if v.get("ND") is not 
 def fresh_lines():
     out = []
     for lab, per, m, v in fresh:
-        out.append(f"- {lab}: " + ", ".join(f"{k} {sg(x)}" for k, x in per.items()) + f"; {'median' if 'PHerc0139' in lab else 'mean'} {sg(m)}, {v}.")
+        tail = (f" Descriptive, not in the endpoint: w043, whose 2.399 um render is a training representation, {sg(w043)}. The in-plane variants did not"
+                f" transfer here either (NSH {sg(F5['F5']['median_gain'])}, NSDH {sg(F5['F5b']['median_gain'])}).") if "PHerc0139" in lab else ""
+        out.append(f"- {lab}: " + ", ".join(f"{k} {sg(x)}" for k, x in per.items()) + f"; {'median' if 'PHerc0139' in lab else 'mean'} {sg(m)}, {v}.{tail}")
     if nd6: out.append("- Chosen after seeing those numbers, so exploratory: on the two scrolls never in training the depth filter alone, without the"
                        " PHerc0841 intensity map (`--no-map`), did better: " + ", ".join(f"{k} {sg(x)}" for k, x in nd6.items()) + f", mean {sg(float(np.mean(list(nd6.values()))))}.")
     return "\n".join(out)
@@ -73,7 +76,7 @@ issue = f"""ink_9um loses AUC on the eligible 1.2 m scans mainly through depth b
 
 {limits}
 
-**What would fix it at the root** is on the training side: the model saw mostly 2.4 um-derived inputs, which are sharper in depth than any eligible scan. Depth-blur augmentation, or more native 1.2 m renders in training, would address the cause instead of the input.
+**What would fix it at the root** is on the training side: the model saw mostly 2.4 um-derived inputs, which are sharper in depth than every 1.2 m render measured here (PHerc0841, PHerc0800). Depth-blur augmentation, or more native 1.2 m renders in training, would address the cause instead of the input.
 """
 c1582 = f"""A follow-up to my 2026-09-23 comment here, on WHY the native family reads worse on an unseen scroll. Label-free, the 9.366 um render differs from the pooled 2.403 um one mainly in depth blur, not in placement; the pre-registered primary endpoint, an in-plane fix, failed ({sg(f1["median_gain"])}); blurring the pooled input in depth as well as in plane reproduces {100 * pdz / gap:.0f}% of the family gap, against {100 * f2['median_drop'] / gap:.0f}% for in plane alone; and {recover}. Full write-up and fresh-scroll tests: {SEC}
 """

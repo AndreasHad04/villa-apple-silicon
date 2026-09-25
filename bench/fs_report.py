@@ -89,6 +89,10 @@ if f5:
         if k in f5:
             per = ", ".join(f"{n} {sg(x)}" for n, x in f5[k]["per_segment"].items())
             L.append(f"- {k} ({lab}), per segment {per}; median over w030 and w045: {sg(f5[k]['median_gain'])}, {f5[k]['verdict']}.")
+    w43 = f5["auc"].get("w043", {})
+    if w43.get("N0") is not None:
+        L.append("- w043, descriptive (its 2.399 um render is a training representation): " + ", ".join(
+            f"{c} {sg(w43[c] - w43['N0'])}" for c in ("NDH", "ND", "NSDH", "NSH") if w43.get(c) is not None) + ".")
     af = json.load(open(R / "f5_affine.json")) if (R / "f5_affine.json").exists() else None
     if af:
         L.append("- Sensitivity (pre-registered, not an endpoint): labels placed by a per-axis scale and offset fitted to the four quadrant"
