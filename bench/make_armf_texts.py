@@ -76,7 +76,7 @@ issue = f"""ink_9um on the eligible 1.2 m scans: depth blur is the largest ident
 
 {limits}
 
-**What would fix it at the root** is on the training side: the model saw mostly 2.4 um-derived inputs, which are sharper in depth than every 1.2 m render measured here (PHerc0841, PHerc0800). Depth-blur augmentation, or more native 1.2 m renders in training, would address the cause instead of the input.
+**On the training side:** the model saw mostly 2.4 um-derived inputs, which are sharper in depth than every 1.2 m render measured here (PHerc0841, PHerc0800). villa's default ink recipe already blurs all three axes on a minority of patches (per-axis sigma 0.3 to 1.5); the eligible scans correspond to a fixed blur inside that range (see the README's Gaussian calibration) applied to every input. A training arm that applies that calibrated depth blur to most patches, or more native 1.2 m renders in training, is the untested direct fix.
 """
 c1582 = f"""A follow-up to my 2026-09-23 comment here, on WHY the native family reads worse on an unseen scroll. Label-free, the 9.366 um render differs from the pooled 2.403 um one in blur, in depth as well as in plane, not in placement; the pre-registered primary endpoint, an in-plane fix, failed ({sg(f1["median_gain"])}); blurring the pooled input in depth as well as in plane reproduces {100 * pdz / gap:.0f}% of the family gap, against {100 * f2['median_drop'] / gap:.0f}% for in plane alone; and {recover}. Full write-up and fresh-scroll tests: {SEC}
 """

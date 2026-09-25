@@ -38,6 +38,14 @@ p800 = json.load(open(R / "p0800_depth_probe.json")) if (R / "p0800_depth_probe.
 cn = float(np.mean([np.mean(P[s]["layer_corr_native"]) for s in SEGS])); cp = float(np.mean([np.mean(P[s]["layer_corr_pooled"]) for s in SEGS]))
 L.append(f"\nMean adjacent-layer correlation: native {cn:.3f}, 2.403 um {cp:.3f}" + (f"; a PHerc0800 8.64 um 116 keV render (the other eligible"
          f" configuration, no labels) {float(np.mean(p800['adjacent_corr'])):.3f}." if p800 else "."))
+BC = json.load(open(R / "blur_calibration.json")) if (R / "blur_calibration.json").exists() else None
+if BC:
+    rng = lambda k: f"{min(v[k] for v in BC.values()):.3f} to {max(v[k] for v in BC.values()):.3f}"
+    L.append(f"\nAs a Gaussian (label free, `ops/fs_calib.py`): the eligible input matches the 2.403 um one blurred by sigma {rng('inplane_sigma')} px"
+             f" in plane (matched on the fraction of power above 0.6 of Nyquist) and {rng('depth_sigma_after_inplane')} layers in depth after that"
+             f" ({rng('depth_sigma_alone')} layers if depth alone is blurred), matched on adjacent-layer correlation. villa's default ink recipe"
+             " already draws a per-axis blur sigma from 0.3 to 1.5 for a minority of training patches (the Gaussian blur at probability 0.3"
+             " times 0.5 per channel), so the eligible scans sit inside that range but carry it on every input.")
 L.append("\nThe native sheet sits within half a 9.366 um layer of the 2.403 um one, so depth placement is not the"
          " difference. The native layers are far more correlated with their neighbours: more depth blur.\n")
 L.append("## Conditions, chosen-direction AUC\n")

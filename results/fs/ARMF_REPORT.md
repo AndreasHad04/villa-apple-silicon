@@ -14,6 +14,8 @@ Model: ink_9um seed42 step-075000 (the primary checkpoint of ARM X to Z), villa'
 
 Mean adjacent-layer correlation: native 0.812, 2.403 um 0.699; a PHerc0800 8.64 um 116 keV render (the other eligible configuration, no labels) 0.873.
 
+As a Gaussian (label free, `ops/fs_calib.py`): the eligible input matches the 2.403 um one blurred by sigma 0.675 to 0.700 px in plane (matched on the fraction of power above 0.6 of Nyquist) and 0.550 to 0.575 layers in depth after that (0.600 to 0.625 layers if depth alone is blurred), matched on adjacent-layer correlation. villa's default ink recipe already draws a per-axis blur sigma from 0.3 to 1.5 for a minority of training patches (the Gaussian blur at probability 0.3 times 0.5 per channel), so the eligible scans sit inside that range but carry it on every input.
+
 The native sheet sits within half a 9.366 um layer of the 2.403 um one, so depth placement is not the difference. The native layers are far more correlated with their neighbours: more depth blur.
 
 ## Conditions, chosen-direction AUC
