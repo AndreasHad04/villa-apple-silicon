@@ -363,6 +363,54 @@ else:
         ck(f"ARM Y/Z {_n}: no em or en dashes, no AI attribution", not any(chr(c) in _t for c in (0x2014, 0x2013)) and "claude" not in _t.lower())
         ck(f"ARM Y/Z {_n}: does not repeat the retracted 'weaker on PHerc0841' reading", "weaker signal on" not in _t and "weaker evidence than" not in _t)
 
+print("\nARM F, THE ELIGIBLE-SCAN GAP AND THE DEPTH FILTER")
+_af = R / "results" / "fs" / "armf_scores.json"
+if not _af.exists() or "<!-- armf:start -->" not in README:
+    print("  NOTE: ARM F not published here, not checked")
+else:
+    _F = json.loads(_af.read_text()); _P = "hybrid_3d2d-seed42_step-075000"
+    _fsec = README[README.index("<!-- armf:start -->"):README.index("<!-- armf:end -->")]
+    for _k, _rows in _F["segments"].items():
+        for _c, _r in _rows.items():
+            if _P in _r and "auc_chosen" in _r[_P]:
+                ck(f"ARM F README: {_k} {_c} {_r[_P]['auc_chosen']:.4f}", f"{_r[_P]['auc_chosen']:.4f}" in _fsec)
+    ck("ARM F README: F1 verdict verbatim, the primary FAILED", f"Verdict: {_F['F1']['verdict']}." in _fsec and _F["F1"]["verdict"] == "not repairable this way",
+       _F["F1"]["verdict"])
+    ck(f"ARM F README: F1 median {_F['F1']['median_gain']:+.4f}", f"{_F['F1']['median_gain']:+.4f}" in _fsec)
+    ck("ARM F README: F2 verdict verbatim", _F["F2"]["verdict"] in _fsec, _F["F2"]["verdict"])
+    ck("ARM F: C0 and C-DOSE pass and are stated", _F["C0"]["pass_"] and _F["C_DOSE"]["pass_"] and "C0: N0 and P0 reproduce" in _fsec and "C-DOSE (blurring must not help): PASS" in _fsec)
+    _n14 = R / "results" / "fs" / "armf_ndh14.json"
+    if _n14.exists():
+        _S = json.loads(_n14.read_text())["summary"]
+        ck(f"ARM F README: all-checkpoint count {_S['pairs_improved']} of {_S['pairs']}", f"**improved in {_S['pairs_improved']} of {_S['pairs']} checkpoint" in _fsec)
+    _f5p = R / "results" / "fs" / "f5_scores.json"
+    if _f5p.exists():
+        _G = json.loads(_f5p.read_text())
+        for _n, _v in _G["auc"].items():
+            for _c, _x in _v.items():
+                if _x is not None: ck(f"ARM F README: PHerc0139 {_n} {_c} {_x:.4f}", f"{_x:.4f}" in _fsec)
+        for _e in ("F5", "F5b", "F5c"):
+            if _e in _G: ck(f"ARM F README: {_e} {_G[_e]['median_gain']:+.4f} {_G[_e]['verdict']}", f"{_G[_e]['median_gain']:+.4f}, {_G[_e]['verdict']}." in _fsec)
+    _tool, _par = R / "public" / "bench" / "depth_sharpen_9um.py", R / "public" / "bench" / "depth_sharpen_9um.json"
+    _d5 = R / "data" / "f5" / "data"
+    if _tool.exists() and _par.exists() and _d5.exists():
+        import importlib.util, zarr as _zarr, numpy as _np
+        _sp = importlib.util.spec_from_file_location("_ds9", _tool); _m = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(_m)
+        for _n in sorted(p.name for p in (_d5 / "fs").iterdir() if (p / "NDH" / "ct.zarr").exists()):
+            _src = _np.asarray(_zarr.open_array(str(_d5 / "zs" / _n / "w04" / "ct.zarr"), mode="r")[:])
+            for _c, _um in (("NDH", True), ("ND", False)):
+                _ref = _np.asarray(_zarr.open_array(str(_d5 / "fs" / _n / _c / "ct.zarr"), mode="r")[:])
+                ck(f"ARM F tool: bench/depth_sharpen_9um.py reproduces the tested {_c} input on PHerc0139 {_n}", bool(_np.array_equal(_m.sharpen(_src, 9.362, _um), _ref)))
+    else:
+        print("  NOTE: tool equivalence needs the local data tree, not checked here")
+    _docs3 = {n: (R / "results" / f).read_text() for n, f in (("ISSUE", "fs/ISSUE_armf.md"), ("C1582", "fs/COMMENT_1582_armf.md"), ("FORM", "FORM_FIELD5_ARMF.txt"),
+                                                            ("DISCORD", "fs/DISCORD_armf.md"), ("C1867", "fs/COMMENT_1867_armf.md"), ("R1898", "fs/REPLY_1898_khj1222.md")) if (R / "results" / f).exists()}
+    for _n, _t in _docs3.items():
+        _miss = sorted({x for x in re.findall(r"(?<![\d.])-?\d\.\d{3,4}(?![\d])", _t) if x not in README})
+        ck(f"ARM F {_n}: every 3 or 4 decimal number appears in the generated README", not _miss, ", ".join(_miss[:5]))
+        ck(f"ARM F {_n}: no em or en dashes, no AI attribution", not any(chr(c) in _t for c in (0x2014, 0x2013)) and "claude" not in _t.lower())
+        ck(f"ARM F {_n}: states that the pre-registered primary failed", "primary" in _t.lower() and ("failed" in _t.lower() or "did not" in _t.lower()))
+
 print("\nHECATE PRECISION ON MPS")
 # Added 2026-09-23: the README's bf16 table had NO check until now.
 for _n, _mode in (("hecate_bf16.json", "bf16"), ("hecate_fp16.json", "fp16")):
@@ -379,6 +427,43 @@ for _n, _mode in (("hecate_bf16.json", "bf16"), ("hecate_fp16.json", "fp16")):
     else:
         _r = f"{_h['speedup_median']:.2f}x"
         ck(f"README quotes the fp16 speedup {_r}", f"**fp16 is {_r} faster on the median.**" in README, _r)
+
+print("\nSEED VERSUS STEP (reply to PedroR4321 on #1867)")
+_sd, _rp = R / "results" / "seed_decomp.json", R / "results" / "ys" / "REPLY_1867_pedro.md"
+if not _sd.exists() or not _rp.exists():
+    print("  NOTE: seed decomposition not published here, not checked")
+else:
+    _S = json.loads(_sd.read_text()); _t = _rp.read_text(); _ok = {"2.403", "9.366", "4.681"}
+    for _a in _S["arrays"].values():
+        _ok |= {f"{100 * _a[_k]:.1f}" for _k in ("share_seed", "share_step", "share_resid")}
+        _ok |= {f"{_a['between_seed_gap_mean']:+.4f}", f"{_a['between_seed_gap_mean']:+.3f}", f"{_a['step_effect_corr_between_seeds']:+.2f}"}
+    for _r in _S["c1_ranking"].values():
+        _ok |= {f"{_v:+.2f}" for _v in _r.values()}
+    _bad = [x for x in re.findall(r"[+-]?\d+\.\d+", _t) if x not in _ok]
+    ck("REPLY 1867 seed vs step: every number is generated from results/seed_decomp.json", not _bad, ", ".join(_bad[:5]))
+    ck("REPLY 1867 seed vs step: no em or en dashes, no AI attribution",
+       not any(chr(c) in _t for c in (0x2014, 0x2013)) and "claude" not in _t.lower())
+
+print("\nFIFTH SEPTEMBER RESPONSE (plain summary of #1898 and evidence of use)")
+_f5, _ev = R / "results" / "FORM_FIELD5_USE.txt", R / "results" / "evidence"
+if not _f5.exists() or not all((R / "results" / "fs" / f).exists() for f in ("armf_scores.json", "f6_scores.json")):
+    print("  NOTE: fifth response not published here, not checked")
+else:
+    import statistics as _st
+    _t = _f5.read_text(); _FF = json.loads((R / "results" / "fs" / "armf_scores.json").read_text()); _P = "hybrid_3d2d-seed42_step-075000"
+    _ndh = _st.median(r["NDH"][_P]["auc_chosen"] - r["N0"][_P]["auc_chosen"] for r in _FF["segments"].values() if "NDH" in r and "N0" in r and _P in r["NDH"])
+    _ours = {f"{json.loads((R / 'results' / 'zs' / 'armz_scores.json').read_text())['Z1']['eligible_median']:.4f}",f"{json.loads((R / 'results' / 'ys' / 'army_scores.json').read_text())['Y2']['published_median']:.4f}",
+             f"{_ndh:+.4f}", f"{json.loads((R / 'results' / 'fs' / 'f6_scores.json').read_text())['F6']['mean_gain']:+.4f}"}
+    _ext = {"+0.029": "bullo27_1898_5845328465.md", "+0.062": "bullo27_1898_5845328465.md", "+0.018": "bullo27_1898_5845328465.md", "+0.010": "lil_1907_5859563049.md"}
+    _nums = set(re.findall(r"[+-]?\d\.\d{3,4}", _t)) - {"2.403", "9.366"}
+    ck("FORM 5 (use): every 3 or 4 decimal number is ours from JSON or quoted from a saved source", _nums <= (_ours | set(_ext)), ", ".join(sorted(_nums - _ours - set(_ext))))
+    ck("FORM 5 (use): all four of our figures are present", _ours <= _nums, ", ".join(sorted(_ours - _nums)))
+    ck("FORM 5 (use): each quoted external figure is in its saved source",
+       all((_ev / f).exists() and x in (_ev / f).read_text() for x, f in _ext.items() if x in _nums))
+    ck("FORM 5 (use): the pre-registration credit is in liliandevarieux's saved file",
+       "Practice borrowed from" in (_ev / "lil_prereg_head.md").read_text() and "pre-registering" in _t)
+    ck("FORM 5 (use): the negative (no readable letters) is stated", "does not make letters readable" in _t and "does not by itself produce legible letters" in _t)
+    ck("FORM 5 (use): no em or en dashes, no AI attribution", not any(chr(c) in _t for c in (0x2014, 0x2013)) and "claude" not in _t.lower())
 
 print("\nHYGIENE")
 for k, t in ALL.items():

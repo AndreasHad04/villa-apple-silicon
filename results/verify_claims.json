@@ -426,6 +426,21 @@
       "detail": ""
     },
     {
+      "name": "ARM X README: man5_outer3 primary AUC 0.4767 quoted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: p0009b primary AUC 0.7462 quoted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README: p0500p2_m1 primary AUC 0.7025 quoted",
+      "ok": true,
+      "detail": ""
+    },
+    {
       "name": "ARM X README: p0500p2a primary AUC 0.4912 quoted",
       "ok": true,
       "detail": ""
@@ -596,6 +611,561 @@
       "detail": ""
     },
     {
+      "name": "ARM Y/Z README: w00 2.403 um forward 0.8531",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: w00 2.403 um reverse 0.5324",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: w00 9.366 um forward 0.7680",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: w00 9.366 um reverse 0.5631",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: w00 C3 0.9714",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: C4 PASS on w00",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: ag144 2.403 um forward 0.8176",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: ag144 2.403 um reverse 0.5938",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: ag144 9.366 um forward 0.7599",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: ag144 9.366 um reverse 0.5440",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: ag144 C3 0.9206",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: C4 PASS on ag144",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: ag174 2.403 um forward 0.8294",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: ag174 2.403 um reverse 0.5363",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: ag174 9.366 um forward 0.7614",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: ag174 9.366 um reverse 0.6033",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: ag174 C3 0.8691",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: C4 PASS on ag174",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: Y1 verdict verbatim",
+      "ok": true,
+      "detail": "SUPPORTED: direction is a property of th"
+    },
+    {
+      "name": "ARM Y/Z README: Y2 verdict verbatim",
+      "ok": true,
+      "detail": "input-array effect: at or above C1"
+    },
+    {
+      "name": "ARM Y/Z README: Z1 verdict verbatim",
+      "ok": true,
+      "detail": "between the two, as measured"
+    },
+    {
+      "name": "ARM Y/Z README: Y3 verdict verbatim",
+      "ok": true,
+      "detail": "slice does not matter on this array"
+    },
+    {
+      "name": "ARM Y/Z README: median 0.8294",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: median 0.6931",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: median 0.7614",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: median 0.7740",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: C1 vs 2.403 Spearman -0.2967",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: C1 correct-direction vs 2.403 Spearman -0.0725",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: render vs 2.403 Spearman 0.6352",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: best single 2.403 0.8512",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed42_step-010000 2.403 median 0.8290",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed42_step-020000 2.403 median 0.8120",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed42_step-030000 2.403 median 0.8250",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed42_step-040000 2.403 median 0.8170",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed42_step-050000 2.403 median 0.8175",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed42_step-060000 2.403 median 0.8253",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed42_step-075000 2.403 median 0.8294",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed43_step-010000 2.403 median 0.8074",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed43_step-020000 2.403 median 0.8512",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed43_step-030000 2.403 median 0.7985",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed43_step-040000 2.403 median 0.8041",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed43_step-050000 2.403 median 0.8314",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed43_step-060000 2.403 median 0.8005",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: seed43_step-075000 2.403 median 0.8205",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: the two wrong-direction C1 rows are named",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: direction rule 42 of 42",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: C1 vs eligible -0.0198",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: C1 correct vs eligible -0.3011",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: render vs eligible 0.5429",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: best single eligible 0.7796",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM Y/Z README: finals averaged eligible 0.7826",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM X README section carries the render note generated from ARM Y/Z",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: w00 N0 0.7680",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: w00 NS 0.8008",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: w00 NH 0.7871",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: w00 NSH 0.8187",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: w00 NSDH 0.8357",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: w00 NINV 0.7503",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: w00 ND 0.7965",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: w00 NDH 0.8115",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: w00 P0 0.8531",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: w00 PDEG 0.8433",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: w00 PDEGZ 0.8197",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag144 N0 0.7599",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag144 NS 0.7500",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag144 NH 0.7504",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag144 NSH 0.7517",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag144 NSDH 0.7769",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag144 NINV 0.7471",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag144 ND 0.7801",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag144 NDH 0.7837",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag144 P0 0.8176",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag144 PDEG 0.8070",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag144 PDEGZ 0.7837",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag174 N0 0.7614",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag174 NS 0.7537",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag174 NH 0.7740",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag174 NSH 0.7596",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag174 NSDH 0.7708",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag174 NINV 0.7481",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag174 ND 0.7832",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag174 NDH 0.7905",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag174 P0 0.8294",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag174 PDEG 0.8216",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: ag174 PDEGZ 0.7839",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: F1 verdict verbatim, the primary FAILED",
+      "ok": true,
+      "detail": "not repairable this way"
+    },
+    {
+      "name": "ARM F README: F1 median -0.0018",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: F2 verdict verbatim",
+      "ok": true,
+      "detail": "explains less than half the gap"
+    },
+    {
+      "name": "ARM F: C0 and C-DOSE pass and are stated",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: all-checkpoint count 41 of 42",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w030 N0 0.9207",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w030 NSH 0.9161",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w030 NSDH 0.9210",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w030 NDH 0.9347",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w030 ND 0.9348",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w030 P0 0.9968",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w045 N0 0.8866",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w045 NSH 0.8880",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w045 NSDH 0.8904",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w045 NDH 0.8909",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w045 ND 0.8913",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w045 P0 0.9733",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w043 N0 0.8707",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w043 NSH 0.8487",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w043 NSDH 0.8464",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w043 NDH 0.8526",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w043 ND 0.8585",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: PHerc0139 w043 P0 0.9996",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: F5 -0.0016 does not transfer",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: F5b +0.0021 does not transfer",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ARM F README: F5c +0.0092 small, as measured",
+      "ok": true,
+      "detail": ""
+    },
+    {
       "name": "README quotes bf16 table value 26.255 from hecate_bf16.json",
       "ok": true,
       "detail": ""
@@ -674,6 +1244,16 @@
       "name": "README quotes the fp16 speedup 1.34x",
       "ok": true,
       "detail": "1.34x"
+    },
+    {
+      "name": "REPLY 1867 seed vs step: every number is generated from results/seed_decomp.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "REPLY 1867 seed vs step: no em or en dashes, no AI attribution",
+      "ok": true,
+      "detail": ""
     },
     {
       "name": "README: no em or en dashes",
