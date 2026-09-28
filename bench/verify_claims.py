@@ -465,6 +465,43 @@ else:
     ck("FORM 5 (use): the negative (no readable letters) is stated", "does not make letters readable" in _t and "does not by itself produce legible letters" in _t)
     ck("FORM 5 (use): no em or en dashes, no AI attribution", not any(chr(c) in _t for c in (0x2014, 0x2013)) and "claude" not in _t.lower())
 
+print("\nFLINJ (can ink_9um draw a letter on the eligible scan type)")
+_fd = R / "results" / "flinj" / "report_data.json"
+_fl = next((q for q in (R / "ops" / "flinj", R / "bench" / "flinj") if (q / "make_flinj_texts.py").exists()), None)
+if not _fd.exists() or _fl is None or "<!-- FLINJ:BEGIN -->" not in README:
+    print("  NOTE: FLINJ not published here, not checked")
+else:
+    import hashlib as _hl, os as _os, subprocess as _sp, statistics as _st, tempfile as _tf
+    _sec = README.split("<!-- FLINJ:BEGIN -->")[1].split("<!-- FLINJ:END -->")[0].strip("\n")
+    with _tf.TemporaryDirectory() as _td:
+        _r = _sp.run([sys.executable, str(_fl / "make_flinj_texts.py")], capture_output=True, text=True,
+                     env={**_os.environ, "FLINJ_TEXT_OUT": _td, "FLINJ_JSON": str(_fd)})
+        _nomodels = _r.returncode != 0 and "all_ckpts" in _r.stderr   # the pipeline modules need models/ (14 checkpoints)
+        if _nomodels:
+            print("  NOTE: generator re-run skipped: it needs the 14 ink_9um checkpoints under models/; the checks below still run")
+        else:
+            ck("FLINJ: the generator runs on this repo's report_data.json", _r.returncode == 0, _r.stderr.strip()[-200:])
+        _g = {n: (pathlib.Path(_td) / n).read_text() if (pathlib.Path(_td) / n).exists() else None
+              for n in ("PUBLIC_SECTION.md", "FORM_FIELD5_FLINJ.txt", "DISCORD_FLINJ.md")}
+    if not _nomodels:
+        ck("FLINJ: the README section is exactly what report_data.json generates now",
+           _g["PUBLIC_SECTION.md"] is not None and _sec == _g["PUBLIC_SECTION.md"].strip("\n"))
+        for _n in ("FORM_FIELD5_FLINJ.txt", "DISCORD_FLINJ.md"):
+            if (R / "results" / "flinj" / _n).exists():
+                ck(f"FLINJ: {_n} is exactly what the JSON generates now", (R / "results" / "flinj" / _n).read_text() == _g[_n])
+    ck("FLINJ: the README section is the committed PUBLIC_SECTION.md",
+       (R / "results" / "flinj" / "PUBLIC_SECTION.md").exists() and _sec == (R / "results" / "flinj" / "PUBLIC_SECTION.md").read_text().strip("\n"))
+    _H = json.loads(_fd.read_text()); _inc = [h for h in _H if not _H[h].get("excluded")]
+    _med = _st.median(_H[h]["pairs"]["primary"]["C_b3"] for h in _inc)   # recomputed here, independent of the generator
+    ck("FLINJ: the headline median C, recomputed here, is the README's", f"median C {_med:.4f}" in _sec, f"{_med:.4f}")
+    ck("FLINJ: every host's C in the table is its primary C_b3", all(f"| {_H[h]['pairs']['primary']['C_b3']:.4f} |" in _sec for h in _inc))
+    ck("FLINJ: STROKES follows from the registered bar (median >= 0.5) and all primaries pass the floor",
+       _med >= 0.5 and all(_H[h]["pairs"]["primary"]["b3_defined"] for h in _inc) and "verdict is STROKES" in _sec)
+    ck("FLINJ: the registration and all four amendments hash to what prereg.sha256 records",
+       all(_hl.sha256((R / "results" / "flinj" / f).read_bytes()).hexdigest() in (R / "results" / "flinj" / "prereg.sha256").read_text()
+           for f in ("PREREGISTRATION_FLINJ.md", "AMENDMENT_1.md", "AMENDMENT_2.md", "AMENDMENT_3.md", "AMENDMENT_4.md")))
+    ck("FLINJ: the limits are stated", has(_sec, "Limits:", "113 keV scans only", "loses part of what the model uses"))
+
 print("\nHYGIENE")
 for k, t in ALL.items():
     ck(f"{k}: no em or en dashes",

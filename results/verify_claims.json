@@ -1256,6 +1256,56 @@
       "detail": ""
     },
     {
+      "name": "FLINJ: the generator runs on this repo's report_data.json",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "FLINJ: the README section is exactly what report_data.json generates now",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "FLINJ: FORM_FIELD5_FLINJ.txt is exactly what the JSON generates now",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "FLINJ: DISCORD_FLINJ.md is exactly what the JSON generates now",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "FLINJ: the README section is the committed PUBLIC_SECTION.md",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "FLINJ: the headline median C, recomputed here, is the README's",
+      "ok": true,
+      "detail": "0.8384"
+    },
+    {
+      "name": "FLINJ: every host's C in the table is its primary C_b3",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "FLINJ: STROKES follows from the registered bar (median >= 0.5) and all primaries pass the floor",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "FLINJ: the registration and all four amendments hash to what prereg.sha256 records",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "FLINJ: the limits are stated",
+      "ok": true,
+      "detail": ""
+    },
+    {
       "name": "README: no em or en dashes",
       "ok": true,
       "detail": ""

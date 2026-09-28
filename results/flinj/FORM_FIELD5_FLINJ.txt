@@ -1,0 +1,7 @@
+Which data: PHerc0841's 9.366 um scan (three labelled segments) and PHerc0500P2's 9.362 um scan, both taken with the 1.2 m / 113 keV setup of the First Letters scans.
+
+How it raises the chance of reading: it tells First Letters work where not to spend effort. I planted real ink, cut from labelled PHerc0841 ink, in the shape of Greek letters into eligible-type scans, with an identical non-ink transplant as control, and ran ink_9um on both. The model keeps the letter shape (counter contrast median 0.8384, registered verdict STROKES, positive control passed on 3 of 4 hosts). What hides letters is weak response (AUC 0.61 to 0.71 against the non-ink control, 0.06 to 0.14 below the same model on real labelled ink) and a stronger response to depth-disordered input (the same ink with shuffled depth planes: AUC 0.81 to 0.90).
+
+What it enables: a test with known letters on the eligible scan type, so any 9 um model or pipeline can be checked for whether it can show a letter before it is run on a scroll nobody can read yet.
+
+Evidence: pre-registered test (four amendments, all made before the final design's outcome was computed), full report, figures and code: https://github.com/AndreasHad04/villa-apple-silicon#can-ink_9um-draw-a-letter-on-the-eligible-scan-type
