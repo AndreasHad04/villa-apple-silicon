@@ -502,6 +502,42 @@ else:
            for f in ("PREREGISTRATION_FLINJ.md", "AMENDMENT_1.md", "AMENDMENT_2.md", "AMENDMENT_3.md", "AMENDMENT_4.md")))
     ck("FLINJ: the limits are stated", has(_sec, "Limits:", "113 keV scans only", "loses part of what the model uses"))
 
+print("\nSPEC (does teaching ink_9um to ignore depth-shuffled input help)")
+_sd, _sq = R / "results" / "spec" / "spec_scores.json", R / "results" / "spec" / "flinj" / "rescore.json"
+_sg = next((q for q in (R / "ops" / "spec", R / "bench" / "spec") if (q / "make_spec_texts.py").exists()), None)
+if not _sd.exists() or not _sq.exists() or _sg is None or "<!-- SPEC:BEGIN -->" not in README:
+    print("  NOTE: SPEC not published here, not checked")
+else:
+    import hashlib as _hl, os as _os, subprocess as _sp, statistics as _st, tempfile as _tf
+    _sec = README.split("<!-- SPEC:BEGIN -->")[1].split("<!-- SPEC:END -->")[0].strip("\n")
+    with _tf.TemporaryDirectory() as _td:
+        _r = _sp.run([sys.executable, str(_sg / "make_spec_texts.py")], capture_output=True, text=True,
+                     env={**_os.environ, "SPEC_TEXT_OUT": _td, "SPEC_JSON": str(_sd), "SPEC_RESCORE": str(_sq)})
+        ck("SPEC: the generator runs on this repo's JSON", _r.returncode == 0, _r.stderr.strip()[-200:])
+        _g = {n: (pathlib.Path(_td) / n).read_text() if (pathlib.Path(_td) / n).exists() else None
+              for n in ("PUBLIC_SECTION.md", "DISCORD_SPEC.md")}
+    ck("SPEC: the README section is exactly what the JSON generates now",
+       _g["PUBLIC_SECTION.md"] is not None and _sec == _g["PUBLIC_SECTION.md"].strip("\n"))
+    ck("SPEC: the README section is the committed PUBLIC_SECTION.md",
+       (R / "results" / "spec" / "PUBLIC_SECTION.md").exists() and _sec == (R / "results" / "spec" / "PUBLIC_SECTION.md").read_text().strip("\n"))
+    if (R / "results" / "spec" / "DISCORD_SPEC.md").exists():
+        ck("SPEC: DISCORD_SPEC.md is exactly what the JSON generates now", (R / "results" / "spec" / "DISCORD_SPEC.md").read_text() == _g["DISCORD_SPEC.md"])
+    _S, _Q = json.loads(_sd.read_text()), json.loads(_sq.read_text()); _cr = ["w00", "ag144", "ag174", "p0500p2"]
+    _d = [_S["rows"]["T"][c]["real"]["auc"] - _S["rows"]["K"][c]["real"]["auc"] for c in _cr]   # recomputed from the rows
+    _dm, _nw = _st.median(_d), sum(x > 0 for x in _d)
+    ck("SPEC: the headline median change, recomputed from the rows, is the README's", f"is {_dm:+.4f}" in _sec, f"{_dm:+.4f}")
+    ck("SPEC: the count of crops where the fine-tune is higher is the README's", f"higher on {_nw} of 4 crops" in _sec, str(_nw))
+    ck("SPEC: NULL follows from the registered bars (WIN >= +0.010 with 3 of 4; HARM <= -0.010)",
+       not (_dm >= 0.010 and _nw >= 3) and not (_dm <= -0.010) and _S["verdict"] == "NULL" and "verdict NULL" in _sec)
+    ck("SPEC: positive control and manipulation check passed on all 4 crops",
+       all(_S["positive_control"].values()) and all(_S["manipulation"].values()))
+    ck("SPEC: the planted-letter re-score reproduced FLINJ's stored predictions exactly (control)",
+       all(v == 0 for v in _Q["control"].values()))
+    ck("SPEC: the registration hashes to what prereg.sha256 records",
+       _hl.sha256((R / "results" / "spec" / "PREREGISTRATION_SPEC.md").read_bytes()).hexdigest()
+       in (R / "results" / "spec" / "prereg.sha256").read_text())
+    ck("SPEC: the limits are stated", has(_sec, "**Limits.**", "Transductive", "113 keV scans only"))
+
 print("\nHYGIENE")
 for k, t in ALL.items():
     ck(f"{k}: no em or en dashes",

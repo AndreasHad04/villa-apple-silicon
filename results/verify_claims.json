@@ -1306,6 +1306,61 @@
       "detail": ""
     },
     {
+      "name": "SPEC: the generator runs on this repo's JSON",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SPEC: the README section is exactly what the JSON generates now",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SPEC: the README section is the committed PUBLIC_SECTION.md",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SPEC: DISCORD_SPEC.md is exactly what the JSON generates now",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SPEC: the headline median change, recomputed from the rows, is the README's",
+      "ok": true,
+      "detail": "-0.0047"
+    },
+    {
+      "name": "SPEC: the count of crops where the fine-tune is higher is the README's",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "SPEC: NULL follows from the registered bars (WIN >= +0.010 with 3 of 4; HARM <= -0.010)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SPEC: positive control and manipulation check passed on all 4 crops",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SPEC: the planted-letter re-score reproduced FLINJ's stored predictions exactly (control)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SPEC: the registration hashes to what prereg.sha256 records",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SPEC: the limits are stated",
+      "ok": true,
+      "detail": ""
+    },
+    {
       "name": "README: no em or en dashes",
       "ok": true,
       "detail": ""

@@ -1,0 +1,8 @@
+{
+ "max_abs_diff": {
+  "b1_ink": 0,
+  "b2_non": 0,
+  "c1_shuffle": 0
+ },
+ "passed": true
+}

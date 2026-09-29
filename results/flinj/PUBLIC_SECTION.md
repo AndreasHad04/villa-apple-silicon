@@ -45,5 +45,7 @@ and its response to depth disorder. A fine-tune aimed at that second part is run
 Limits: 113 keV scans only (the one 116 keV crop had no room for a row of letters clear of its own ink); the planted
 ink is real but tiled from 32-pixel patches of tracings about 1 mm wide, and the model detects it less well than real
 labelled ink, so the transplant loses part of what the model uses; the primary is one checkpoint (seed 42, step 75,000).
+A fine-tune that removes the model's response to depth-shuffled input also weakens its response to the planted ink while
+its real-label AUC holds (next section), so part of the planted signal is a depth cue that real ink in place does not need.
 
 Code: `bench/flinj/`. Registration, amendments and the full generated report: `results/flinj/`.
