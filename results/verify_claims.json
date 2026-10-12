@@ -1361,6 +1361,41 @@
       "detail": ""
     },
     {
+      "name": "NL343: the README section is exactly what the summary JSON generates now",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "NL343: G2 passes its registered bars (f34 >= 0.99, coverage >= 0.5) and discriminates (f33, f35 < 0.99)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "NL343: the count of pixels off by more than 1 follows from f34",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "NL343: REPRODUCED follows from the registered bars (three r >= 0.98, >= 16 of 18 boxes) and the depth control",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "NL343: the published renderer is byte-identical to the one that made the measured render",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "NL343: the registration hashes to what the summary records",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "NL343: the limits are stated",
+      "ok": true,
+      "detail": ""
+    },
+    {
       "name": "README: no em or en dashes",
       "ok": true,
       "detail": ""

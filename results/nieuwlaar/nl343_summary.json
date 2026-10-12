@@ -1,0 +1,40 @@
+{
+ "render": {
+  "chunks": 1053,
+  "gb": 2.21,
+  "seconds_compute": 9.8
+ },
+ "ct": {
+  "lo": 26.0,
+  "hi": 164.0,
+  "dim": 0.45
+ },
+ "g2": {
+  "valid_px": 8887441,
+  "grey_px": 7523228,
+  "grey_share": 0.8465010344372469,
+  "f34": 0.9999990695483375,
+  "f33": 0.1409658194594129,
+  "f35": 0.14047852863159271,
+  "f31_flipped": 0.06028077309367734,
+  "off_by_more_than_1": 7,
+  "sha_layer34_equal": false,
+  "pass_f34": true,
+  "discriminates": true
+ },
+ "s2": {
+  "verdict": "REPRODUCED",
+  "n_C": 8840757,
+  "r_alpha": 0.9998294788034896,
+  "r_alpha_letters": 0.9998359932262744,
+  "r_lum": 0.9999034768522099,
+  "boxes_agree": 18,
+  "boxes_total": 18,
+  "r_alpha_d0": 0.9009229002741096,
+  "r_alpha_d2": 0.8841014775867125,
+  "image_sha_equal_his": false
+ },
+ "prereg_sha256": "9e6217d4e92d7b0ad7d8aeb1e12c2b14eba7851c2bade6e9ecfb91ffd7f3bf27",
+ "prereg_original_sha256": "607f4ec2e22da4d7c7d1723ce90b1b447d7fff2de04088d2c1572734f28480a3",
+ "renderer_sha256": "a6d530ee74de38a8c67f2c13873e1cbd7a843e310eb39d60b2685aaccd3b6afe"
+}

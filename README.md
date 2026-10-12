@@ -978,3 +978,55 @@ from the start), so "treatment minus control" is in effect "treatment minus rele
 
 Code: [bench/spec/](bench/spec/). Scores: [results/spec/](results/spec/).
 <!-- SPEC:END -->
+
+<!-- NL343:BEGIN -->
+## The PHerc. 343 First Letters image, reproduced without VC3D or an NVIDIA GPU
+
+Erwin Nieuwlaar's First Letters result on PHerc. 343 ([pherc343-first-letters](https://github.com/Nieuwlaar/pherc343-first-letters),
+MIT) renders its segment with VC3D build `41701aa`, which can no longer be downloaded
+([villa #2049](https://github.com/ScrollPrize/villa/issues/2049)). `firstletters/render66.py` does that step in Python
+on the CPU, in the convention of his `mesh/render_66_layers.sh` (66 layers one voxel apart along the normal,
+d = layer - 33). The sampling is `firstletters/render_tifxyz.py`, written from villa's `vc_render_tifxyz` sources.
+
+```
+python firstletters/render66.py --mesh outputs/concat_w047-w048_R5B2_z9500-11000.tifxyz \
+    --volume https://vesuvius-challenge-open-data.s3.amazonaws.com/PHerc0343/volumes/20250521140437-8.640um-1.2m-116keV-masked.zarr/0 \
+    --out concat_w047-w048_R5B2_z9500-11000_66.zarr --cache-dir chunks_0343
+```
+
+The output is a 66 x H x W uint8 zarr that villa's ink CLI and his `hecate_prep.py` read as it is (that is how the
+maps below were made). It needs numpy, tifffile, urllib3, zarr and numcodecs, and fetches 1,053 chunks
+(2.21 GB) of the open-data volume once.
+
+**The render, checked against his published image.** His PNG shows CT layer 34 in grey wherever no ink is drawn,
+so every such pixel can be predicted from our render with his own stretch (26 to 164) and dimming (0.45).
+
+| our layer | share of the compared grey pixels within 1 grey level of his |
+|---|---|
+| 34, the layer his image uses | 0.9999991 |
+| 33 | 0.1410 |
+| 35 | 0.1405 |
+| 31 (normal flipped) | 0.0603 |
+
+7,523,228 pixels compared (84.65% of the 8,887,441 valid ones; the rest carry ink
+or his row lines); 7 of them differ by more than 1. The layer is not bit-identical to his
+(its sha256 differs from the one his sidecar records).
+
+**The ink, on Apple Silicon.** The four models of his ensemble (dense_native, ink_9um seeds 42 and 43, Hecate 9.6 um)
+ran on an M1 Max (MPS, fp32) at d = +1 on both tilings of our render, and his own `make_submission_image.py` made the
+image from our maps with the statistics published in his sidecar:
+
+| measured against his image | value |
+|---|---|
+| Pearson r of ink opacity, 8,840,757 compared pixels | 0.99983 |
+| the same inside his 18 letter boxes | 0.99984 |
+| Pearson r of luminance | 0.99990 |
+| letter boxes whose ink fraction is within 0.8 to 1.25 of his | 18 of 18 |
+| depth control: opacity r from our d = 0 and d = +2 maps instead | 0.9009 and 0.8841 |
+
+Pre-registered before any ink model ran on this render: `results/nieuwlaar/PREREGISTRATION_MAC.md` (original text
+sha256 `607f4ec2e22da4d7`; one amendment, after two timing runs, changed no endpoint, threshold or arm).
+**Limits.** This uses his published statistics. The pre-registered primary recomputes them from our own maps at all
+31 depths (248 model runs) and is still running; it will be reported here whatever it shows. Our image is not
+bit-identical to his.
+<!-- NL343:END -->

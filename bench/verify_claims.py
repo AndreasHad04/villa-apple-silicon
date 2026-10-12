@@ -538,6 +538,38 @@ else:
        in (R / "results" / "spec" / "prereg.sha256").read_text())
     ck("SPEC: the limits are stated", has(_sec, "**Limits.**", "Transductive", "113 keV scans only"))
 
+print("\nNL343 (the PHerc. 343 First Letters render without VC3D, maps on Apple Silicon)")
+_nlj = R / "results" / "nieuwlaar" / "nl343_summary.json"
+if not _nlj.exists() or "<!-- NL343:BEGIN -->" not in README:
+    print("  NOTE: NL343 not published here, not checked")
+else:
+    import importlib.util as _ilu, hashlib as _hl3
+    _gen = next(p for p in (R / "ops" / "make_nl343_section.py", R / "bench" / "make_nl343_section.py") if p.exists())
+    _sp = _ilu.spec_from_file_location("make_nl343_section", _gen); _nm = _ilu.module_from_spec(_sp); _sp.loader.exec_module(_nm)
+    _ns = json.loads(_nlj.read_text())
+    _nsec = README[README.index(_nm.BEGIN):README.index(_nm.END) + len(_nm.END)]
+    ck("NL343: the README section is exactly what the summary JSON generates now", _nsec == _nm.section_text(_ns))
+    if (R / "results" / "nieuwlaar" / "g2.json").exists() and (R / "results" / "nieuwlaar" / "arm_S2" / "result.json").exists():
+        ck("NL343: the summary is exactly what the raw G2 and S2 results give now", _nm.build_summary(R) == _ns)
+    else:
+        print("  NOTE: raw G2 and S2 results are not in this repo; the summary is checked against its own bars only")
+    _g, _k = _ns["g2"], _ns["s2"]
+    ck("NL343: G2 passes its registered bars (f34 >= 0.99, coverage >= 0.5) and discriminates (f33, f35 < 0.99)",
+       _g["f34"] >= 0.99 and _g["grey_share"] >= 0.5 and _g["f33"] < 0.99 and _g["f35"] < 0.99
+       and _g["pass_f34"] and _g["discriminates"])
+    ck("NL343: the count of pixels off by more than 1 follows from f34",
+       _g["off_by_more_than_1"] == round((1 - _g["f34"]) * _g["grey_px"]))
+    ck("NL343: REPRODUCED follows from the registered bars (three r >= 0.98, >= 16 of 18 boxes) and the depth control",
+       min(_k["r_alpha"], _k["r_alpha_letters"], _k["r_lum"]) >= 0.98 and _k["boxes_agree"] >= 16
+       and _k["r_alpha_d0"] < _k["r_alpha"] and _k["r_alpha_d2"] < _k["r_alpha"] and _k["verdict"] == "REPRODUCED")
+    _rend = next(p for p in (R / "public" / "firstletters" / "render_tifxyz.py", R / "firstletters" / "render_tifxyz.py")
+                 if p.exists())
+    ck("NL343: the published renderer is byte-identical to the one that made the measured render",
+       _hl3.sha256(_rend.read_bytes()).hexdigest() == _ns["renderer_sha256"])
+    ck("NL343: the registration hashes to what the summary records",
+       _hl3.sha256((R / "results" / "nieuwlaar" / "PREREGISTRATION_MAC.md").read_bytes()).hexdigest() == _ns["prereg_sha256"])
+    ck("NL343: the limits are stated", has(_nsec, "**Limits.**", "his published statistics", "still running"))
+
 print("\nHYGIENE")
 for k, t in ALL.items():
     ck(f"{k}: no em or en dashes",
