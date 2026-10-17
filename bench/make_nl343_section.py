@@ -38,7 +38,19 @@ def build_summary(root: Path) -> dict:
         prereg_sha256=hashlib.sha256((root / 'results/nieuwlaar/PREREGISTRATION_MAC.md').read_bytes()).hexdigest(),
         prereg_original_sha256=(root / 'results/nieuwlaar/prereg.sha256').read_text().split()[0],
         renderer_sha256=hashlib.sha256((root / 'ops/render/render_tifxyz.py').read_bytes()).hexdigest(),
+        grids=_grids(root),
     )
+
+
+def _grids(root: Path) -> dict:
+    ck = json.loads((root / 'results/render66_flags/check.json').read_text())
+    fo = json.loads((root / 'results/render_forensics/forensics.json').read_text())
+    rows = fo['A_per_layer']
+    return dict(default_identical=ck['a_default_identical']['array_equal'], passed=ck['pass'],
+                identical_median=ck['b_flip31']['official']['identical_median'],
+                corr_median=ck['b_flip31']['official']['corr_median'], mask_px=ck['b_flip31']['official']['mask_px'],
+                noflip_corr_median=ck['c_noflip31']['official']['corr_median'],
+                pair_mad=round(sum(r['pair_u8_mad'] for r in rows) / len(rows), 3))
 
 
 def section_text(s: dict) -> str:
@@ -58,7 +70,9 @@ python firstletters/render66.py --mesh outputs/concat_w047-w048_R5B2_z9500-11000
     --out concat_w047-w048_R5B2_z9500-11000_66.zarr --cache-dir chunks_0343
 ```
 
-The output is a 66 x H x W uint8 zarr that villa's ink CLI and his `hecate_prep.py` read as it is (that is how the
+{_grids_text(s)}
+
+By default the output is a 66 x H x W uint8 zarr that villa's ink CLI and his `hecate_prep.py` read as it is (that is how the
 maps below were made). It needs numpy, tifffile, urllib3, zarr and numcodecs, and fetches {rr['chunks']:,} chunks
 ({rr['gb']:.2f} GB) of the open-data volume once.
 
@@ -91,9 +105,22 @@ image from our maps with the statistics published in his sidecar:
 Pre-registered before any ink model ran on this render: `results/nieuwlaar/PREREGISTRATION_MAC.md` (original text
 sha256 `{s['prereg_original_sha256'][:16]}`; one amendment, after two timing runs, changed no endpoint, threshold or arm).
 **Limits.** This uses his published statistics. The pre-registered primary recomputes them from our own maps at all
-31 depths (248 model runs) and is still running; it will be reported here whatever it shows. Our image is not
+31 depths (248 model runs) and has not finished yet; it will be reported here whatever it shows. Our image is not
 bit-identical to his{'' if not k['image_sha_equal_his'] else ' (it is, by sha256)'}.
 {END}"""
+
+
+def _grids_text(s: dict) -> str:
+    g = s['grids']
+    return ("**Other grids.** `--num-slices N` renders N layers centred at (N - 1) / 2, as `vc_render_tifxyz` does, and "
+            "`--flip-normals` samples along -n, so `--num-slices 31 --flip-normals` gives VC3D's default 31-slice render "
+            "with flipped normals. On PHerc0800 segment 20251029010146 that reproduces the published VC3D render: "
+            f"{100 * g['identical_median']:.2f}% of the {g['mask_px']:,} compared voxels per layer have the same value "
+            "(median over the 31 layers; the others differ by one grey level), Pearson r "
+            f"{g['corr_median']:.7f}, and without `--flip-normals` r is {g['noflip_corr_median']:.3f}. The default 66 "
+            "layers sit half a voxel from VC3D's 31, so a comparison between the two grids has to average two "
+            f"neighbouring layers, which leaves about {g['pair_mad']:.2f} grey levels of difference even between two "
+            "renders from this same renderer.")
 
 
 def main():

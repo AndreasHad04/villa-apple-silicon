@@ -994,7 +994,9 @@ python firstletters/render66.py --mesh outputs/concat_w047-w048_R5B2_z9500-11000
     --out concat_w047-w048_R5B2_z9500-11000_66.zarr --cache-dir chunks_0343
 ```
 
-The output is a 66 x H x W uint8 zarr that villa's ink CLI and his `hecate_prep.py` read as it is (that is how the
+**Other grids.** `--num-slices N` renders N layers centred at (N - 1) / 2, as `vc_render_tifxyz` does, and `--flip-normals` samples along -n, so `--num-slices 31 --flip-normals` gives VC3D's default 31-slice render with flipped normals. On PHerc0800 segment 20251029010146 that reproduces the published VC3D render: 99.68% of the 477,100 compared voxels per layer have the same value (median over the 31 layers; the others differ by one grey level), Pearson r 0.9999969, and without `--flip-normals` r is 0.047. The default 66 layers sit half a voxel from VC3D's 31, so a comparison between the two grids has to average two neighbouring layers, which leaves about 1.23 grey levels of difference even between two renders from this same renderer.
+
+By default the output is a 66 x H x W uint8 zarr that villa's ink CLI and his `hecate_prep.py` read as it is (that is how the
 maps below were made). It needs numpy, tifffile, urllib3, zarr and numcodecs, and fetches 1,053 chunks
 (2.21 GB) of the open-data volume once.
 
@@ -1027,6 +1029,6 @@ image from our maps with the statistics published in his sidecar:
 Pre-registered before any ink model ran on this render: `results/nieuwlaar/PREREGISTRATION_MAC.md` (original text
 sha256 `607f4ec2e22da4d7`; one amendment, after two timing runs, changed no endpoint, threshold or arm).
 **Limits.** This uses his published statistics. The pre-registered primary recomputes them from our own maps at all
-31 depths (248 model runs) and is still running; it will be reported here whatever it shows. Our image is not
+31 depths (248 model runs) and has not finished yet; it will be reported here whatever it shows. Our image is not
 bit-identical to his.
 <!-- NL343:END -->

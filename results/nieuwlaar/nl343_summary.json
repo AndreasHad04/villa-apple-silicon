@@ -36,5 +36,14 @@
  },
  "prereg_sha256": "9e6217d4e92d7b0ad7d8aeb1e12c2b14eba7851c2bade6e9ecfb91ffd7f3bf27",
  "prereg_original_sha256": "607f4ec2e22da4d7c7d1723ce90b1b447d7fff2de04088d2c1572734f28480a3",
- "renderer_sha256": "a6d530ee74de38a8c67f2c13873e1cbd7a843e310eb39d60b2685aaccd3b6afe"
+ "renderer_sha256": "a6d530ee74de38a8c67f2c13873e1cbd7a843e310eb39d60b2685aaccd3b6afe",
+ "grids": {
+  "default_identical": true,
+  "passed": true,
+  "identical_median": 0.99678,
+  "corr_median": 0.9999969,
+  "mask_px": 477100,
+  "noflip_corr_median": 0.0472773,
+  "pair_mad": 1.229
+ }
 }

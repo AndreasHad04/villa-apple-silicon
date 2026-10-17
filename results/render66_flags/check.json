@@ -1,0 +1,80 @@
+{
+ "a_default_identical": {
+  "shape": [
+   66,
+   1480,
+   7720
+  ],
+  "array_equal": true,
+  "attrs_equal": {
+   "convention": true,
+   "valid_px": true,
+   "mesh_sha256": true,
+   "renderer_sha256": true,
+   "scale": true,
+   "volume": true
+  },
+  "script_sha_differs": true
+ },
+ "b_flip31": {
+  "shape": [
+   31,
+   980,
+   980
+  ],
+  "convention": {
+   "layers": 31,
+   "centre": 15.0,
+   "sign": -1.0,
+   "normal_mode": "nearest",
+   "normal": "normalise(dP/dcolumn x dP/drow)",
+   "transform": "identity",
+   "rule": "layer k samples p + (k - 15) * -n"
+  },
+  "official": {
+   "mask_px": 477100,
+   "identical_median": 0.99678,
+   "identical_min": 0.9961,
+   "corr_median": 0.9999969,
+   "corr_min": 0.9999963
+  },
+  "ours_r1": {
+   "mask_px": 477100,
+   "identical_median": 1.0,
+   "identical_min": 1.0,
+   "corr_median": 1.0,
+   "corr_min": 1.0
+  }
+ },
+ "c_noflip31": {
+  "shape": [
+   31,
+   980,
+   980
+  ],
+  "convention": {
+   "layers": 31,
+   "centre": 15.0,
+   "sign": 1.0,
+   "normal_mode": "nearest",
+   "normal": "normalise(dP/dcolumn x dP/drow)",
+   "transform": "identity",
+   "rule": "layer k samples p + (k - 15) * n"
+  },
+  "official": {
+   "mask_px": 477100,
+   "identical_median": 0.0138,
+   "identical_min": 0.01129,
+   "corr_median": 0.0472773,
+   "corr_min": 0.0249111
+  },
+  "ours_r1": {
+   "mask_px": 477100,
+   "identical_median": 0.01378,
+   "identical_min": 0.01131,
+   "corr_median": 0.0472723,
+   "corr_min": 0.0249102
+  }
+ },
+ "pass": true
+}

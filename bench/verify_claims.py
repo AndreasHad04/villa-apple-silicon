@@ -553,6 +553,10 @@ else:
         ck("NL343: the summary is exactly what the raw G2 and S2 results give now", _nm.build_summary(R) == _ns)
     else:
         print("  NOTE: raw G2 and S2 results are not in this repo; the summary is checked against its own bars only")
+    _gr = _ns.get("grids")
+    ck("NL343: --num-slices 31 --flip-normals reproduces the published VC3D render (>= 99% identical), unflipped does not, default grid unchanged",
+       _gr is not None and _gr["passed"] and _gr["default_identical"] and _gr["identical_median"] >= 0.99
+       and _gr["noflip_corr_median"] < 0.9)
     _g, _k = _ns["g2"], _ns["s2"]
     ck("NL343: G2 passes its registered bars (f34 >= 0.99, coverage >= 0.5) and discriminates (f33, f35 < 0.99)",
        _g["f34"] >= 0.99 and _g["grey_share"] >= 0.5 and _g["f33"] < 0.99 and _g["f35"] < 0.99
@@ -568,7 +572,7 @@ else:
        _hl3.sha256(_rend.read_bytes()).hexdigest() == _ns["renderer_sha256"])
     ck("NL343: the registration hashes to what the summary records",
        _hl3.sha256((R / "results" / "nieuwlaar" / "PREREGISTRATION_MAC.md").read_bytes()).hexdigest() == _ns["prereg_sha256"])
-    ck("NL343: the limits are stated", has(_nsec, "**Limits.**", "his published statistics", "still running"))
+    ck("NL343: the limits are stated", has(_nsec, "**Limits.**", "his published statistics", "has not finished yet"))
 
 print("\nHYGIENE")
 for k, t in ALL.items():

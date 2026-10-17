@@ -22,6 +22,12 @@ PHerc. 343, the First Letters segment (the mesh comes from his mesh/build_concat
       --volume https://vesuvius-challenge-open-data.s3.amazonaws.com/PHerc0343/volumes/20250521140437-8.640um-1.2m-116keV-masked.zarr/0 \\
       --out concat_w047-w048_R5B2_z9500-11000_66.zarr --cache-dir chunks_0343
 That fetches 1,053 chunks (2.21 GB) once; the sampling itself took about 10 s on an M1 Max.
+
+Other grids, with vc_render_tifxyz's own option names: --num-slices N renders N layers centred at (N - 1) / 2
+(VC's buildOffsetList, so 66 gives the half-integer offsets above and 31 gives integer offsets -15..15), and
+--flip-normals samples along -n. VC3D's default 31-slice render with --flip-normals is therefore
+  python render66.py --mesh <seg>.tifxyz --volume <volume level url> --out <seg>_31.zarr --num-slices 31 --flip-normals
+The defaults (66 layers, VC's normal) are unchanged.
 """
 import argparse, json, os, shutil, sys, time
 from pathlib import Path
@@ -97,7 +103,15 @@ def main():
     ap.add_argument('--workers', type=int, default=8, help='CPU threads for geometry and sampling')
     ap.add_argument('--cap-gb', type=float, default=8.0, help='in-memory chunk cache cap (GB)')
     ap.add_argument('--plan-only', action='store_true', help='print the chunk count and stop')
+    ap.add_argument('--num-slices', type=int, default=N_LAYERS,
+                    help='layers, centred at (N - 1) / 2 as vc_render_tifxyz does (default 66)')
+    ap.add_argument('--flip-normals', action='store_true', help='sample along -n, as vc_render_tifxyz --flip-normals')
     a = ap.parse_args()
+    if a.num_slices < 1:
+        ap.error('--num-slices must be at least 1')
+    n_layers, centre, sign = a.num_slices, 0.5 * (a.num_slices - 1), (-1.0 if a.flip_normals else +1.0)
+    rt.NUM_LAYERS, rt.CENTER = n_layers, centre
+    default_grid = (n_layers, centre, sign) == (N_LAYERS, CENTRE, +1.0)
     mesh, out = Path(a.mesh), Path(a.out).resolve()
     out.parent.mkdir(parents=True, exist_ok=True)
     rt.RESULTS = out.parent
@@ -117,7 +131,7 @@ def main():
     if a.plan_only:
         keys = set()
         for t in rt.tiles_of(surf.H, surf.W):
-            _, _, q = surf.tile_points(*t, +1.0, 0.0)
+            _, _, q = surf.tile_points(*t, sign, 0.0)
             keys.update(int(k) for k in rt.chunk_keys(q, shape))
         rt.log(f'  plan: {len(keys)} chunks ({len(keys) * rt.CHUNK_BYTES / 1e9:.2f} GB raw)')
         return
@@ -125,12 +139,15 @@ def main():
         cache = DiskChunkCache(a.volume, shape, a.threads, Path(a.cache_dir))
     else:
         cache = rt.ChunkCache(a.volume, shape, a.threads)
-    stack, valid, info, _ = rt.render_surface(surf, cache, +1.0, 0.0, a.workers, a.cap_gb * 1e9, mesh.name)
-    for k in range(N_LAYERS):          # outside the valid mask every layer must be 0 (VC writes nothing there)
+    stack, valid, info, _ = rt.render_surface(surf, cache, sign, 0.0, a.workers, a.cap_gb * 1e9, mesh.name)
+    assert stack.shape[0] == n_layers, stack.shape
+    for k in range(n_layers):          # outside the valid mask every layer must be 0 (VC writes nothing there)
         assert not stack[k][~valid].any()
-    attrs = dict(render66=dict(convention=dict(layers=N_LAYERS, centre=CENTRE, sign=+1.0, normal_mode='nearest',
+    rule = ('layer k samples p + (k - 32.5) * n; d = k - 33' if default_grid else
+            f'layer k samples p + (k - {centre:g}) * {"-" if sign < 0 else ""}n')
+    attrs = dict(render66=dict(convention=dict(layers=n_layers, centre=centre, sign=sign, normal_mode='nearest',
                                                normal='normalise(dP/dcolumn x dP/drow)', transform='identity',
-                                               rule='layer k samples p + (k - 32.5) * n; d = k - 33'),
+                                               rule=rule),
                                volume=a.volume, mesh=str(mesh), mesh_sha256=shas, scale=sc,
                                renderer_sha256=rt.sha256_file(Path(rt.__file__)), script_sha256=rt.sha256_file(me),
                                info=info, valid_px=int(valid.sum())))
