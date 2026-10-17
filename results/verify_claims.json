@@ -1366,6 +1366,11 @@
       "detail": ""
     },
     {
+      "name": "NL343: --num-slices 31 --flip-normals reproduces the published VC3D render (>= 99% identical), unflipped does not, default grid unchanged",
+      "ok": true,
+      "detail": ""
+    },
+    {
       "name": "NL343: G2 passes its registered bars (f34 >= 0.99, coverage >= 0.5) and discriminates (f33, f35 < 0.99)",
       "ok": true,
       "detail": ""
