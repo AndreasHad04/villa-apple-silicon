@@ -1032,3 +1032,166 @@ sha256 `607f4ec2e22da4d7`; one amendment, after two timing runs, changed no endp
 31 depths (248 model runs) and has not finished yet; it will be reported here whatever it shows. Our image is not
 bit-identical to his.
 <!-- NL343:END -->
+
+<!-- PATCHES:BEGIN -->
+## Sheet patches without an umbilicus on First Letters scrolls
+
+**What this is.** 56 validated sheet patches, 38.219 cm2 in all, on 3 First Letters scrolls: PHerc0483B 21 (19.884 cm2), PHerc0175B 19 (10.588 cm2) and PHerc0490A 16 (7.747 cm2). They come
+from a CPU tracer that needs no umbilicus and no VC3D: `uncontested/sheet_patches.py` walks the organisers' m7 surface
+prediction, seeded by the surface tracks that villa's `extract_surface_tracks.py` makes from it, and writes tifxyz that
+villa's renderers and ink models read like any segment. The same file (sha256 `03ef8c59e525e8cc`) served every scroll unchanged: it traced PHerc0175B and PHerc0490A as shipped; it rebuilt 6 of the PHerc0483B patches byte for byte from the same inputs. Every patch passes four gates: at least
+0.9 of its vertices on the predicted sheet, no jump over 8 voxels between rows, vertical tracks
+that meet it at least 2 times as often as a copy shifted half a sheet, and at least
+0.9 of its normals pointing outward (Validation, below).
+
+| scroll | patches | passing every gate | area (cm2) | largest patch (cm2) | z range | seed keys | pass the survey's sheet check |
+|---|---|---|---|---|---|---|---|
+| PHerc0483B | 21 | 21 | 19.884 | 2.016 | 4992 to 6512 | 7 | 20 of 21 |
+| PHerc0175B | 19 | 19 | 10.588 | 0.935 | 2112 to 3440 | 7 | 9 of 19 |
+| PHerc0490A | 16 | 16 | 7.747 | 0.987 | 8256 to 9776 | 7 | 10 of 16 |
+| all | 56 | 56 | 38.219 | | | | 39 of 56 |
+
+**Related work.** ketchupbyheinz published a survey of all 21 First Letters scrolls ([vesuvius-scroll-survey](https://github.com/ketchupbyheinz/vesuvius-scroll-survey)) and opened villa PR #2318 from it. It traces patches with VC3D's `vc_grow_seg_from_seed` and the remote normal grids, and scores each with its own sheet check, which flags parts of a patch that cut across windings. Its counts for the scrolls covered here: PHerc. 483B 6 traced and 3 passing its sheet check; PHerc. 175B 9 traced and 0 passing its sheet check; PHerc. 490A 6 traced and 2 passing its sheet check. The survey and this work differ on PHerc0175B: none of its 9 traces passed its sheet check, while the tracer here produced 19 patches that pass the gates above. Its sheet check, run here with its own `inkcheck.py` unchanged and its published pass rule (at least 0.4 of the 512 px tiles with a median crossness of at least 0.31) on the middle layer of every render, passes 20 of the 21 PHerc0483B patches, 9 of the 19 PHerc0175B patches and 10 of the 16 PHerc0490A patches. On the positive control, a PHerc0343 crop over known letters, it gives a good fraction of 1 over 23 tiles and passes. No negative control was run. The two checks disagree: the gates here pass every patch, while its sheet check fails 1 on PHerc0483B, 10 on PHerc0175B and 6 on PHerc0490A. On PHerc0175B its failures and the switch-event counter here do not single out the same patches: of the 4 with the most switch events, pt39_z3008_a151 and pt32_z2560_a104 pass its check while pt3_z2784_a118 and pt21_z2336_a135 fail it, and the other 8 failing patches have at most 3 switch events each. The two criteria measure different things, and which is right on PHerc0175B is not settled. On PHerc0490A its failures and the switch-event counter here do not single out the same patches: of the 4 with the most switch events, pt2_z9024_a125, pt21_z8512_a116 and pt3_z9024_a253 pass its check while pt19_z8512_a024 fails it, and the other 5 failing patches have at most 2 switch events each. The two criteria measure different things, and which is right on PHerc0490A is not settled. Its rule degenerates on patches with 0 or 1 scoreable tiles, where one tile or none decides: on PHerc0483B pt21_z5056_a026 (1 tile, pass); on PHerc0175B pt2_z2784_a083 (0 tiles, fail), pt7_z2176_a135 (1 tile, pass), pt13_z3392_a102 (1 tile, pass) and pt25_z3232_a132 (1 tile, pass); on PHerc0490A pt8_z8336_a073 (1 tile, fail) and pt22_z8512_a153 (0 tiles, fail). Its face check, which asks whether the ink models agree on one face of the sheet more than on the other (forward against reverse maps), is close in spirit to the blind-side stage below.
+
+**What the open data lacks.** These are First Letters scrolls. In the open-data `metadata.json`, for PHerc0483B, PHerc0175B and PHerc0490A it lists no segments, no umbilicus and no lasagna data, and the volume comes with the CT, the m7 surface prediction and its normal grids only.
+villa's spiral fitting needs an umbilicus to start, so it cannot run on them as published.
+
+**Why not estimate an umbilicus first.** Two automatic estimators that read the m7 surface prediction were registered
+and then scored blind on the 4 scrolls that have a published umbilicus
+(PHerc0125, PHerc0211, PHerc0343 and PHerc0826), against a bar of a median distance of at most 40 and a maximum of at
+most 100 level-0 voxels. The first gave a median of 349.7 and a maximum of 3303.1 over
+40 planes, the second a median of 285.2 and a maximum of 1785.5 over
+36 planes. Both failed, so no
+umbilicus was written and the patches below do without one.
+
+**Method.** `uncontested/sheet_patches.py` traces local sheet patches through the m7 surface prediction, seeded by the
+surface tracks that villa's `extract_surface_tracks.py` makes from it (`uncontested/export_tracks.py` turns their DBM
+into one npz). A seed is a long horizontal track at one z, joined to others only across clean end-to-end breaks. The
+walk moves every sample of the curve along its in-plane normal, 4 slices at a time, to the nearest run of
+predicted voxels on a ray of +-24 voxels. A sample is accepted only when that run is within 4
+voxels and within 0.45 of the gap to the neighbouring sheet, at most 7 voxels wide, and the
+neighbouring sheet is at least 6 voxels away; a step is refused when fewer than 0.65 of the
+samples are accepted. Where the surface jumps between rows 16 slices apart (second difference over
+8 voxels) those columns are cut. An axis is used for one thing only, choosing which side of each patch faces
+outward, and that axis is coarse: the centroid of the scan's cross-section. Patches are tifxyz with one vertex every
+20 voxels, so `firstletters/render66.py` and villa's tools read them like any segment. CPU only.
+Every scroll was traced with the same parameters.
+
+**Validation.** A patch is kept only if at least 0.9 of its vertices lie on the predicted sheet (a
+predicted voxel within 2 voxels), the second difference between rows 16 slices apart never exceeds
+8 voxels, the vertical tracks meet the surface at least 2 times as often as they meet
+the same surface shifted half a sheet sideways, and at least 0.9 of its normals point outward on the
+chosen side. The gates are the same on every scroll.
+
+### PHerc0483B
+
+| patch | seed z | z range | angle (deg) | area (cm2) | on sheet | second difference max (voxels) | vertical tracks on surface | same, shifted half a sheet | outward | switch events / lines | brightest render layer | survey sheet check: good fraction (tiles), result |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| pt1_z5760_a182 | 5760 | 5660 to 6172 | 182.1 | 0.555 | 0.9456 | 7.91 | 0.7851 | 0.0503 | 0.9904 | 0 / 57 | 35 | 0.333 (3 tiles), fail |
+| pt2_z5760_a213 | 5760 | 5500 to 6512 | 213.1 | 0.826 | 0.9743 | 7.84 | 0.6563 | 0.0353 | 1.0000 | 1 / 45 | 37 | 1 (9 tiles), pass |
+| pt3_z5760_a258 | 5760 | 5568 to 6216 | 258.1 | 0.514 | 0.9506 | 7.98 | 0.4614 | 0.1232 | 1.0000 | 11 / 24 | 39 | 0.833 (6 tiles), pass |
+| pt4_z5760_a290 | 5760 | 5336 to 6512 | 289.7 | 1.293 | 0.9607 | 7.73 | 0.5844 | 0.1601 | 0.9964 | 9 / 46 | 60 | 1 (17 tiles), pass |
+| pt5_z5760_a320 | 5760 | 5460 to 6012 | 319.7 | 0.294 | 0.9191 | 7.77 | 0.6201 | 0.1638 | 1.0000 | 2 / 11 | 33 | 1 (4 tiles), pass |
+| pt6_z6272_a316 | 6272 | 5292 to 6512 | 315.5 | 2.016 | 0.9645 | 7.89 | 0.6774 | 0.0814 | 0.9929 | 76 / 83 | 36 | 0.8 (25 tiles), pass |
+| pt7_z5472_a290 | 5472 | 5004 to 6512 | 289.9 | 1.718 | 0.9792 | 7.60 | 0.7007 | 0.1714 | 0.9592 | 16 / 116 | 34 | 0.633 (30 tiles), pass |
+| pt8_z6016_a271 | 6016 | 5456 to 6492 | 270.7 | 1.416 | 0.9700 | 7.93 | 0.6758 | 0.1831 | 1.0000 | 24 / 70 | 34 | 1 (22 tiles), pass |
+| pt9_z5760_a300 | 5760 | 4992 to 6512 | 300.5 | 1.251 | 0.9683 | 7.77 | 0.6193 | 0.1334 | 0.9931 | 44 / 66 | 34 | 1 (15 tiles), pass |
+| pt10_z6448_a300 | 6448 | 5372 to 6512 | 299.9 | 1.227 | 0.9520 | 7.94 | 0.5974 | 0.2141 | 0.9923 | 96 / 46 | 34 | 0.895 (19 tiles), pass |
+| pt11_z6272_a290 | 6272 | 5384 to 6512 | 289.5 | 1.167 | 0.9298 | 7.98 | 0.5690 | 0.2068 | 0.9842 | 208 / 54 | 33 | 0.765 (17 tiles), pass |
+| pt12_z5472_a304 | 5472 | 4992 to 6488 | 304.2 | 1.062 | 0.9382 | 7.96 | 0.5596 | 0.1329 | 1.0000 | 2 / 29 | 17 | 0.923 (13 tiles), pass |
+| pt13_z6272_a226 | 6272 | 5688 to 6512 | 225.5 | 1.038 | 0.9454 | 7.98 | 0.4707 | 0.1565 | 0.9994 | 6 / 40 | 34 | 1 (19 tiles), pass |
+| pt14_z6016_a275 | 6016 | 5424 to 6336 | 275.4 | 0.991 | 0.9659 | 7.90 | 0.6725 | 0.1559 | 0.9997 | 6 / 49 | 35 | 0.818 (11 tiles), pass |
+| pt15_z5472_a305 | 5472 | 4992 to 6364 | 304.6 | 0.962 | 0.9652 | 7.88 | 0.6457 | 0.2067 | 1.0000 | 70 / 49 | 37 | 1 (11 tiles), pass |
+| pt16_z6272_a208 | 6272 | 5892 to 6512 | 207.9 | 0.956 | 0.9529 | 7.83 | 0.6074 | 0.0966 | 1.0000 | 14 / 48 | 34 | 1 (14 tiles), pass |
+| pt17_z6272_a316 | 6272 | 5264 to 6512 | 316.0 | 0.839 | 0.9391 | 7.94 | 0.7558 | 0.0904 | 0.9981 | 2 / 30 | 33 | 1 (12 tiles), pass |
+| pt18_z5216_a051 | 5216 | 4992 to 5520 | 51.1 | 0.597 | 0.9633 | 7.99 | 0.5342 | 0.2278 | 1.0000 | 0 / 17 | 34 | 1 (7 tiles), pass |
+| pt19_z5472_a147 | 5472 | 4992 to 5516 | 146.6 | 0.405 | 0.9736 | 7.77 | 0.8025 | 0.0585 | 1.0000 | 15 / 35 | 65 | 1 (2 tiles), pass |
+| pt20_z5472_a131 | 5472 | 4992 to 5808 | 130.7 | 0.379 | 0.9506 | 7.99 | 0.7283 | 0.0798 | 1.0000 | 1 / 26 | 34 | 1 (3 tiles), pass |
+| pt21_z5056_a026 | 5056 | 4992 to 5528 | 26.5 | 0.378 | 0.9606 | 7.99 | 0.4696 | 0.0846 | 1.0000 | 0 / 11 | 35 | 1 (1 tiles), pass |
+
+**Totals.** 21 patches, 21 passing every gate, 19.884 cm2 in all, between z 4992 and 6512. The first 5 (3.482 cm2) come from seeds at z 5760, chosen at least 30 degrees apart. The other 16 (16.402 cm2) come from seeds at z 5056, 5216, 5472, 5760, 6016, 6272 and 6448: 192 candidates validated, 185 passed, 27 refused as duplicates of a patch already accepted, 12 written largest first and 4 more from the 0 to 150 degree sector, which had none; 142 passing candidates were not written. Across all 21: on-sheet fraction at least 0.9191, outward fraction at least 0.9592, and the vertical tracks meet the surface at least 2.3 times as often as its shifted copy.
+
+### PHerc0175B
+
+| patch | seed z | z range | angle (deg) | area (cm2) | on sheet | second difference max (voxels) | vertical tracks on surface | same, shifted half a sheet | outward | switch events / lines | brightest render layer | survey sheet check: good fraction (tiles), result |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| pt1_z2784_a048 | 2784 | 2568 to 3284 | 47.9 | 0.804 | 0.9456 | 7.70 | 0.5647 | 0.0998 | 0.9992 | 3 / 46 | 34 | 1 (5 tiles), pass |
+| pt2_z2784_a083 | 2784 | 2644 to 2928 | 83.1 | 0.344 | 0.9669 | 7.97 | 0.5146 | 0.1701 | 1.0000 | 0 / 22 | 35 | 0 (0 tiles), fail |
+| pt3_z2784_a118 | 2784 | 2456 to 3064 | 118.2 | 0.807 | 0.9770 | 8.00 | 0.7196 | 0.0877 | 1.0000 | 23 / 49 | 23 | 0 (9 tiles), fail |
+| pt4_z2784_a163 | 2784 | 2724 to 3204 | 162.8 | 0.310 | 0.9837 | 7.26 | 0.6821 | 0.0875 | 1.0000 | 0 / 18 | 34 | 0 (3 tiles), fail |
+| pt5_z2784_a331 | 2784 | 2784 to 3440 | 331.1 | 0.484 | 0.9545 | 7.96 | 0.6156 | 0.1299 | 1.0000 | 0 / 27 | 35 | 1 (5 tiles), pass |
+| pt7_z2176_a135 | 2176 | 2112 to 2700 | 134.8 | 0.344 | 0.9746 | 7.82 | 0.8370 | 0.0591 | 1.0000 | 0 / 29 | 33 | 1 (1 tiles), pass |
+| pt13_z3392_a102 | 3392 | 2980 to 3440 | 101.8 | 0.370 | 0.9758 | 7.59 | 0.5044 | 0.0540 | 0.9954 | 0 / 10 | 34 | 1 (1 tiles), pass |
+| pt14_z3392_a142 | 3392 | 2884 to 3440 | 142.1 | 0.566 | 0.9744 | 7.85 | 0.7528 | 0.0710 | 0.9924 | 1 / 42 | 22 | 0.125 (8 tiles), fail |
+| pt15_z3392_a332 | 3392 | 2808 to 3440 | 332.5 | 0.511 | 0.9697 | 6.97 | 0.7201 | 0.0608 | 0.9944 | 0 / 36 | 34 | 0 (7 tiles), fail |
+| pt19_z2336_a073 | 2336 | 2176 to 2812 | 73.1 | 0.564 | 0.9710 | 7.85 | 0.5166 | 0.1779 | 1.0000 | 1 / 25 | 34 | 1 (7 tiles), pass |
+| pt20_z2336_a101 | 2336 | 2264 to 2812 | 101.0 | 0.394 | 0.9813 | 7.71 | 0.6662 | 0.1063 | 0.9851 | 0 / 18 | 33 | 0 (6 tiles), fail |
+| pt21_z2336_a135 | 2336 | 2112 to 2964 | 134.7 | 0.879 | 0.9895 | 7.93 | 0.7977 | 0.1270 | 1.0000 | 6 / 67 | 34 | 0 (8 tiles), fail |
+| pt25_z3232_a132 | 3232 | 2960 to 3440 | 131.6 | 0.655 | 0.9647 | 7.96 | 0.5814 | 0.1014 | 1.0000 | 2 / 49 | 35 | 1 (1 tiles), pass |
+| pt26_z3232_a338 | 3232 | 2804 to 3400 | 337.7 | 0.322 | 0.9608 | 7.32 | 0.6800 | 0.1114 | 0.9912 | 0 / 12 | 35 | 0 (6 tiles), fail |
+| pt31_z2560_a043 | 2560 | 2560 to 3348 | 42.8 | 0.595 | 0.9647 | 7.71 | 0.4547 | 0.1423 | 0.9821 | 3 / 34 | 4 | 0.375 (8 tiles), fail |
+| pt32_z2560_a104 | 2560 | 2340 to 3100 | 103.5 | 0.935 | 0.9436 | 7.92 | 0.6384 | 0.1346 | 1.0000 | 12 / 29 | 34 | 0.875 (16 tiles), pass |
+| pt37_z3008_a055 | 3008 | 2564 to 3440 | 54.6 | 0.796 | 0.9811 | 7.72 | 0.5269 | 0.1767 | 0.9972 | 0 / 43 | 34 | 0.714 (14 tiles), pass |
+| pt39_z3008_a151 | 3008 | 2740 to 3440 | 150.8 | 0.481 | 0.9500 | 7.94 | 0.5619 | 0.1571 | 0.9931 | 115 / 31 | 34 | 1 (3 tiles), pass |
+| pt40_z3008_a323 | 3008 | 2868 to 3440 | 322.9 | 0.427 | 0.9912 | 7.17 | 0.8785 | 0.0128 | 1.0000 | 0 / 41 | 35 | 0 (6 tiles), fail |
+
+**Totals.** 19 patches, 19 passing every gate, 10.588 cm2 in all, between z 2112 and 3440. They come from seeds at z 2176, 2336, 2560, 2784, 3008, 3232 and 3392, the seeds of one key at least 20 or 30 degrees apart: one `build` and `validate` per key wrote 21 patches and 21 passed every gate; pooled across keys, largest first, 2 were refused as duplicates of a larger patch, so 19 were kept. Across all 19: on-sheet fraction at least 0.9436, outward fraction at least 0.9821, and the vertical tracks meet the surface at least 2.9 times as often as its shifted copy.
+
+### PHerc0490A
+
+| patch | seed z | z range | angle (deg) | area (cm2) | on sheet | second difference max (voxels) | vertical tracks on surface | same, shifted half a sheet | outward | switch events / lines | brightest render layer | survey sheet check: good fraction (tiles), result |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| pt1_z9024_a075 | 9024 | 8672 to 9184 | 75.2 | 0.599 | 0.9739 | 7.54 | 0.5860 | 0.1174 | 1.0000 | 0 / 29 | 34 | 0.5 (6 tiles), pass |
+| pt2_z9024_a125 | 9024 | 8444 to 9100 | 124.8 | 0.656 | 0.9708 | 7.94 | 0.7592 | 0.0789 | 0.9917 | 14 / 44 | 34 | 1 (4 tiles), pass |
+| pt3_z9024_a253 | 9024 | 8928 to 9340 | 253.0 | 0.317 | 0.9444 | 7.46 | 0.5526 | 0.1603 | 0.9967 | 5 / 9 | 46 | 1 (2 tiles), pass |
+| pt8_z8336_a073 | 8336 | 8256 to 8956 | 73.2 | 0.295 | 0.9558 | 7.98 | 0.6340 | 0.1319 | 1.0000 | 2 / 21 | 24 | 0 (1 tiles), fail |
+| pt13_z9712_a109 | 9712 | 9256 to 9776 | 109.2 | 0.388 | 0.9681 | 7.96 | 0.6307 | 0.1300 | 0.9483 | 0 / 18 | 35 | 0 (6 tiles), fail |
+| pt14_z9712_a130 | 9712 | 9476 to 9776 | 130.5 | 0.267 | 0.9728 | 7.66 | 0.7557 | 0.0538 | 1.0000 | 0 / 18 | 34 | 0 (2 tiles), fail |
+| pt19_z8512_a024 | 8512 | 8256 to 8744 | 23.8 | 0.378 | 0.9711 | 7.94 | 0.5562 | 0.2135 | 1.0000 | 4 / 21 | 34 | 0 (2 tiles), fail |
+| pt20_z8512_a073 | 8512 | 8352 to 8960 | 72.8 | 0.291 | 0.9683 | 7.53 | 0.5984 | 0.2332 | 1.0000 | 0 / 21 | 34 | 1 (3 tiles), pass |
+| pt21_z8512_a116 | 8512 | 8272 to 8912 | 115.9 | 0.757 | 0.9460 | 7.92 | 0.6161 | 0.1399 | 1.0000 | 12 / 36 | 35 | 0.583 (12 tiles), pass |
+| pt22_z8512_a153 | 8512 | 8396 to 8892 | 152.8 | 0.250 | 0.9855 | 7.59 | 0.7494 | 0.0725 | 1.0000 | 1 / 19 | 34 | 0 (0 tiles), fail |
+| pt25_z9536_a055 | 9536 | 9264 to 9776 | 55.1 | 0.336 | 0.9528 | 7.78 | 0.4950 | 0.1067 | 1.0000 | 0 / 22 | 34 | 1 (5 tiles), pass |
+| pt32_z8768_a122 | 8768 | 8256 to 8960 | 121.8 | 0.925 | 0.9786 | 7.88 | 0.7346 | 0.0979 | 1.0000 | 1 / 44 | 34 | 0.923 (13 tiles), pass |
+| pt33_z8768_a188 | 8768 | 8464 to 9180 | 187.9 | 0.451 | 0.9736 | 7.70 | 0.6565 | 0.1406 | 1.0000 | 0 / 27 | 34 | 0.25 (4 tiles), fail |
+| pt37_z9280_a057 | 9280 | 9032 to 9396 | 57.0 | 0.361 | 0.9821 | 7.91 | 0.5132 | 0.1142 | 1.0000 | 0 / 30 | 34 | 1 (3 tiles), pass |
+| pt38_z9280_a087 | 9280 | 8540 to 9776 | 87.0 | 0.987 | 0.9656 | 7.99 | 0.6340 | 0.2211 | 0.9942 | 1 / 39 | 34 | 0.778 (9 tiles), pass |
+| pt39_z9280_a120 | 9280 | 8820 to 9400 | 119.6 | 0.489 | 0.9731 | 7.98 | 0.6402 | 0.0896 | 1.0000 | 3 / 36 | 34 | 1 (4 tiles), pass |
+
+**Totals.** 16 patches, 16 passing every gate, 7.747 cm2 in all, between z 8256 and 9776. They come from seeds at z 8336, 8512, 8768, 9024, 9280, 9536 and 9712, the seeds of one key at least 20 or 30 degrees apart: one `build` and `validate` per key wrote 21 patches and 21 passed every gate; pooled across keys, largest first, 5 were refused as duplicates of a larger patch, so 16 were kept. Across all 16: on-sheet fraction at least 0.9444, outward fraction at least 0.9483, and the vertical tracks meet the surface at least 2.6 times as often as its shifted copy.
+
+**Ink screen.** Five-model ink images of every patch at d = +1 were reviewed blind, with known-letter windows from PHerc0343 shuffled in unmarked; a review counts as VALID only if a flagged control window overlaps the known letters. Each scroll's screen was registered before any ink map of its patches existed.
+
+- PHerc0483B (registration sha256 `71835116d3f5a073`): the review is VALID (1 of the 8 control windows on known letters flagged) and flagged 4 PHerc0483B windows in 2 regions (pt7_z5472_a290 windows 0 and 2; pt6_z6272_a316 windows 0 and 3). The neighbour-depth check (the same models at d = 0, +1 and +2; a window passes when it is present at d = +1 and at d = 0 or +2 and absent in the 180 degree negative) is VALID, and 4 of 4 windows pass it. The blind-side confirmation is running; its result is not in yet. Under Amendment 1 of the registration, a window passes the blind-side confirmation only if the blinded reviewer marks it present in the reading-side image and absent both in the blind-side image (the same models in the opposite depth order, shown with the reading side's statistics) and in the 180 degree negative, with the control required to pass and one attempt allowed.
+- PHerc0175B (registration sha256 `7393d6e1c6ae4514`): the review is VALID (2 of the 8 control windows on known letters flagged) and flagged no PHerc0175B window: a null, so nothing goes on to the later checks.
+- PHerc0490A (registration sha256 `808520a6fae96b06`): registered; the review has not run yet.
+
+Flagged windows are candidates, places to look, not readings, and no letters are claimed. A window without a flag is not a window without ink: the reviews miss some of the control's known letters.
+
+**Limits.**
+- Switch events are counted, not gated. The detector (the vertical track matched to the surface changes while the old one carries on beside it) has not been calibrated, and it fires the same way where a vertical track crosses a bridge between touching sheets. The most: on PHerc0483B pt11_z6272_a290 (208 on 54 lines), pt10_z6448_a300 (96 on 46 lines), pt6_z6272_a316 (76 on 83 lines) and pt15_z5472_a305 (70 on 49 lines); on PHerc0175B pt39_z3008_a151 (115 on 31 lines), pt3_z2784_a118 (23 on 49 lines), pt32_z2560_a104 (12 on 29 lines) and pt21_z2336_a135 (6 on 67 lines); on PHerc0490A pt2_z9024_a125 (14 on 44 lines), pt21_z8512_a116 (12 on 36 lines), pt3_z9024_a253 (5 on 9 lines) and pt19_z8512_a024 (4 on 21 lines).
+- The brightest layer of the 66-layer render is more than 10 layers from the centre layer 33 on PHerc0483B pt4_z5760_a290 (60), pt12_z5472_a304 (17) and pt19_z5472_a147 (65); on PHerc0175B pt14_z3392_a142 (22) and pt31_z2560_a043 (4); on PHerc0490A pt3_z9024_a253 (46), and exactly 10 layers from it on PHerc0175B pt3_z2784_a118 (23), so on those patches the centre layer may not sit on the sheet.
+- pt3_z2784_a118 on PHerc0175B reaches the second-difference bar exactly (8.00 voxels); the gate refuses only values over 8 voxels, so it passes.
+- The axis is coarse and has never been tested against a reference: the centroid of the m7 tracks' convex hull sits a median of 45 voxels from it over the band's z keys and 137.5 at worst on PHerc0483B; 35.5 and 189.3 on PHerc0175B; 61.8 and 190.9 on PHerc0490A. It only chooses the outward side, and every patch's chosen side reaches the bar above.
+- The survey's sheet check fails 17 of the 56 patches scored here, although every patch here passes the gates above (Related work); which criterion is right on those patches is not settled.
+- These are surfaces, not text. No letters are claimed.
+
+**How to reproduce.** CPU only.
+
+For PHerc0483B, from its surface tracks and m7 prediction:
+
+```
+python uncontested/export_tracks.py PHerc0483B_tracks.dbm tracks_export.npz
+python uncontested/sheet_patches.py axis --tracks tracks_export.npz --axis axis.json --sections level5_sections.npz
+python uncontested/sheet_patches.py build --tracks tracks_export.npz --m7 sp_m7.zarr/0 --axis axis.json \
+    --sections level5_sections.npz --out patches --record build.json
+python uncontested/sheet_patches.py validate --tracks tracks_export.npz --m7 sp_m7.zarr/0 --axis axis.json \
+    --out patches --record build.json --validation validation.json
+```
+
+The defaults reproduce PHerc0483B's run; `build --key K` seeds at another z, and `python uncontested/sheet_patches.py --help` lists every option. Run from this repository on the same inputs, `sheet_patches.py` rebuilt pt1_z5760_a182, pt2_z5760_a213, pt3_z5760_a258, pt4_z5760_a290, pt5_z5760_a320 and pt21_z5056_a026 with x, y and z grids byte-identical to the ones in the PHerc0483B table; `validate` on the first 5 gave 100 of 100 compared fields identical; `axis` rebuilt the 96 control points of the coarse axis and its cross-sections exactly.
+
+PHerc0175B is a further run of the same file, unchanged (its run record gives sha256 `03ef8c59e525e8cc`): `axis`, then `build` and `validate` once per seed key with `--scroll PHerc0175B --band 2112 3440 16 --voxel-um 8.64 --key K --first-index N` (N numbers the patches of each key), then the patches of all keys pooled: a patch was refused when more than 0.1 of the vertices lie within 3.0 voxels of the surface of a patch accepted before it (largest area first, all keys pooled). The pooling is a short merge over the per-key outputs and is not part of the script.
+
+PHerc0490A is a further run of the same file, unchanged (its run record gives sha256 `03ef8c59e525e8cc`): `axis`, then `build` and `validate` once per seed key with `--scroll PHerc0490A --band 8256 9776 16 --voxel-um 8.64 --key K --first-index N` (N numbers the patches of each key), then the patches of all keys pooled: a patch was refused when more than 0.1 of the vertices lie within 3.0 voxels of the surface of a patch accepted before it (largest area first, all keys pooled). The pooling is a short merge over the per-key outputs and is not part of the script.
+<!-- PATCHES:END -->

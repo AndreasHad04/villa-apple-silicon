@@ -1401,6 +1401,31 @@
       "detail": ""
     },
     {
+      "name": "PATCHES: the README section is exactly what the summary JSON generates now",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PATCHES: every number in the section is a value of the summary JSON or a named constant",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PATCHES: one table per scroll of the summary, in its order",
+      "ok": true,
+      "detail": "['PHerc0483B', 'PHerc0175B', 'PHerc0490A'] vs ['PHerc0483B', 'PHerc0175B', 'PHerc0490A']"
+    },
+    {
+      "name": "PATCHES: the limits are stated",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PATCHES control: a planted defect (the first patch row's area raised by 0.001 cm2) is caught by this block",
+      "ok": true,
+      "detail": "2 checks failed on it"
+    },
+    {
       "name": "README: no em or en dashes",
       "ok": true,
       "detail": ""

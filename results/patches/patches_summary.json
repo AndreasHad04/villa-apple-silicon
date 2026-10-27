@@ -1,0 +1,2048 @@
+{
+ "scrolls": [
+  {
+   "scroll": "PHerc0483B",
+   "folder": "research/uncontested/patch",
+   "missing": {
+    "segments": 0,
+    "data_types": [
+     "normal-grids",
+     "ome-zarr",
+     "photo",
+     "photo-mask",
+     "surface-prediction-zarr"
+    ],
+    "volume_types": [
+     "normal-grids",
+     "ome-zarr",
+     "surface-prediction-zarr"
+    ],
+    "umbilicus": false,
+    "lasagna": false
+   },
+   "rows": [
+    {
+     "name": "pt1_z5760_a182",
+     "seed_key": 5760,
+     "z": [
+      5660,
+      6172
+     ],
+     "angle": 182.1,
+     "area": 0.555,
+     "on_sheet": 0.9456,
+     "second_diff_max": 7.91,
+     "vertical": 0.7851,
+     "control": 0.0503,
+     "outward": 0.9904,
+     "switches": 0,
+     "lines": 57,
+     "peak": 35,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.333,
+      "tiles": 3,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt2_z5760_a213",
+     "seed_key": 5760,
+     "z": [
+      5500,
+      6512
+     ],
+     "angle": 213.1,
+     "area": 0.826,
+     "on_sheet": 0.9743,
+     "second_diff_max": 7.84,
+     "vertical": 0.6563,
+     "control": 0.0353,
+     "outward": 1.0,
+     "switches": 1,
+     "lines": 45,
+     "peak": 37,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 9,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt3_z5760_a258",
+     "seed_key": 5760,
+     "z": [
+      5568,
+      6216
+     ],
+     "angle": 258.1,
+     "area": 0.514,
+     "on_sheet": 0.9506,
+     "second_diff_max": 7.98,
+     "vertical": 0.4614,
+     "control": 0.1232,
+     "outward": 1.0,
+     "switches": 11,
+     "lines": 24,
+     "peak": 39,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.833,
+      "tiles": 6,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt4_z5760_a290",
+     "seed_key": 5760,
+     "z": [
+      5336,
+      6512
+     ],
+     "angle": 289.7,
+     "area": 1.293,
+     "on_sheet": 0.9607,
+     "second_diff_max": 7.73,
+     "vertical": 0.5844,
+     "control": 0.1601,
+     "outward": 0.9964,
+     "switches": 9,
+     "lines": 46,
+     "peak": 60,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 17,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt5_z5760_a320",
+     "seed_key": 5760,
+     "z": [
+      5460,
+      6012
+     ],
+     "angle": 319.7,
+     "area": 0.294,
+     "on_sheet": 0.9191,
+     "second_diff_max": 7.77,
+     "vertical": 0.6201,
+     "control": 0.1638,
+     "outward": 1.0,
+     "switches": 2,
+     "lines": 11,
+     "peak": 33,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 4,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt6_z6272_a316",
+     "seed_key": 6272,
+     "z": [
+      5292,
+      6512
+     ],
+     "angle": 315.5,
+     "area": 2.016,
+     "on_sheet": 0.9645,
+     "second_diff_max": 7.89,
+     "vertical": 0.6774,
+     "control": 0.0814,
+     "outward": 0.9929,
+     "switches": 76,
+     "lines": 83,
+     "peak": 36,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.8,
+      "tiles": 25,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt7_z5472_a290",
+     "seed_key": 5472,
+     "z": [
+      5004,
+      6512
+     ],
+     "angle": 289.9,
+     "area": 1.718,
+     "on_sheet": 0.9792,
+     "second_diff_max": 7.6,
+     "vertical": 0.7007,
+     "control": 0.1714,
+     "outward": 0.9592,
+     "switches": 16,
+     "lines": 116,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.633,
+      "tiles": 30,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt8_z6016_a271",
+     "seed_key": 6016,
+     "z": [
+      5456,
+      6492
+     ],
+     "angle": 270.7,
+     "area": 1.416,
+     "on_sheet": 0.97,
+     "second_diff_max": 7.93,
+     "vertical": 0.6758,
+     "control": 0.1831,
+     "outward": 1.0,
+     "switches": 24,
+     "lines": 70,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 22,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt9_z5760_a300",
+     "seed_key": 5760,
+     "z": [
+      4992,
+      6512
+     ],
+     "angle": 300.5,
+     "area": 1.251,
+     "on_sheet": 0.9683,
+     "second_diff_max": 7.77,
+     "vertical": 0.6193,
+     "control": 0.1334,
+     "outward": 0.9931,
+     "switches": 44,
+     "lines": 66,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 15,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt10_z6448_a300",
+     "seed_key": 6448,
+     "z": [
+      5372,
+      6512
+     ],
+     "angle": 299.9,
+     "area": 1.227,
+     "on_sheet": 0.952,
+     "second_diff_max": 7.94,
+     "vertical": 0.5974,
+     "control": 0.2141,
+     "outward": 0.9923,
+     "switches": 96,
+     "lines": 46,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.895,
+      "tiles": 19,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt11_z6272_a290",
+     "seed_key": 6272,
+     "z": [
+      5384,
+      6512
+     ],
+     "angle": 289.5,
+     "area": 1.167,
+     "on_sheet": 0.9298,
+     "second_diff_max": 7.98,
+     "vertical": 0.569,
+     "control": 0.2068,
+     "outward": 0.9842,
+     "switches": 208,
+     "lines": 54,
+     "peak": 33,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.765,
+      "tiles": 17,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt12_z5472_a304",
+     "seed_key": 5472,
+     "z": [
+      4992,
+      6488
+     ],
+     "angle": 304.2,
+     "area": 1.062,
+     "on_sheet": 0.9382,
+     "second_diff_max": 7.96,
+     "vertical": 0.5596,
+     "control": 0.1329,
+     "outward": 1.0,
+     "switches": 2,
+     "lines": 29,
+     "peak": 17,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.923,
+      "tiles": 13,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt13_z6272_a226",
+     "seed_key": 6272,
+     "z": [
+      5688,
+      6512
+     ],
+     "angle": 225.5,
+     "area": 1.038,
+     "on_sheet": 0.9454,
+     "second_diff_max": 7.98,
+     "vertical": 0.4707,
+     "control": 0.1565,
+     "outward": 0.9994,
+     "switches": 6,
+     "lines": 40,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 19,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt14_z6016_a275",
+     "seed_key": 6016,
+     "z": [
+      5424,
+      6336
+     ],
+     "angle": 275.4,
+     "area": 0.991,
+     "on_sheet": 0.9659,
+     "second_diff_max": 7.9,
+     "vertical": 0.6725,
+     "control": 0.1559,
+     "outward": 0.9997,
+     "switches": 6,
+     "lines": 49,
+     "peak": 35,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.818,
+      "tiles": 11,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt15_z5472_a305",
+     "seed_key": 5472,
+     "z": [
+      4992,
+      6364
+     ],
+     "angle": 304.6,
+     "area": 0.962,
+     "on_sheet": 0.9652,
+     "second_diff_max": 7.88,
+     "vertical": 0.6457,
+     "control": 0.2067,
+     "outward": 1.0,
+     "switches": 70,
+     "lines": 49,
+     "peak": 37,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 11,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt16_z6272_a208",
+     "seed_key": 6272,
+     "z": [
+      5892,
+      6512
+     ],
+     "angle": 207.9,
+     "area": 0.956,
+     "on_sheet": 0.9529,
+     "second_diff_max": 7.83,
+     "vertical": 0.6074,
+     "control": 0.0966,
+     "outward": 1.0,
+     "switches": 14,
+     "lines": 48,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 14,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt17_z6272_a316",
+     "seed_key": 6272,
+     "z": [
+      5264,
+      6512
+     ],
+     "angle": 316.0,
+     "area": 0.839,
+     "on_sheet": 0.9391,
+     "second_diff_max": 7.94,
+     "vertical": 0.7558,
+     "control": 0.0904,
+     "outward": 0.9981,
+     "switches": 2,
+     "lines": 30,
+     "peak": 33,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 12,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt18_z5216_a051",
+     "seed_key": 5216,
+     "z": [
+      4992,
+      5520
+     ],
+     "angle": 51.1,
+     "area": 0.597,
+     "on_sheet": 0.9633,
+     "second_diff_max": 7.99,
+     "vertical": 0.5342,
+     "control": 0.2278,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 17,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 7,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt19_z5472_a147",
+     "seed_key": 5472,
+     "z": [
+      4992,
+      5516
+     ],
+     "angle": 146.6,
+     "area": 0.405,
+     "on_sheet": 0.9736,
+     "second_diff_max": 7.77,
+     "vertical": 0.8025,
+     "control": 0.0585,
+     "outward": 1.0,
+     "switches": 15,
+     "lines": 35,
+     "peak": 65,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 2,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt20_z5472_a131",
+     "seed_key": 5472,
+     "z": [
+      4992,
+      5808
+     ],
+     "angle": 130.7,
+     "area": 0.379,
+     "on_sheet": 0.9506,
+     "second_diff_max": 7.99,
+     "vertical": 0.7283,
+     "control": 0.0798,
+     "outward": 1.0,
+     "switches": 1,
+     "lines": 26,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 3,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt21_z5056_a026",
+     "seed_key": 5056,
+     "z": [
+      4992,
+      5528
+     ],
+     "angle": 26.5,
+     "area": 0.378,
+     "on_sheet": 0.9606,
+     "second_diff_max": 7.99,
+     "vertical": 0.4696,
+     "control": 0.0846,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 11,
+     "peak": 35,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 1,
+      "passes": true
+     }
+    }
+   ],
+   "selection": {
+    "kind": "first_plus_extension",
+    "first_key": 5760,
+    "n_first": 5,
+    "area_first": 3.482,
+    "sep": 30.0,
+    "ext_keys": [
+     5056,
+     5216,
+     5472,
+     5760,
+     6016,
+     6272,
+     6448
+    ],
+    "validated": 192,
+    "passed": 185,
+    "duplicates": 27,
+    "n_ext": 16,
+    "n_sector": 4,
+    "n_cap": 12,
+    "sector": [
+     0,
+     150
+    ],
+    "not_written": 142,
+    "area_ext": 16.402
+   },
+   "cli": null,
+   "limits": {
+    "top_switches": [
+     [
+      "pt11_z6272_a290",
+      208,
+      54
+     ],
+     [
+      "pt10_z6448_a300",
+      96,
+      46
+     ],
+     [
+      "pt6_z6272_a316",
+      76,
+      83
+     ],
+     [
+      "pt15_z5472_a305",
+      70,
+      49
+     ]
+    ],
+    "n_top": 4,
+    "off_centre": [
+     [
+      "pt4_z5760_a290",
+      60
+     ],
+     [
+      "pt12_z5472_a304",
+      17
+     ],
+     [
+      "pt19_z5472_a147",
+      65
+     ]
+    ],
+    "at_off_centre": [],
+    "at_bar": [],
+    "not_rendered": [],
+    "axis_hull_median": 45.0,
+    "axis_hull_max": 137.5
+   },
+   "sheet_check": {
+    "n": 21,
+    "n_pass": 20,
+    "n_scored": 21,
+    "failing": [
+     "pt1_z5760_a182"
+    ],
+    "n_failing": 1,
+    "few_tiles": [
+     [
+      "pt21_z5056_a026",
+      1,
+      true
+     ]
+    ],
+    "top_switch_passes": [
+     [
+      "pt11_z6272_a290",
+      true
+     ],
+     [
+      "pt10_z6448_a300",
+      true
+     ],
+     [
+      "pt6_z6272_a316",
+      true
+     ],
+     [
+      "pt15_z5472_a305",
+      true
+     ]
+    ],
+    "n_failing_outside_top": 1,
+    "max_switches_failing_outside_top": 0
+   },
+   "ink": {
+    "prereg": {
+     "file": "results/fl/PREREGISTRATION_FL_0483B.md",
+     "sha256": "71835116d3f5a0738ff9f013b30d03c7c80e89225093715a869f8f80ad9e1713",
+     "recorded": true,
+     "amendment1_rule": "pass = present in READ, absent in BLIND (forward maps with the reading side's statistics, his convention) and absent in the 180 degree negative. BLIND_OWN is still built, shown and scored, but as description only. Unclear can only fail. The control must pass or the confirmation is VOID; this is the only attempt."
+    },
+    "review": {
+     "valid": true,
+     "rule": "VALID only if at least one flagged control window overlaps his letter boxes",
+     "n_control_windows_with_letters": 8,
+     "n_flagged_control_on_letters": 1,
+     "n_flagged_screen": 4,
+     "n_regions": 2,
+     "regions": [
+      [
+       "pt7_z5472_a290",
+       [
+        0,
+        2
+       ]
+      ],
+      [
+       "pt6_z6272_a316",
+       [
+        0,
+        3
+       ]
+      ]
+     ]
+    },
+    "neighbour": {
+     "valid": true,
+     "rule": "pass = present at d+1 and at d0 or d+2, absent in the 180 degree negative; unclear can only fail; the control window must pass or the check is VOID (Amendments 4 to 6, results/fl/PREREGISTRATION_FL_0483B.md)",
+     "n_screen": 4,
+     "n_pass_screen": 4,
+     "n_control": 1,
+     "control_passed": 1,
+     "depths": [
+      0,
+      1,
+      2
+     ]
+    },
+    "confirm": {
+     "state": "running"
+    }
+   },
+   "repro": {
+    "script_sha256": "03ef8c59e525e8cc77e6caa9e55435e1c53266fd31a4e4d35e70188ade2e1f57",
+    "grids": [
+     "pt1_z5760_a182",
+     "pt2_z5760_a213",
+     "pt3_z5760_a258",
+     "pt4_z5760_a290",
+     "pt5_z5760_a320",
+     "pt21_z5056_a026"
+    ],
+    "n_grids": 6,
+    "n_validated": 5,
+    "grids_byte_identical": true,
+    "validated": [
+     "pt1_z5760_a182",
+     "pt2_z5760_a213",
+     "pt3_z5760_a258",
+     "pt4_z5760_a290",
+     "pt5_z5760_a320"
+    ],
+    "validation_fields": 100,
+    "validation_differing": 0,
+    "axis_points": 96,
+    "axis_identical": true
+   },
+   "script_sha256": "03ef8c59e525e8cc77e6caa9e55435e1c53266fd31a4e4d35e70188ade2e1f57",
+   "totals": {
+    "n": 21,
+    "n_pass": 21,
+    "area": 19.884,
+    "largest": 2.016,
+    "z_min": 4992,
+    "z_max": 6512,
+    "n_keys": 7,
+    "on_sheet_min": 0.9191,
+    "outward_min": 0.9592,
+    "vertical_over_control_min": 2.3
+   }
+  },
+  {
+   "scroll": "PHerc0175B",
+   "folder": "research/uncontested/patch_0175B",
+   "missing": {
+    "segments": 0,
+    "data_types": [
+     "normal-grids",
+     "ome-zarr",
+     "photo",
+     "photo-mask",
+     "surface-prediction-zarr"
+    ],
+    "volume_types": [
+     "normal-grids",
+     "ome-zarr",
+     "surface-prediction-zarr"
+    ],
+    "umbilicus": false,
+    "lasagna": false
+   },
+   "rows": [
+    {
+     "name": "pt1_z2784_a048",
+     "seed_key": 2784,
+     "z": [
+      2568,
+      3284
+     ],
+     "angle": 47.9,
+     "area": 0.804,
+     "on_sheet": 0.9456,
+     "second_diff_max": 7.7,
+     "vertical": 0.5647,
+     "control": 0.0998,
+     "outward": 0.9992,
+     "switches": 3,
+     "lines": 46,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 5,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt2_z2784_a083",
+     "seed_key": 2784,
+     "z": [
+      2644,
+      2928
+     ],
+     "angle": 83.1,
+     "area": 0.344,
+     "on_sheet": 0.9669,
+     "second_diff_max": 7.97,
+     "vertical": 0.5146,
+     "control": 0.1701,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 22,
+     "peak": 35,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.0,
+      "tiles": 0,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt3_z2784_a118",
+     "seed_key": 2784,
+     "z": [
+      2456,
+      3064
+     ],
+     "angle": 118.2,
+     "area": 0.807,
+     "on_sheet": 0.977,
+     "second_diff_max": 8.0,
+     "vertical": 0.7196,
+     "control": 0.0877,
+     "outward": 1.0,
+     "switches": 23,
+     "lines": 49,
+     "peak": 23,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.0,
+      "tiles": 9,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt4_z2784_a163",
+     "seed_key": 2784,
+     "z": [
+      2724,
+      3204
+     ],
+     "angle": 162.8,
+     "area": 0.31,
+     "on_sheet": 0.9837,
+     "second_diff_max": 7.26,
+     "vertical": 0.6821,
+     "control": 0.0875,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 18,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.0,
+      "tiles": 3,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt5_z2784_a331",
+     "seed_key": 2784,
+     "z": [
+      2784,
+      3440
+     ],
+     "angle": 331.1,
+     "area": 0.484,
+     "on_sheet": 0.9545,
+     "second_diff_max": 7.96,
+     "vertical": 0.6156,
+     "control": 0.1299,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 27,
+     "peak": 35,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 5,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt7_z2176_a135",
+     "seed_key": 2176,
+     "z": [
+      2112,
+      2700
+     ],
+     "angle": 134.8,
+     "area": 0.344,
+     "on_sheet": 0.9746,
+     "second_diff_max": 7.82,
+     "vertical": 0.837,
+     "control": 0.0591,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 29,
+     "peak": 33,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 1,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt13_z3392_a102",
+     "seed_key": 3392,
+     "z": [
+      2980,
+      3440
+     ],
+     "angle": 101.8,
+     "area": 0.37,
+     "on_sheet": 0.9758,
+     "second_diff_max": 7.59,
+     "vertical": 0.5044,
+     "control": 0.054,
+     "outward": 0.9954,
+     "switches": 0,
+     "lines": 10,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 1,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt14_z3392_a142",
+     "seed_key": 3392,
+     "z": [
+      2884,
+      3440
+     ],
+     "angle": 142.1,
+     "area": 0.566,
+     "on_sheet": 0.9744,
+     "second_diff_max": 7.85,
+     "vertical": 0.7528,
+     "control": 0.071,
+     "outward": 0.9924,
+     "switches": 1,
+     "lines": 42,
+     "peak": 22,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.125,
+      "tiles": 8,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt15_z3392_a332",
+     "seed_key": 3392,
+     "z": [
+      2808,
+      3440
+     ],
+     "angle": 332.5,
+     "area": 0.511,
+     "on_sheet": 0.9697,
+     "second_diff_max": 6.97,
+     "vertical": 0.7201,
+     "control": 0.0608,
+     "outward": 0.9944,
+     "switches": 0,
+     "lines": 36,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.0,
+      "tiles": 7,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt19_z2336_a073",
+     "seed_key": 2336,
+     "z": [
+      2176,
+      2812
+     ],
+     "angle": 73.1,
+     "area": 0.564,
+     "on_sheet": 0.971,
+     "second_diff_max": 7.85,
+     "vertical": 0.5166,
+     "control": 0.1779,
+     "outward": 1.0,
+     "switches": 1,
+     "lines": 25,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 7,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt20_z2336_a101",
+     "seed_key": 2336,
+     "z": [
+      2264,
+      2812
+     ],
+     "angle": 101.0,
+     "area": 0.394,
+     "on_sheet": 0.9813,
+     "second_diff_max": 7.71,
+     "vertical": 0.6662,
+     "control": 0.1063,
+     "outward": 0.9851,
+     "switches": 0,
+     "lines": 18,
+     "peak": 33,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.0,
+      "tiles": 6,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt21_z2336_a135",
+     "seed_key": 2336,
+     "z": [
+      2112,
+      2964
+     ],
+     "angle": 134.7,
+     "area": 0.879,
+     "on_sheet": 0.9895,
+     "second_diff_max": 7.93,
+     "vertical": 0.7977,
+     "control": 0.127,
+     "outward": 1.0,
+     "switches": 6,
+     "lines": 67,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.0,
+      "tiles": 8,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt25_z3232_a132",
+     "seed_key": 3232,
+     "z": [
+      2960,
+      3440
+     ],
+     "angle": 131.6,
+     "area": 0.655,
+     "on_sheet": 0.9647,
+     "second_diff_max": 7.96,
+     "vertical": 0.5814,
+     "control": 0.1014,
+     "outward": 1.0,
+     "switches": 2,
+     "lines": 49,
+     "peak": 35,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 1,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt26_z3232_a338",
+     "seed_key": 3232,
+     "z": [
+      2804,
+      3400
+     ],
+     "angle": 337.7,
+     "area": 0.322,
+     "on_sheet": 0.9608,
+     "second_diff_max": 7.32,
+     "vertical": 0.68,
+     "control": 0.1114,
+     "outward": 0.9912,
+     "switches": 0,
+     "lines": 12,
+     "peak": 35,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.0,
+      "tiles": 6,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt31_z2560_a043",
+     "seed_key": 2560,
+     "z": [
+      2560,
+      3348
+     ],
+     "angle": 42.8,
+     "area": 0.595,
+     "on_sheet": 0.9647,
+     "second_diff_max": 7.71,
+     "vertical": 0.4547,
+     "control": 0.1423,
+     "outward": 0.9821,
+     "switches": 3,
+     "lines": 34,
+     "peak": 4,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.375,
+      "tiles": 8,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt32_z2560_a104",
+     "seed_key": 2560,
+     "z": [
+      2340,
+      3100
+     ],
+     "angle": 103.5,
+     "area": 0.935,
+     "on_sheet": 0.9436,
+     "second_diff_max": 7.92,
+     "vertical": 0.6384,
+     "control": 0.1346,
+     "outward": 1.0,
+     "switches": 12,
+     "lines": 29,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.875,
+      "tiles": 16,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt37_z3008_a055",
+     "seed_key": 3008,
+     "z": [
+      2564,
+      3440
+     ],
+     "angle": 54.6,
+     "area": 0.796,
+     "on_sheet": 0.9811,
+     "second_diff_max": 7.72,
+     "vertical": 0.5269,
+     "control": 0.1767,
+     "outward": 0.9972,
+     "switches": 0,
+     "lines": 43,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.714,
+      "tiles": 14,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt39_z3008_a151",
+     "seed_key": 3008,
+     "z": [
+      2740,
+      3440
+     ],
+     "angle": 150.8,
+     "area": 0.481,
+     "on_sheet": 0.95,
+     "second_diff_max": 7.94,
+     "vertical": 0.5619,
+     "control": 0.1571,
+     "outward": 0.9931,
+     "switches": 115,
+     "lines": 31,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 3,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt40_z3008_a323",
+     "seed_key": 3008,
+     "z": [
+      2868,
+      3440
+     ],
+     "angle": 322.9,
+     "area": 0.427,
+     "on_sheet": 0.9912,
+     "second_diff_max": 7.17,
+     "vertical": 0.8785,
+     "control": 0.0128,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 41,
+     "peak": 35,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.0,
+      "tiles": 6,
+      "passes": false
+     }
+    }
+   ],
+   "selection": {
+    "kind": "pooled_keys",
+    "keys": [
+     2176,
+     2336,
+     2560,
+     2784,
+     3008,
+     3232,
+     3392
+    ],
+    "built": 21,
+    "passed": 21,
+    "duplicates": 2,
+    "failed": 0,
+    "kept": 19,
+    "sep": [
+     20.0,
+     30.0
+    ],
+    "duplicate_rule": "refused when more than 0.1 of the vertices lie within 3.0 voxels of the surface of a patch accepted before it (largest area first, all keys pooled)"
+   },
+   "cli": {
+    "band": [
+     2112,
+     3440,
+     16
+    ],
+    "voxel_um": 8.64,
+    "first_index": {
+     "2176": 7,
+     "2336": 19,
+     "2560": 31,
+     "2784": 1,
+     "3008": 37,
+     "3232": 25,
+     "3392": 13
+    }
+   },
+   "limits": {
+    "top_switches": [
+     [
+      "pt39_z3008_a151",
+      115,
+      31
+     ],
+     [
+      "pt3_z2784_a118",
+      23,
+      49
+     ],
+     [
+      "pt32_z2560_a104",
+      12,
+      29
+     ],
+     [
+      "pt21_z2336_a135",
+      6,
+      67
+     ]
+    ],
+    "n_top": 4,
+    "off_centre": [
+     [
+      "pt14_z3392_a142",
+      22
+     ],
+     [
+      "pt31_z2560_a043",
+      4
+     ]
+    ],
+    "at_off_centre": [
+     [
+      "pt3_z2784_a118",
+      23
+     ]
+    ],
+    "at_bar": [
+     [
+      "pt3_z2784_a118",
+      8.0
+     ]
+    ],
+    "not_rendered": [],
+    "axis_hull_median": 35.5,
+    "axis_hull_max": 189.3
+   },
+   "sheet_check": {
+    "n": 19,
+    "n_pass": 9,
+    "n_scored": 19,
+    "failing": [
+     "pt2_z2784_a083",
+     "pt3_z2784_a118",
+     "pt4_z2784_a163",
+     "pt14_z3392_a142",
+     "pt15_z3392_a332",
+     "pt20_z2336_a101",
+     "pt21_z2336_a135",
+     "pt26_z3232_a338",
+     "pt31_z2560_a043",
+     "pt40_z3008_a323"
+    ],
+    "n_failing": 10,
+    "few_tiles": [
+     [
+      "pt2_z2784_a083",
+      0,
+      false
+     ],
+     [
+      "pt7_z2176_a135",
+      1,
+      true
+     ],
+     [
+      "pt13_z3392_a102",
+      1,
+      true
+     ],
+     [
+      "pt25_z3232_a132",
+      1,
+      true
+     ]
+    ],
+    "top_switch_passes": [
+     [
+      "pt39_z3008_a151",
+      true
+     ],
+     [
+      "pt3_z2784_a118",
+      false
+     ],
+     [
+      "pt32_z2560_a104",
+      true
+     ],
+     [
+      "pt21_z2336_a135",
+      false
+     ]
+    ],
+    "n_failing_outside_top": 8,
+    "max_switches_failing_outside_top": 3
+   },
+   "ink": {
+    "prereg": {
+     "file": "results/fl/PREREGISTRATION_FL_0175B.md",
+     "sha256": "7393d6e1c6ae45146822831880593ce9f8554c4ede0bcfb742ed0b4e34d49433",
+     "recorded": true,
+     "amendment1_rule": null
+    },
+    "review": {
+     "valid": true,
+     "rule": "VALID only if at least one flagged control window overlaps his letter boxes",
+     "n_control_windows_with_letters": 8,
+     "n_flagged_control_on_letters": 2,
+     "n_flagged_screen": 0,
+     "n_regions": 0,
+     "regions": []
+    },
+    "neighbour": null,
+    "confirm": null
+   },
+   "repro": null,
+   "script_sha256": "03ef8c59e525e8cc77e6caa9e55435e1c53266fd31a4e4d35e70188ade2e1f57",
+   "totals": {
+    "n": 19,
+    "n_pass": 19,
+    "area": 10.588,
+    "largest": 0.935,
+    "z_min": 2112,
+    "z_max": 3440,
+    "n_keys": 7,
+    "on_sheet_min": 0.9436,
+    "outward_min": 0.9821,
+    "vertical_over_control_min": 2.9
+   }
+  },
+  {
+   "scroll": "PHerc0490A",
+   "folder": "research/uncontested/patch_0490A",
+   "missing": {
+    "segments": 0,
+    "data_types": [
+     "normal-grids",
+     "ome-zarr",
+     "photo",
+     "photo-mask",
+     "surface-prediction-zarr"
+    ],
+    "volume_types": [
+     "normal-grids",
+     "ome-zarr",
+     "surface-prediction-zarr"
+    ],
+    "umbilicus": false,
+    "lasagna": false
+   },
+   "rows": [
+    {
+     "name": "pt1_z9024_a075",
+     "seed_key": 9024,
+     "z": [
+      8672,
+      9184
+     ],
+     "angle": 75.2,
+     "area": 0.599,
+     "on_sheet": 0.9739,
+     "second_diff_max": 7.54,
+     "vertical": 0.586,
+     "control": 0.1174,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 29,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.5,
+      "tiles": 6,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt2_z9024_a125",
+     "seed_key": 9024,
+     "z": [
+      8444,
+      9100
+     ],
+     "angle": 124.8,
+     "area": 0.656,
+     "on_sheet": 0.9708,
+     "second_diff_max": 7.94,
+     "vertical": 0.7592,
+     "control": 0.0789,
+     "outward": 0.9917,
+     "switches": 14,
+     "lines": 44,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 4,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt3_z9024_a253",
+     "seed_key": 9024,
+     "z": [
+      8928,
+      9340
+     ],
+     "angle": 253.0,
+     "area": 0.317,
+     "on_sheet": 0.9444,
+     "second_diff_max": 7.46,
+     "vertical": 0.5526,
+     "control": 0.1603,
+     "outward": 0.9967,
+     "switches": 5,
+     "lines": 9,
+     "peak": 46,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 2,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt8_z8336_a073",
+     "seed_key": 8336,
+     "z": [
+      8256,
+      8956
+     ],
+     "angle": 73.2,
+     "area": 0.295,
+     "on_sheet": 0.9558,
+     "second_diff_max": 7.98,
+     "vertical": 0.634,
+     "control": 0.1319,
+     "outward": 1.0,
+     "switches": 2,
+     "lines": 21,
+     "peak": 24,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.0,
+      "tiles": 1,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt13_z9712_a109",
+     "seed_key": 9712,
+     "z": [
+      9256,
+      9776
+     ],
+     "angle": 109.2,
+     "area": 0.388,
+     "on_sheet": 0.9681,
+     "second_diff_max": 7.96,
+     "vertical": 0.6307,
+     "control": 0.13,
+     "outward": 0.9483,
+     "switches": 0,
+     "lines": 18,
+     "peak": 35,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.0,
+      "tiles": 6,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt14_z9712_a130",
+     "seed_key": 9712,
+     "z": [
+      9476,
+      9776
+     ],
+     "angle": 130.5,
+     "area": 0.267,
+     "on_sheet": 0.9728,
+     "second_diff_max": 7.66,
+     "vertical": 0.7557,
+     "control": 0.0538,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 18,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.0,
+      "tiles": 2,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt19_z8512_a024",
+     "seed_key": 8512,
+     "z": [
+      8256,
+      8744
+     ],
+     "angle": 23.8,
+     "area": 0.378,
+     "on_sheet": 0.9711,
+     "second_diff_max": 7.94,
+     "vertical": 0.5562,
+     "control": 0.2135,
+     "outward": 1.0,
+     "switches": 4,
+     "lines": 21,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.0,
+      "tiles": 2,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt20_z8512_a073",
+     "seed_key": 8512,
+     "z": [
+      8352,
+      8960
+     ],
+     "angle": 72.8,
+     "area": 0.291,
+     "on_sheet": 0.9683,
+     "second_diff_max": 7.53,
+     "vertical": 0.5984,
+     "control": 0.2332,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 21,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 3,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt21_z8512_a116",
+     "seed_key": 8512,
+     "z": [
+      8272,
+      8912
+     ],
+     "angle": 115.9,
+     "area": 0.757,
+     "on_sheet": 0.946,
+     "second_diff_max": 7.92,
+     "vertical": 0.6161,
+     "control": 0.1399,
+     "outward": 1.0,
+     "switches": 12,
+     "lines": 36,
+     "peak": 35,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.583,
+      "tiles": 12,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt22_z8512_a153",
+     "seed_key": 8512,
+     "z": [
+      8396,
+      8892
+     ],
+     "angle": 152.8,
+     "area": 0.25,
+     "on_sheet": 0.9855,
+     "second_diff_max": 7.59,
+     "vertical": 0.7494,
+     "control": 0.0725,
+     "outward": 1.0,
+     "switches": 1,
+     "lines": 19,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.0,
+      "tiles": 0,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt25_z9536_a055",
+     "seed_key": 9536,
+     "z": [
+      9264,
+      9776
+     ],
+     "angle": 55.1,
+     "area": 0.336,
+     "on_sheet": 0.9528,
+     "second_diff_max": 7.78,
+     "vertical": 0.495,
+     "control": 0.1067,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 22,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 5,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt32_z8768_a122",
+     "seed_key": 8768,
+     "z": [
+      8256,
+      8960
+     ],
+     "angle": 121.8,
+     "area": 0.925,
+     "on_sheet": 0.9786,
+     "second_diff_max": 7.88,
+     "vertical": 0.7346,
+     "control": 0.0979,
+     "outward": 1.0,
+     "switches": 1,
+     "lines": 44,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.923,
+      "tiles": 13,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt33_z8768_a188",
+     "seed_key": 8768,
+     "z": [
+      8464,
+      9180
+     ],
+     "angle": 187.9,
+     "area": 0.451,
+     "on_sheet": 0.9736,
+     "second_diff_max": 7.7,
+     "vertical": 0.6565,
+     "control": 0.1406,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 27,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.25,
+      "tiles": 4,
+      "passes": false
+     }
+    },
+    {
+     "name": "pt37_z9280_a057",
+     "seed_key": 9280,
+     "z": [
+      9032,
+      9396
+     ],
+     "angle": 57.0,
+     "area": 0.361,
+     "on_sheet": 0.9821,
+     "second_diff_max": 7.91,
+     "vertical": 0.5132,
+     "control": 0.1142,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 30,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 3,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt38_z9280_a087",
+     "seed_key": 9280,
+     "z": [
+      8540,
+      9776
+     ],
+     "angle": 87.0,
+     "area": 0.987,
+     "on_sheet": 0.9656,
+     "second_diff_max": 7.99,
+     "vertical": 0.634,
+     "control": 0.2211,
+     "outward": 0.9942,
+     "switches": 1,
+     "lines": 39,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 0.778,
+      "tiles": 9,
+      "passes": true
+     }
+    },
+    {
+     "name": "pt39_z9280_a120",
+     "seed_key": 9280,
+     "z": [
+      8820,
+      9400
+     ],
+     "angle": 119.6,
+     "area": 0.489,
+     "on_sheet": 0.9731,
+     "second_diff_max": 7.98,
+     "vertical": 0.6402,
+     "control": 0.0896,
+     "outward": 1.0,
+     "switches": 3,
+     "lines": 36,
+     "peak": 34,
+     "passed": true,
+     "sheet": {
+      "good_fraction": 1.0,
+      "tiles": 4,
+      "passes": true
+     }
+    }
+   ],
+   "selection": {
+    "kind": "pooled_keys",
+    "keys": [
+     8336,
+     8512,
+     8768,
+     9024,
+     9280,
+     9536,
+     9712
+    ],
+    "built": 21,
+    "passed": 21,
+    "duplicates": 5,
+    "failed": 0,
+    "kept": 16,
+    "sep": [
+     20.0,
+     30.0
+    ],
+    "duplicate_rule": "refused when more than 0.1 of the vertices lie within 3.0 voxels of the surface of a patch accepted before it (largest area first, all keys pooled)"
+   },
+   "cli": {
+    "band": [
+     8256,
+     9776,
+     16
+    ],
+    "voxel_um": 8.64,
+    "first_index": {
+     "8336": 7,
+     "8512": 19,
+     "8768": 31,
+     "9024": 1,
+     "9280": 37,
+     "9536": 25,
+     "9712": 13
+    }
+   },
+   "limits": {
+    "top_switches": [
+     [
+      "pt2_z9024_a125",
+      14,
+      44
+     ],
+     [
+      "pt21_z8512_a116",
+      12,
+      36
+     ],
+     [
+      "pt3_z9024_a253",
+      5,
+      9
+     ],
+     [
+      "pt19_z8512_a024",
+      4,
+      21
+     ]
+    ],
+    "n_top": 4,
+    "off_centre": [
+     [
+      "pt3_z9024_a253",
+      46
+     ]
+    ],
+    "at_off_centre": [],
+    "at_bar": [],
+    "not_rendered": [],
+    "axis_hull_median": 61.8,
+    "axis_hull_max": 190.9
+   },
+   "sheet_check": {
+    "n": 16,
+    "n_pass": 10,
+    "n_scored": 16,
+    "failing": [
+     "pt8_z8336_a073",
+     "pt13_z9712_a109",
+     "pt14_z9712_a130",
+     "pt19_z8512_a024",
+     "pt22_z8512_a153",
+     "pt33_z8768_a188"
+    ],
+    "n_failing": 6,
+    "few_tiles": [
+     [
+      "pt8_z8336_a073",
+      1,
+      false
+     ],
+     [
+      "pt22_z8512_a153",
+      0,
+      false
+     ]
+    ],
+    "top_switch_passes": [
+     [
+      "pt2_z9024_a125",
+      true
+     ],
+     [
+      "pt21_z8512_a116",
+      true
+     ],
+     [
+      "pt3_z9024_a253",
+      true
+     ],
+     [
+      "pt19_z8512_a024",
+      false
+     ]
+    ],
+    "n_failing_outside_top": 5,
+    "max_switches_failing_outside_top": 2
+   },
+   "ink": {
+    "prereg": {
+     "file": "results/fl/PREREGISTRATION_FL_0490A.md",
+     "sha256": "808520a6fae96b06449017419f1716d5d60230e9fcde16ee6c67234061df0bee",
+     "recorded": true,
+     "amendment1_rule": null
+    },
+    "review": null,
+    "neighbour": null,
+    "confirm": null
+   },
+   "repro": null,
+   "script_sha256": "03ef8c59e525e8cc77e6caa9e55435e1c53266fd31a4e4d35e70188ade2e1f57",
+   "totals": {
+    "n": 16,
+    "n_pass": 16,
+    "area": 7.747,
+    "largest": 0.987,
+    "z_min": 8256,
+    "z_max": 9776,
+    "n_keys": 7,
+    "on_sheet_min": 0.9444,
+    "outward_min": 0.9483,
+    "vertical_over_control_min": 2.6
+   }
+  }
+ ],
+ "totals": {
+  "n_scrolls": 3,
+  "n": 56,
+  "n_pass": 56,
+  "area": 38.219,
+  "on_sheet_min": 0.9191,
+  "outward_min": 0.9483,
+  "vertical_over_control_min": 2.3,
+  "sheet_scored": 56,
+  "sheet_pass": 39,
+  "sheet_fail": 17
+ },
+ "umbilicus": {
+  "bar_median": 40,
+  "bar_max": 100,
+  "v1": {
+   "planes": 40,
+   "scrolls": 4,
+   "median": 349.7,
+   "max": 3303.1,
+   "passed": false,
+   "per_scroll": [
+    "PHerc0125",
+    "PHerc0211",
+    "PHerc0343",
+    "PHerc0826"
+   ]
+  },
+  "v2": {
+   "planes": 36,
+   "scrolls": 4,
+   "median": 285.2,
+   "max": 1785.5,
+   "passed": false,
+   "per_scroll": [
+    "PHerc0125",
+    "PHerc0211",
+    "PHerc0343",
+    "PHerc0826"
+   ]
+  }
+ },
+ "params": {
+  "step_z": 4,
+  "ray": 24.0,
+  "dmax": 4.0,
+  "frac_sp": 0.45,
+  "wmax": 7.0,
+  "sp_min": 6.0,
+  "min_match": 0.65,
+  "k2k": 8.0,
+  "vertex": 20.0,
+  "key_step": 16
+ },
+ "params_same": true,
+ "criteria": {
+  "on_sheet": 0.9,
+  "k2k": 8.0,
+  "vertical_ratio": 2.0,
+  "outward": 0.9,
+  "box": 2
+ },
+ "criteria_same": true,
+ "script": {
+  "sha256": "03ef8c59e525e8cc77e6caa9e55435e1c53266fd31a4e4d35e70188ade2e1f57",
+  "same_for_all": true
+ },
+ "survey_sheet_check": {
+  "rule": "pass when good_fraction >= 0.4 (512 px tiles, median crossness >= 0.31)",
+  "layer": "middle (33 of 66)",
+  "inkcheck_sha256": "009f013b1e5f40f27de70c7d76096d553c9ca04a0e52557a4ba03d5cb03e91b3",
+  "positive_control": {
+   "crop": "PHerc0343 control crop, CT layer 33",
+   "good_fraction": 1.0,
+   "median_cross": 0.4524,
+   "tiles": 23,
+   "passes": true
+  },
+  "negative_control": null
+ },
+ "prior_art": {
+  "source": "research/prior_art/ketchupbyheinz_survey_README_20261027.md",
+  "n_scrolls": 21,
+  "author": "ketchupbyheinz",
+  "repo": "vesuvius-scroll-survey",
+  "url": "https://github.com/ketchupbyheinz/vesuvius-scroll-survey",
+  "pr": 2318,
+  "per_scroll": {
+   "PHerc0483B": {
+    "label": "PHerc. 483B",
+    "traced": 6,
+    "passed": 3,
+    "inked": 3
+   },
+   "PHerc0175B": {
+    "label": "PHerc. 175B",
+    "traced": 9,
+    "passed": 0,
+    "inked": 0
+   },
+   "PHerc0490A": {
+    "label": "PHerc. 490A",
+    "traced": 6,
+    "passed": 2,
+    "inked": 2
+   }
+  }
+ }
+}

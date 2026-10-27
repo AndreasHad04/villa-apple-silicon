@@ -396,11 +396,12 @@ else:
     if _tool.exists() and _par.exists() and _d5.exists():
         import importlib.util, zarr as _zarr, numpy as _np
         _sp = importlib.util.spec_from_file_location("_ds9", _tool); _m = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(_m)
+        # in row strips: sharpen() works per pixel column along depth, so strips equal the whole-volume result bit for bit
         for _n in sorted(p.name for p in (_d5 / "fs").iterdir() if (p / "NDH" / "ct.zarr").exists()):
             _src = _np.asarray(_zarr.open_array(str(_d5 / "zs" / _n / "w04" / "ct.zarr"), mode="r")[:])
             for _c, _um in (("NDH", True), ("ND", False)):
                 _ref = _np.asarray(_zarr.open_array(str(_d5 / "fs" / _n / _c / "ct.zarr"), mode="r")[:])
-                ck(f"ARM F tool: bench/depth_sharpen_9um.py reproduces the tested {_c} input on PHerc0139 {_n}", bool(_np.array_equal(_m.sharpen(_src, 9.362, _um), _ref)))
+                ck(f"ARM F tool: bench/depth_sharpen_9um.py reproduces the tested {_c} input on PHerc0139 {_n}", bool(_src.shape == _ref.shape and all(_np.array_equal(_m.sharpen(_src[:, _y:_y + 256], 9.362, _um), _ref[:, _y:_y + 256]) for _y in range(0, _src.shape[1], 256))))
     else:
         print("  NOTE: tool equivalence needs the local data tree, not checked here")
     _docs3 = {n: (R / "results" / f).read_text() for n, f in (("ISSUE", "fs/ISSUE_armf.md"), ("C1582", "fs/COMMENT_1582_armf.md"), ("FORM", "FORM_FIELD5_ARMF.txt"),
@@ -573,6 +574,232 @@ else:
     ck("NL343: the registration hashes to what the summary records",
        _hl3.sha256((R / "results" / "nieuwlaar" / "PREREGISTRATION_MAC.md").read_bytes()).hexdigest() == _ns["prereg_sha256"])
     ck("NL343: the limits are stated", has(_nsec, "**Limits.**", "his published statistics", "has not finished yet"))
+
+print("\nPATCHES (axis-free sheet patches on First Letters scrolls)")
+_pj = R / "results" / "patches" / "patches_summary.json"
+if not _pj.exists() or "<!-- PATCHES:BEGIN -->" not in README:
+    print("  NOTE: PATCHES not published here, not checked")
+else:
+    import importlib.util as _ilu, hashlib as _hlp, os as _osp
+    _pg = next(p for p in (R / "ops" / "make_patches_section.py", R / "bench" / "make_patches_section.py") if p.exists())
+    _spp = _ilu.spec_from_file_location("make_patches_section", _pg); _pm = _ilu.module_from_spec(_spp); _spp.loader.exec_module(_pm)
+    _ps = json.loads(_pj.read_text())
+    _psec = README[README.index(_pm.BEGIN):README.index(_pm.END) + len(_pm.END)]
+    _NUM = re.compile(r"(?<![A-Za-z_\d.])\d+(?:\.\d+)?(?![A-Za-z_\d])")
+    _STRUCT = {0: "zarr level 0 in the usage block", 1: "d = +1, the registered depth", 33: "centre layer of the 66-layer render",
+               66: "layers of the render", float(_pm.OFF_CENTRE): "the generator's off-centre threshold"}
+    _SCJ = _opt(R / "results" / "patches" / "survey_sheetcheck.json")
+    _SC = json.loads(_SCJ) if _SCJ else None
+    _PA = R / "research" / "prior_art"
+    _PRIOR = sorted(_PA.glob("*survey_README*.md")) if _PA.exists() else []
+    _PBODY = sorted(_PA.glob("villa_*_body_*.md")) if _PA.exists() else []
+
+    def _raw(x):
+        """validation.json and build.json of one scroll's patch folder, (None, None) in the published repo"""
+        d = R / x["folder"]
+        if not (d / "validation.json").exists():
+            return None, None
+        return json.loads((d / "validation.json").read_text()), (json.loads((d / "build.json").read_text())
+                                                                  if (d / "build.json").exists() else {})
+
+    def _patches_checks(sec):
+        """every check of this block on one section text, as (name, ok, detail); the control runs it on a planted copy."""
+        flat = " ".join(sec.split())
+        out = [("PATCHES: the README section is exactly what the summary JSON generates now", sec == _pm.section_text(_ps), "")]
+        allowed = {float(x) for x in _NUM.findall(json.dumps(_ps))} | set(_STRUCT)
+        extra = sorted({x for x in _NUM.findall(sec) if float(x) not in allowed})
+        out.append(("PATCHES: every number in the section is a value of the summary JSON or a named constant", not extra,
+                    ", ".join(extra[:8])))
+        parts = {c.split("\n", 1)[0].strip(): c for c in sec.split("\n### ")[1:]}
+        names = [x["scroll"] for x in _ps["scrolls"]]
+        out.append(("PATCHES: one table per scroll of the summary, in its order", list(parts) == names, f"{list(parts)} vs {names}"))
+        tot_n = tot_pass = 0
+        tot_area, raw_all, recs = 0.0, True, []
+        pub = next(q for q in (R / "public" / "uncontested" / "sheet_patches.py", R / "uncontested" / "sheet_patches.py") if q.exists())
+        psh = _hlp.sha256(pub.read_bytes()).hexdigest()
+        for x in _ps["scrolls"]:
+            sn = x["scroll"]
+            pflat = " ".join(parts.get(sn, "").split())
+            V, B = _raw(x)
+            if V is None:
+                raw_all = False
+                continue
+            P, suf = V["patches"], sn[len("PHerc"):]
+            recs += [B["params"]] if "params" in B else [r["params"] for r in (B.get("per_key_records") or {}).values()]
+            seed0 = (B.get("params") or {}).get("Z0")
+            Q = ((_SC or {}).get("scrolls") or {}).get(sn)
+            shp = {q["patch"]: q for q in (Q or {}).get("patches", [])}
+            rows = {l.split("|")[1].strip(): [c.strip() for c in l.split("|")[2:-1]]
+                    for l in parts.get(sn, "").splitlines() if l.startswith("| pt")}
+            bad = []
+            for n, p in P.items():
+                vt, q = p["vertical"], shp.get(n)
+                want = [p.get("seed_key", seed0), f"{p['keys'][0]} to {p['keys'][1]}", p["angle_deg"], p["area_cm2"],
+                        p["m7"]["on_sheet_vertices"], p["keys_check"]["second_diff_max"], vt["on_track_of_covered_all"],
+                        max(v or 0 for v in vt["control_half_spacing_shift_on_track"].values()),
+                        p["orientation"]["outward_fraction_chosen"], f"{vt['switch_events']} / {vt['lines']}",
+                        (p.get("render") or {}).get("peak_layer", "not rendered"),
+                        "not scored" if q is None else
+                        f"{q['good_fraction']:g} ({q['tiles']} tiles), {'pass' if q['passes'] else 'fail'}"]
+                got = rows.get(n, [])
+                if len(got) != len(want):
+                    bad.append(f"{n}: {len(got)} cells")
+                    continue
+                for g, w in zip(got, want):
+                    try:
+                        same = g == w if isinstance(w, str) else float(g) == float(w)
+                    except ValueError:
+                        same = False
+                    if not same:
+                        bad.append(f"{n}: {g} != {w}")
+            out.append((f"PATCHES {sn}: one table row per patch of validation.json, every cell equal to it and to "
+                        "survey_sheetcheck.json (re-read here)", sorted(rows) == sorted(P) and not bad, "; ".join(bad[:4])))
+            area = round(sum(p["area_cm2"] for p in P.values()), 3)
+            npass = sum(bool(p["pass"]) for p in P.values())
+            tot_n, tot_pass, tot_area = tot_n + len(P), tot_pass + npass, tot_area + sum(p["area_cm2"] for p in P.values())
+            out.append((f"PATCHES {sn}: the patch count, the pass count and the total area, summed here, are the README's",
+                        f"{len(P)} patches, {npass} passing every gate, {area:.3f} cm2 in all" in pflat and npass == V["n_pass"],
+                        f"{len(P)}, {npass}, {area:.3f}"))
+            e = V["extension"]
+            if "passed_not_written_cap" in e:
+                fa = round(sum(P[n]["area_cm2"] for n in B["selected"]), 3)
+                sel = has(pflat, f"The first {len(B['selected'])} ({fa:.3f} cm2) come from seeds at z {B['params']['Z0']}",
+                          f"The other {len(e['accepted'])} ({e['new_area_cm2']:.3f} cm2)",
+                          f"{e['validated']} candidates validated, {e['passed']} passed, {len(e['refused_duplicate_of_new'])} refused",
+                          f"{len(e['passed_not_written_cap'])} passing candidates were not written")
+            else:
+                pk, nd = list(e["per_key"].values()), len(e["refused_duplicate"])
+                sel = has(pflat, f"wrote {sum(k['n_selected'] for k in pk)} patches and {sum(k['n_pass'] for k in pk)} passed",
+                          f"{nd} {'was' if nd == 1 else 'were'} refused as duplicates", f"so {len(e['accepted'])} were kept") \
+                    and sorted(e["accepted"]) == sorted(P)
+            out.append((f"PATCHES {sn}: how the patches were selected is quoted from build.json and validation.json", sel, ""))
+            cr = V["criteria"]
+            out.append((f"PATCHES {sn}: the gates quoted are the criteria in its validation.json",
+                        has(flat, f"at least {cr['on_sheet_vertices_min']:g} of its vertices",
+                            f"never exceeds {cr['key_second_difference_max_max']:g} voxels",
+                            f"at least {cr['vertical_on_track_vs_control']:g} times as often",
+                            f"at least {cr['outward_fraction_min']:g} of its normals"), ""))
+            pre = R / "results" / "fl" / f"PREREGISTRATION_FL_{suf}.md"
+            if pre.exists():
+                psha = _hlp.sha256(pre.read_bytes()).hexdigest()
+                out.append((f"PATCHES {sn}: the registration quoted hashes to the file and to prereg.sha256",
+                            f"{sn} (registration sha256 `{psha[:16]}`)" in sec
+                            and psha in (R / "results" / "fl" / "prereg.sha256").read_text(), psha[:16]))
+                pl = dict(re.findall(r"(pt\d+) \((\d+)\)", pre.read_text().split("off centre for", 1)[1].split(";")[0]))
+                oc = {n.split("_")[0]: str(p["render"]["peak_layer"]) for n, p in P.items()
+                      if "render" in p and abs(p["render"]["peak_layer"] - 33) >= _pm.OFF_CENTRE}
+                out.append((f"PATCHES {sn}: the layers {_pm.OFF_CENTRE} or more from layer 33, recomputed here, are the "
+                            "registration's off-centre list and are named", oc == pl and all(
+                                f"{m} ({P[m]['render']['peak_layer']})" in flat for m in P if m.split("_")[0] in oc), f"{oc} vs {pl}"))
+            ink, fl = [], R / "results" / "fl"
+            if (fl / f"review_{suf}" / "UNSEALED.json").exists():
+                U = json.loads((fl / f"review_{suf}" / "UNSEALED.json").read_text())
+                ink.append(f"the review is {'VALID' if U['valid'] else 'VOID'} ({U['n_flagged_control_on_letters']} of the "
+                           f"{U['n_control_windows_with_letters']} control windows")
+                ink.append(f"flagged no {sn} window" if U["n_flagged_screen"] == 0 else f"flagged {U['n_flagged_screen']} {sn} window")
+            if (fl / f"neighbour_{suf}" / "RESULT.json").exists():
+                N = json.loads((fl / f"neighbour_{suf}" / "RESULT.json").read_text())
+                ink.append(f"is {'VALID' if N['valid'] else 'VOID'}, and {N['n_pass_screen']} of "
+                           f"{sum(not r['control'] for r in N['results'])} windows pass it")
+            if (fl / f"confirm_{suf}" / "RESULT.json").exists():
+                C = json.loads((fl / f"confirm_{suf}" / "RESULT.json").read_text())
+                ink.append(f"The blind-side confirmation is {'VALID' if C['valid'] else 'VOID'}: the control passed")
+            elif (fl / f"confirm_{suf}").exists():
+                ink.append("The blind-side confirmation is running; its result is not in yet.")
+            out.append((f"PATCHES {sn}: the ink screen quoted is UNSEALED.json, the neighbour RESULT.json and the confirmation "
+                        "state (re-read here)", has(flat, *ink), " | ".join(ink)[:160]))
+            rp, run = R / x["folder"] / "public_repro.json", R / x["folder"] / "run.json"
+            if rp.exists():
+                rr = json.loads(rp.read_text())
+                out.append((f"PATCHES {sn}: the reproduction quoted is public_repro.json, made with the sheet_patches.py shipped now",
+                            rr["grids_all_bytes_identical"] == (f"byte-identical to the ones in the {sn} table" in flat)
+                            and rr["public_sha256"] == psh, rr["public_sha256"][:16]))
+            elif run.exists():
+                rs = json.loads(run.read_text()).get("sheet_patches_sha256") or "unrecorded"
+                out.append((f"PATCHES {sn}: its run record's sheet_patches.py is the one shipped now, as the section says",
+                            rs == psh and f"{sn} is a further run of the same file, unchanged" in flat, rs[:16]))
+            if Q:
+                fails = [z["patch"] for z in Q["patches"] if not z["passes"]]
+                out.append((f"PATCHES {sn}: the survey sheet-check counts quoted are survey_sheetcheck.json's (re-counted here)",
+                            f"{Q['n_pass']} of the {Q['n']} {sn} patches" in flat and Q["n_pass"] == len(Q["patches"]) - len(fails)
+                            and all(f"{z['patch']} ({z['tiles']} tile" in flat for z in Q["patches"] if z["tiles"] <= 1),
+                            f"{Q['n_pass']} of {Q['n']}"))
+                if len(fails) >= 2:
+                    top = sorted(P, key=lambda n: (-P[n]["vertical"]["switch_events"], int(n.split("_")[0][2:])))[:4]
+                    res = {z["patch"]: z["passes"] for z in Q["patches"]}
+                    ok = [n for n in top if res.get(n)]
+                    ko = [n for n in top if res.get(n) is False]
+                    rest = [n for n in fails if n not in top]
+                    frag = ([f"{_pm._fmt_list(ok)} pass"] if ok else []) + ([f"{_pm._fmt_list(ko)} fail"] if ko else []) + \
+                        ([f"the other {len(rest)} failing patches have at most "
+                          f"{max(P[n]['vertical']['switch_events'] for n in rest)} switch events each"] if rest else [])
+                    out.append((f"PATCHES {sn}: the overlap of the survey's failures with the most switch events, recomputed "
+                                "here from validation.json and survey_sheetcheck.json, is the one quoted", has(flat, *frag),
+                                " | ".join(frag)[:160]))
+            if _PRIOR:
+                pt = _PRIOR[-1].read_text()
+                m = re.fullmatch(r"(\d+)(\w*)", suf)
+                lab = f"PHerc. {int(m.group(1))}{m.group(2)}" if m else sn
+                srv = pt[pt.index("Survey of the"):].splitlines()
+                row = next((l for l in srv if l.startswith(f"| {lab} |")), None)
+                if row:
+                    c = [z.strip() for z in row.split("|")[1:-1]]
+                    out.append((f"PATCHES {sn}: the survey's own counts quoted are its README's survey table (re-read here)",
+                                f"{lab} {c[1]} traced and {c[2]} passing its sheet check" in flat, f"{c[1]}, {c[2]}"))
+        if raw_all:
+            lead = f"{tot_n} validated sheet patches" if tot_pass == tot_n else f"{tot_n} sheet patches, {tot_pass} validated"
+            out.append(("PATCHES: the totals across scrolls, summed here, are the README's lead and its table",
+                        f"{lead}, {round(tot_area, 3):.3f} cm2 in all, on {len(names)} First Letters scrolls" in flat
+                        and f"| all | {tot_n} | {tot_pass} | {round(tot_area, 3):.3f} |" in sec, f"{tot_n}, {tot_pass}, {tot_area:.3f}"))
+        if recs:
+            pr, mk = recs[0], ("STEP_Z", "RAY", "DMAX", "FRAC_SP", "WMAX", "SP_MIN", "MIN_MATCH", "K2K_MAX", "COL_EVERY", "DS")
+            out.append(("PATCHES: every build record of every scroll has the parameters the Method paragraph quotes",
+                        all(all(r[k] == pr[k] for k in mk) for r in recs)
+                        and has(flat, f"{pr['STEP_Z']} slices at a time", f"a ray of +-{pr['RAY']:g} voxels",
+                                f"within {pr['DMAX']:g} voxels", f"at most {pr['WMAX']:g} voxels wide",
+                                f"fewer than {pr['MIN_MATCH']:g} of the samples", f"one vertex every {pr['COL_EVERY'] * pr['DS']:g} voxels",
+                                "Every scroll was traced with the same parameters."), f"{len(recs)} build records"))
+        um = []
+        for k in ("v1", "v2"):
+            c = json.loads((R / "research" / "uncontested" / "phase2" / f"score_{k}.json").read_text())["checks_curve"] \
+                if (R / "research" / "uncontested" / "phase2").exists() else None
+            if c is not None:
+                um.append(f"a median of {c['median_l0']} and a maximum of {c['max_l0']} over {c['planes']} planes" in flat and not c["PASS"])
+        if um:
+            out.append(("PATCHES: both umbilicus attempts are quoted from score_v1.json and score_v2.json and both failed",
+                        all(um) and "Both failed" in flat, str(um)))
+        if _SC:
+            pc = _SC.get("positive_control") or {}
+            out.append(("PATCHES: the survey sheet check's positive control is quoted from survey_sheetcheck.json, and the missing "
+                        "negative control is stated", f"a good fraction of {pc.get('good_fraction', -1):g} over {pc.get('tiles')} tiles and "
+                        f"{'passes' if pc.get('passes') else 'FAILS'}" in flat
+                        and ("No negative control was run." in flat) == (not _SC.get("negative_control")), ""))
+        if _PBODY:
+            prn = re.search(r"villa_(\d+)_body", _PBODY[-1].name).group(1)
+            url = _ps["prior_art"]["url"]
+            out.append(("PATCHES: the related work names the villa PR and the survey repository of the saved PR body",
+                        f"villa PR #{prn}" in flat and url in sec and url.split("github.com/", 1)[1] in _PBODY[-1].read_text(), prn))
+        out.append(("PATCHES: the limits are stated", has(flat, "**Limits.**", "counted, not gated",
+                                                        "has never been tested against a reference", "No letters are claimed",
+                                                        "Flagged windows are candidates"), ""))
+        return out
+
+    _pl = next(l for l in _psec.splitlines() if l.startswith("| pt"))
+    _pc = _pl.split("|"); _pc[5] = f" {float(_pc[5]) + 0.001:.3f} "
+    _plant = _psec.replace(_pl, "|".join(_pc))
+    if _osp.environ.get("VERIFY_PLANT") == "PATCHES":
+        print("  NOTE: VERIFY_PLANT=PATCHES, the checks below run on a copy with the first patch row's area raised by 0.001 cm2 "
+              "and must FAIL")
+        _psec = _plant
+    for _n, _ok, _d in _patches_checks(_psec):
+        ck(_n, _ok, _d)
+    if all(_raw(x)[0] is not None for x in _ps["scrolls"]):
+        ck("PATCHES: the summary is exactly what the raw JSON gives now", _pm.build_summary(R) == _ps)
+    else:
+        print("  NOTE: raw validation.json and build.json are not in this repo; the section is checked against the summary")
+    _caught = [n for n, ok, _ in _patches_checks(_plant) if not ok]
+    ck("PATCHES control: a planted defect (the first patch row's area raised by 0.001 cm2) is caught by this block", bool(_caught),
+       f"{len(_caught)} checks failed on it")
 
 print("\nHYGIENE")
 for k, t in ALL.items():
