@@ -6,8 +6,11 @@ patch folder research/uncontested/patch*/ that holds a validation.json (a folder
 scroll name comes from the folder's build.json or run.json and from the axis file its validation.json names, which must
 agree), plus the umbilicus scores, each scroll's axis, the open-data metadata, the registrations and ink-screen results
 under results/fl/, the public reproduction record, results/patches/survey_sheetcheck.json and the saved prior-art survey
-under research/prior_art/. `--write` splices the section into public/README.md between the PATCHES markers and copies
-the summary and this script into the published layout (results/patches/, bench/).
+under research/prior_art/. A folder whose build.json lists `existing_keys` is an expansion of its scroll's one other
+folder: its patches join that scroll's table and totals, and its own screen (the registration that names its
+validation.json, the review whose contact sheets hold exactly its patches) is reported after the scroll's. A folder that
+holds a WRITEUP_EXCLUDE file is left out. `--write` splices the section into public/README.md between the PATCHES markers
+and copies the summary and this script into the published layout (results/patches/, bench/).
 Published repo: section_text(summary) regenerates the section from the shipped summary alone, which is what
 bench/verify_claims.py checks.
 """
@@ -21,6 +24,8 @@ VOL_NAMES = {'ome-zarr': 'the CT', 'surface-prediction-zarr': 'the m7 surface pr
 NEIGHBOUR_RULE = 'pass = present at d+1 and at d0 or d+2, absent in the 180 degree negative'
 AMENDMENT1_RULE = 'pass = present in READ, absent in BLIND'
 SHEET_RULE = 'pass when good_fraction >= '
+EXT_FOLLOWUP = 'a follow-up of known candidates, not independent'
+EXT_BEFORE_INK = 'before any ink map'
 
 
 def _num(name):
@@ -140,15 +145,7 @@ def _ink(root, scroll):
     return out
 
 
-def _scroll(root, d, md_all, sheets):
-    v = json.loads((d / 'validation.json').read_text())
-    b = _load(d / 'build.json') or {}
-    run = _load(d / 'run.json')
-    name = _scroll_name(root, v, b, run)
-    params = [b['params']] if 'params' in b else [r['params'] for r in (b.get('per_key_records') or {}).values()]
-    seed0 = b['params']['Z0'] if 'params' in b else None
-    sc = ((sheets or {}).get('scrolls') or {}).get(name)
-    sh = {x['patch']: x for x in sc['patches']} if sc else {}
+def _rows(v, seed0, sh):
     rows = []
     for n in sorted(v['patches'], key=_num):
         p, vert, s = v['patches'][n], v['patches'][n]['vertical'], sh.get(n)
@@ -160,6 +157,110 @@ def _scroll(root, d, md_all, sheets):
                          lines=vert['lines'], peak=(p.get('render') or {}).get('peak_layer'), passed=p['pass'],
                          sheet=None if s is None else dict(good_fraction=s['good_fraction'], tiles=s['tiles'],
                                                            passes=s['passes'])))
+    return rows
+
+
+def _is_expansion(b):
+    """a folder traced around the existing patches of its scroll: its build record lists their seed keys"""
+    return bool((b or {}).get('existing_keys'))
+
+
+def _ink_expansion(root, d, v):
+    """the screen of an expansion folder: the registration that names its validation.json, and the review whose contact
+    sheets were built from exactly its patches (its key is read only once UNSEALED.json exists)"""
+    fl, folder, names = root / 'results/fl', str(d.relative_to(root)), set(v['patches'])
+    pres = [p for p in sorted(fl.glob('PREREGISTRATION_FL_*.md')) if f'{folder}/validation.json' in p.read_text()]
+    revs = [q.parent for q in sorted(fl.glob('review_*/build.json'))
+            if {m for m in (_load(q).get('meshes') or []) if isinstance(m, str)} == names]
+    if len(pres) > 1 or len(revs) > 1:
+        raise SystemExit(f'{d.name}: {len(pres)} registrations and {len(revs)} reviews match it; at most one of each')
+    out = dict(prereg=None, review=None)
+    if pres:
+        t, sha, rec = ' '.join(pres[0].read_text().split()), _sha(pres[0]), fl / 'prereg.sha256'
+        if EXT_FOLLOWUP not in t or EXT_BEFORE_INK not in t:
+            raise SystemExit(f'{pres[0].name}: it no longer says the screen was registered before any ink map as a follow-up '
+                             'of known candidates; update the sentences that paraphrase it')
+        out['prereg'] = dict(file=str(pres[0].relative_to(root)), sha256=sha, recorded=rec.exists() and sha in rec.read_text())
+    u = _load(revs[0] / 'UNSEALED.json') if revs else None
+    if u:
+        win = {}
+        for s in json.loads((revs[0] / 'key.json').read_text())['sheets'].values():
+            if not s['control']:
+                win[s['mesh']] = win.get(s['mesh'], 0) + len(s['windows'])
+        if not set(win) <= names:
+            raise SystemExit(f'{revs[0].name}: its key holds windows of patches outside {d.name}')
+        by = {}
+        for f in u['flagged']:
+            if not f['control']:
+                by.setdefault(f['mesh'], []).append(f['window'])
+        n_with = sum(1 for k in win.values() if k)
+        out['review'] = dict(folder=str(revs[0].relative_to(root)), valid=u['valid'], rule=u['rule'],
+                             n_control_windows_with_letters=u['n_control_windows_with_letters'],
+                             n_flagged_control_on_letters=u['n_flagged_control_on_letters'],
+                             n_flagged_screen=u['n_flagged_screen'], n_regions=len(by),
+                             regions=[[k, sorted(w)] for k, w in by.items()], n_windows_screen=sum(win.values()),
+                             n_patches=len(names), n_patches_with_windows=n_with, n_patches_without_windows=len(names) - n_with)
+    return out
+
+
+def _expansion(root, d, name, sh, v0, ink0, md):
+    """one expansion folder of a scroll: (what the write-up says about it, its table rows, its build parameters)"""
+    v = json.loads((d / 'validation.json').read_text())
+    b = _load(d / 'build.json') or {}
+    run = _load(d / 'run.json')
+    if _scroll_name(root, v, b, run) != name:
+        raise SystemExit(f'{d.name}: not a folder of {name}')
+    rows = _rows(v, None, sh)
+    e, first = v['extension'], set(v0['patches'])
+    if set(e['accepted']) != set(v['patches']) or first & set(v['patches']):
+        raise SystemExit(f'{d.name}: its accepted list is not its patches, or it reuses a patch name of {name}')
+    dup, reb = e['refused_duplicate'], e['duplicate_control']
+    parts = [len(e[k]) for k in ('accepted', 'refused_cap', 'refused_duplicate', 'failed_gates', 'failed_bars',
+                                 'failed_build', 'failed_validate')]
+    listed = sum(k['n_in_sector_geometry_ok'] for k in e['per_key'].values())
+    built = len(b['candidates_built'])
+    if not sum(parts) == built == listed:
+        raise SystemExit(f'{d.name}: {parts} do not add up to the {built} candidates built ({listed} listed)')
+    regions = sorted(e['per_region'])
+    flagged = sorted(m for m, _ in ((ink0 or {}).get('review') or {}).get('regions') or [])
+    if regions != flagged:
+        raise SystemExit(f'{d.name}: its regions {regions} are not the regions the {name} screen flagged {flagged}')
+    prefix = {n.split('_')[0].rstrip('0123456789') for n in v['patches']}
+    area = round(sum(r['area'] for r in rows), 3)
+    if len(prefix) != 1 or area != e['area_cm2_total'] or v['n_pass'] != len(rows):
+        raise SystemExit(f'{d.name}: patch names {sorted(prefix)}, area {area} against {e["area_cm2_total"]}, '
+                         f'{v["n_pass"]} of {len(rows)} passing')
+    sel = dict(kind='sector_expansion', keys=e['keys'], n_keys_searched=len(e['keys']), sector=e['sector_deg'],
+               built=built, failed_bars=len(e['failed_bars']), failed_validation=len(e['failed_gates']),
+               errors=len(e['failed_build']) + len(e['failed_validate']), duplicates=len(dup),
+               duplicates_of_first=sum(x['duplicate_of'] in first for x in dup.values()), n_first=len(first),
+               rebuilt_first=len(reb), rebuilt_identical_refused=sum(bool(x['identical']) and x['status'] == 'refused_duplicate'
+                                                                     and x['rebuilt'] in dup for x in reb),
+               passed_not_duplicate=len(e['accepted']) + len(e['refused_cap']), kept=len(e['accepted']), cap=e['cap'],
+               per_region=[[k, e['per_region'][k]] for k in regions], gates=e['gates'], duplicate_rule=e['duplicate_rule'],
+               cap_rule=e['cap_rule'])
+    vol = next(iter(md['volumes'].values()))
+    cli = dict(band=(run or {}).get('band_arg'), voxel_um=vol['properties']['pixel_size_um'])
+    out = dict(folder=str(d.relative_to(root)), prefix=prefix.pop(), n=len(rows), n_pass=v['n_pass'], area=area, cli=cli,
+               n_sheet_unscored=sum(r['sheet'] is None for r in rows), selection=sel, ink=_ink_expansion(root, d, v),
+               script_sha256=(run or {}).get('sheet_patches_sha256'))
+    return out, rows, [r['params'] for r in (b.get('per_key_listing_records') or {}).values()], _criteria(v)
+
+
+def _scroll(root, d, md_all, sheets, ext_dirs=()):
+    v = json.loads((d / 'validation.json').read_text())
+    b = _load(d / 'build.json') or {}
+    run = _load(d / 'run.json')
+    name = _scroll_name(root, v, b, run)
+    params = [b['params']] if 'params' in b else [r['params'] for r in (b.get('per_key_records') or {}).values()]
+    seed0 = b['params']['Z0'] if 'params' in b else None
+    sc = ((sheets or {}).get('scrolls') or {}).get(name)
+    sh = {x['patch']: x for x in sc['patches']} if sc else {}
+    first_rows = _rows(v, seed0, sh)
+    ink = _ink(root, name)
+    exps = [_expansion(root, e, name, sh, v, ink, md_all[name]) for e in ext_dirs]
+    params += [p for x in exps for p in x[2]]
+    rows = first_rows + [r for x in exps for r in x[1]]
     crit = _criteria(v)
     md = md_all[name]
     vol_types = sorted({x['type'] for vol in md['volumes'].values() for x in vol.get('data') or []})
@@ -185,7 +286,7 @@ def _scroll(root, d, md_all, sheets):
                      n_failing_outside_top=sum(r['name'] not in topn for r in fails),
                      max_switches_failing_outside_top=max([r['switches'] for r in fails if r['name'] not in topn],
                                                           default=None))
-    sel = _selection(v, b, rows)
+    sel = _selection(v, b, first_rows)
     cli = None
     if sel['kind'] == 'pooled_keys' and run and b.get('per_key_records'):
         vol = next(iter(md['volumes'].values()))
@@ -208,14 +309,16 @@ def _scroll(root, d, md_all, sheets):
         scroll=name, folder=str(d.relative_to(root)),
         missing=dict(segments=len(md.get('segments', {})), data_types=types, volume_types=vol_types,
                      umbilicus=any('umbilicus' in t for t in types), lasagna=any('lasagna' in t for t in types)),
-        rows=rows, selection=sel, cli=cli, limits=limits, sheet_check=sheet, ink=_ink(root, name), repro=repro,
+        rows=rows, selection=sel, cli=cli, limits=limits, sheet_check=sheet, ink=ink, repro=repro,
         script_sha256=(run or {}).get('sheet_patches_sha256') or (repro or {}).get('script_sha256'),
-        totals=dict(n=len(rows), n_pass=v['n_pass'], area=round(sum(r['area'] for r in rows), 3),
+        totals=dict(n=len(rows), n_pass=v['n_pass'] + sum(x[0]['n_pass'] for x in exps), area=round(sum(r['area'] for r in rows), 3),
                     largest=max(r['area'] for r in rows), z_min=min(r['z'][0] for r in rows),
                     z_max=max(r['z'][1] for r in rows), n_keys=len(keys_used),
                     on_sheet_min=min(r['on_sheet'] for r in rows), outward_min=min(r['outward'] for r in rows),
                     vertical_over_control_min=round(min(r['vertical'] / max(r['control'], 1e-9) for r in rows), 1)))
-    return out, [_method(x) for x in params], crit
+    if exps:
+        out['expansions'] = [x[0] for x in exps]
+    return out, [_method(x) for x in params], [crit] + [x[3] for x in exps]
 
 
 def _prior(root, names):
@@ -253,16 +356,23 @@ def build_summary(root: Path) -> dict:
     p2 = root / 'research/uncontested'
     md_all = json.loads((p2 / 'dl/metadata.json').read_text())['samples']
     sheets = _load(root / 'results/patches/survey_sheetcheck.json')
-    built = [_scroll(root, d, md_all, sheets) for d in sorted(p2.glob('patch*'))
-             if d.is_dir() and (d / 'validation.json').exists() and not (d / 'WRITEUP_EXCLUDE').exists()]
-    if not built:
+    groups = {}
+    for d in sorted(p2.glob('patch*')):
+        if d.is_dir() and (d / 'validation.json').exists() and not (d / 'WRITEUP_EXCLUDE').exists():
+            v, b = json.loads((d / 'validation.json').read_text()), _load(d / 'build.json') or {}
+            groups.setdefault(_scroll_name(root, v, b, _load(d / 'run.json')), []).append((d, _is_expansion(b)))
+    if not groups:
         raise SystemExit('no patch folder with a validation.json')
-    if len({x[0]['scroll'] for x in built}) != len(built):
-        raise SystemExit('two patch folders for one scroll')
+    built = []
+    for name, ds in groups.items():
+        first = [d for d, x in ds if not x]
+        if len(first) != 1:
+            raise SystemExit(f'{name}: {len(first)} patch folders that are not an expansion; exactly one is needed')
+        built.append(_scroll(root, first[0], md_all, sheets, [d for d, x in ds if x]))
     built.sort(key=lambda x: (-x[0]['totals']['area'], x[0]['scroll']))
     scrolls = [x[0] for x in built]
     methods = [m for x in built for m in x[1]]
-    crits = [x[2] for x in built]
+    crits = [c for x in built for c in x[2]]
     bar = re.search(r'Bar: median <= (\d+) and max <= (\d+) level-0 voxels', (p2 / 'PHASE2_UMBILICUS.md').read_text())
     umb = {}
     for k in ('v1', 'v2'):
@@ -283,7 +393,8 @@ def build_summary(root: Path) -> dict:
         umbilicus=dict(bar_median=int(bar.group(1)), bar_max=int(bar.group(2)), **umb),
         params=methods[0], params_same=all(m == methods[0] for m in methods),
         criteria=crits[0], criteria_same=all(c == crits[0] for c in crits),
-        script=dict(sha256=pub_sha, same_for_all=all(s['script_sha256'] in (pub_sha, None) for s in scrolls)),
+        script=dict(sha256=pub_sha, same_for_all=all(s['script_sha256'] in (pub_sha, None) for s in scrolls) and
+                    all(e['script_sha256'] in (pub_sha, None) for s in scrolls for e in s.get('expansions') or [])),
         survey_sheet_check=None if sheets is None else dict(
             rule=sheets['rule'], layer=sheets['layer'], inkcheck_sha256=sheets['inkcheck_sha256'],
             positive_control=sheets.get('positive_control'), negative_control=sheets.get('negative_control')),
@@ -309,13 +420,15 @@ def _scroll_row(x):
 
 def _script_text(s):
     sc, sha = s['scrolls'], s['script']['sha256']
-    diff = [x for x in sc if x['script_sha256'] and x['script_sha256'] != sha]
+    runs = [(x['scroll'], x['script_sha256'], x['repro']) for x in sc] + \
+        [(f"the {x['scroll']} expansion", e['script_sha256'], None) for x in sc for e in x.get('expansions') or []]
+    diff = [(n, h) for n, h, _ in runs if h and h != sha]
     if diff:
         return ('Not every run used the shipped `sheet_patches.py`: ' +
-                '; '.join(f"{x['scroll']} sha256 `{x['script_sha256'][:16]}`" for x in diff) + '.')
-    made = [x['scroll'] for x in sc if x['repro'] is None and x['script_sha256']]
+                '; '.join(f"{n} sha256 `{h[:16]}`" for n, h in diff) + '.')
+    made = [n for n, h, r in runs if r is None and h]
     rep = [x for x in sc if x['repro'] and x['repro']['grids_byte_identical']]
-    unrec = [x['scroll'] for x in sc if not x['script_sha256']]
+    unrec = [n for n, h, _ in runs if not h]
     parts = ([f"it traced {_fmt_list(made)} as shipped"] if made else []) + \
         [f"it rebuilt {len(x['repro']['grids'])} of the {x['scroll']} patches byte for byte from the same inputs" for x in rep]
     who = 'every scroll' if not unrec else _fmt_list(made + [x['scroll'] for x in rep])
@@ -348,6 +461,11 @@ def _related_text(s):
               f"the middle layer of every render, passes " +
               _fmt_list([f"{x['sheet_check']['n_pass']} of the {x['sheet_check']['n_scored']} {x['scroll']} patches"
                          for x in scored]) + '.')
+        uns = [(x['scroll'], e) for x in scored for e in x.get('expansions') or [] if e['n_sheet_unscored']]
+        if uns:
+            t += (' It has not been run on ' +
+                  _fmt_list([f"the {e['n']} {n} expansion patches" if e['n_sheet_unscored'] == e['n'] else
+                             f"{e['n_sheet_unscored']} of the {e['n']} {n} expansion patches" for n, e in uns]) + '.')
         if pc:
             t += (f" On the positive control, a PHerc0343 crop over known letters, it gives a good fraction of "
                   f"{pc['good_fraction']:g} over {pc['tiles']} tiles and {'passes' if pc['passes'] else 'FAILS'}.")
@@ -398,6 +516,30 @@ def _missing_text(sc):
 
 
 def _selection_text(x):
+    return ' '.join([_selection_first(x)] + [_expansion_selection_text(e) for e in x.get('expansions') or []])
+
+
+def _expansion_selection_text(e):
+    q = e['selection']
+    regs = _fmt_list([f"{k} nearer {m}" for m, k in q['per_region']])
+    t = (f"The last {e['n']} ({e['area']:.3f} cm2, the {e['prefix']} patches) were traced around the candidate regions of "
+         f"the ink screen below, {regs}: every seed candidate whose geometry the tracer accepts at the "
+         f"{q['n_keys_searched']} keys from z {min(q['keys'])} to {max(q['keys'])} with an angle of {q['sector'][0]:g} to "
+         f"{q['sector'][1]:g} degrees, {q['built']} in all; {q['failed_bars']} failed the tracer's own bars, "
+         f"{q['failed_validation']} failed validation, " + (f"{q['errors']} did not run, " if q['errors'] else '') +
+         f"{q['duplicates']} were refused as duplicates ({q['duplicates_of_first']} of them of the {q['n_first']} earlier "
+         "patches")
+    if q['rebuilt_first']:
+        t += (f"; the {q['rebuilt_first']} candidates that rebuild an earlier patch came out identical to it and are among "
+              "them" if q['rebuilt_identical_refused'] == q['rebuilt_first'] else
+              f"; {q['rebuilt_identical_refused']} of the {q['rebuilt_first']} candidates that rebuild an earlier patch came "
+              "out identical to it and are among them")
+    if q['passed_not_duplicate'] > q['kept']:
+        return t + f"), and the {q['kept']} largest of the other {q['passed_not_duplicate']} were kept, a cap of {q['cap']}."
+    return t + f"), and the other {q['kept']} were kept."
+
+
+def _selection_first(x):
     q = x['selection']
     if q['kind'] == 'first_plus_extension':
         return (f"The first {q['n_first']} ({q['area_first']:.3f} cm2) come from seeds at z {q['first_key']}, chosen at "
@@ -418,6 +560,40 @@ def _depths(ds):
     return _fmt_list(['0' if d == 0 else f'+{d}' for d in ds])
 
 
+def _expansion_ink_lines(x):
+    out = []
+    for e in x.get('expansions') or []:
+        n, k = x['scroll'], e['ink']
+        pre, rv = k['prereg'], k['review']
+        line = (f"- {n} expansion, the {e['n']} {e['prefix']} patches" +
+                (f" (registration sha256 `{pre['sha256'][:16]}`)" if pre else '') + ': ')
+        if pre:
+            line += (f"registered before any ink map of them existed, as a follow-up of the {n} candidates above and not as an "
+                     "independent test. ")
+        if rv is None:
+            out.append(line + ('The review' if pre else 'Not registered yet; the review') + ' has not run yet.')
+            continue
+        a, b = rv['n_flagged_control_on_letters'], rv['n_control_windows_with_letters']
+        line += f"The review is {'VALID' if rv['valid'] else 'VOID'} ({a} of the {b} control windows on known letters flagged)"
+        if not rv['valid']:
+            out.append(line + ', so it counts for nothing under its rule.')
+            continue
+        cover = (f"{rv['n_windows_screen']} windows from {rv['n_patches_with_windows']} of the {rv['n_patches']} patches" +
+                 (f" (the other {rv['n_patches_without_windows']} yielded no window)" if rv['n_patches_without_windows'] else ''))
+        if rv['n_flagged_screen'] == 0:
+            line += (f" and flagged none of the {cover}: a null." +
+                     (f" With only {a} of the {b} control windows on known letters flagged, its sensitivity is low, so the "
+                      "null is weak evidence against text continuing there, not proof." if 2 * a < b else
+                      " The null is evidence against text continuing there, not proof."))
+        else:
+            regs = '; '.join(f"{m} {'windows' if len(w) > 1 else 'window'} {_fmt_list(w)}" for m, w in rv['regions'])
+            line += (f" and flagged {_pl(rv['n_flagged_screen'], 'window')} of the {cover}, in "
+                     f"{_pl(rv['n_regions'], 'region')} ({regs}); the later checks have not run on them yet.")
+        reg = [m.split('_')[0] for m, _ in e['selection']['per_region']]
+        out.append(line + f" The results for {_fmt_list(reg)} above are unchanged.")
+    return out
+
+
 def _ink_text(s):
     sc = s['scrolls']
     reg = [x['scroll'] for x in sc if x['ink']['prereg']]
@@ -435,12 +611,14 @@ def _ink_text(s):
         line = f"- {n}" + (f" (registration sha256 `{pre['sha256'][:16]}`)" if pre else '') + ': '
         if rv is None:
             out.append(line + ('registered; ' if pre else 'not registered yet; ') + 'the review has not run yet.')
+            out += _expansion_ink_lines(x)
             continue
         miss = miss or rv['n_flagged_control_on_letters'] < rv['n_control_windows_with_letters']
         line += (f"the review is {'VALID' if rv['valid'] else 'VOID'} ({rv['n_flagged_control_on_letters']} of the "
                  f"{rv['n_control_windows_with_letters']} control windows on known letters flagged)")
         if rv['n_flagged_screen'] == 0:
             out.append(line + f" and flagged no {n} window: a null, so nothing goes on to the later checks.")
+            out += _expansion_ink_lines(x)
             continue
         regs = '; '.join(f"{m} {'windows' if len(w) > 1 else 'window'} {_fmt_list(w)}" for m, w in rv['regions'])
         line += (f" and flagged {_pl(rv['n_flagged_screen'], n + ' window')} in {_pl(rv['n_regions'], 'region')} "
@@ -487,6 +665,9 @@ def _ink_text(s):
                 line += ' So it supports ' + (_fmt_list(sup) if sup else 'no window') + (
                     ' and goes against ' + _fmt_list(nsup) if nsup else '') + '; it gates nothing.'
         out.append(line)
+        out += _expansion_ink_lines(x)
+    miss = miss or any(e['ink']['review']['n_flagged_control_on_letters'] < e['ink']['review']['n_control_windows_with_letters']
+                       for x in sc for e in x.get('expansions') or [] if e['ink']['review'])
     fig = Path(__file__).resolve().parents[1] / 'public/results/patches/candidates_PHerc0483B.png'
     if not fig.exists():
         fig = Path(__file__).resolve().parents[1] / 'results/patches/candidates_PHerc0483B.png'
@@ -581,6 +762,18 @@ def _howto_text(s):
                 f"{cl['band'][2]} --voxel-um {cl['voxel_um']:g} --key K --first-index N` (N numbers the patches of each "
                 f"key), then the patches of all keys pooled: a patch was {q['duplicate_rule']}. The pooling is a short "
                 f"merge over the per-key outputs and is not part of the script."]
+    for x in s['scrolls']:
+        for e in x.get('expansions') or []:
+            q, h, cl = e['selection'], e['script_sha256'], e['cli']
+            what = ('a further run of the same file, unchanged' if h == sha else 'a run of a DIFFERENT file' if h
+                    else 'a further run whose script hash is not recorded')
+            opts = (f"--scroll {x['scroll']} --band {' '.join(str(b) for b in cl['band'])} --voxel-um {cl['voxel_um']:g} --key K"
+                    if cl['band'] else '--key K')
+            out += ['', f"The {x['scroll']} expansion is {what} (its run record gives sha256 `{(h or 'unrecorded')[:16]}`): "
+                    f"`build {opts}` once per seed key to list its candidates, then `build` with `--candidate I --name N` "
+                    f"added and `validate` with the same options once per candidate in the sector, then a merge over their "
+                    f"outputs that is not part of the script: the gates were {q['gates']}; a patch was {q['duplicate_rule']}; "
+                    f"and {q['cap_rule']}."]
     return '\n'.join(out)
 
 

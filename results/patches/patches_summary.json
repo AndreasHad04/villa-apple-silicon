@@ -524,6 +524,486 @@
       "tiles": 1,
       "passes": true
      }
+    },
+    {
+     "name": "px9_z5216_a308",
+     "seed_key": 5216,
+     "z": [
+      5124,
+      6024
+     ],
+     "angle": 308.2,
+     "area": 0.626,
+     "on_sheet": 0.9182,
+     "second_diff_max": 7.96,
+     "vertical": 0.4503,
+     "control": 0.1989,
+     "outward": 0.9872,
+     "switches": 15,
+     "lines": 24,
+     "peak": 39,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px24_z5472_a271",
+     "seed_key": 5472,
+     "z": [
+      5352,
+      6428
+     ],
+     "angle": 271.3,
+     "area": 0.607,
+     "on_sheet": 0.9815,
+     "second_diff_max": 7.6,
+     "vertical": 0.594,
+     "control": 0.2655,
+     "outward": 1.0,
+     "switches": 3,
+     "lines": 34,
+     "peak": null,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px32_z5472_a285",
+     "seed_key": 5472,
+     "z": [
+      5256,
+      6464
+     ],
+     "angle": 285.2,
+     "area": 0.819,
+     "on_sheet": 0.9399,
+     "second_diff_max": 7.83,
+     "vertical": 0.5806,
+     "control": 0.1822,
+     "outward": 0.986,
+     "switches": 58,
+     "lines": 39,
+     "peak": 33,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px41_z5472_a316",
+     "seed_key": 5472,
+     "z": [
+      5164,
+      5812
+     ],
+     "angle": 315.7,
+     "area": 0.609,
+     "on_sheet": 0.9509,
+     "second_diff_max": 7.62,
+     "vertical": 0.6306,
+     "control": 0.1751,
+     "outward": 0.9979,
+     "switches": 31,
+     "lines": 28,
+     "peak": 6,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px42_z5472_a317",
+     "seed_key": 5472,
+     "z": [
+      5176,
+      6172
+     ],
+     "angle": 317.3,
+     "area": 0.622,
+     "on_sheet": 0.9684,
+     "second_diff_max": 7.6,
+     "vertical": 0.6949,
+     "control": 0.0841,
+     "outward": 1.0,
+     "switches": 2,
+     "lines": 20,
+     "peak": 34,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px44_z5616_a266",
+     "seed_key": 5616,
+     "z": [
+      5364,
+      6380
+     ],
+     "angle": 266.0,
+     "area": 0.717,
+     "on_sheet": 0.9643,
+     "second_diff_max": 7.86,
+     "vertical": 0.5493,
+     "control": 0.1051,
+     "outward": 0.9912,
+     "switches": 54,
+     "lines": 34,
+     "peak": 35,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px51_z5616_a282",
+     "seed_key": 5616,
+     "z": [
+      5376,
+      6320
+     ],
+     "angle": 281.7,
+     "area": 1.008,
+     "on_sheet": 0.9497,
+     "second_diff_max": 8.0,
+     "vertical": 0.5731,
+     "control": 0.2237,
+     "outward": 0.9917,
+     "switches": 59,
+     "lines": 42,
+     "peak": 23,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px53_z5616_a284",
+     "seed_key": 5616,
+     "z": [
+      5308,
+      6424
+     ],
+     "angle": 283.9,
+     "area": 0.88,
+     "on_sheet": 0.9695,
+     "second_diff_max": 7.85,
+     "vertical": 0.6209,
+     "control": 0.2647,
+     "outward": 0.9895,
+     "switches": 75,
+     "lines": 42,
+     "peak": 34,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px54_z5616_a285",
+     "seed_key": 5616,
+     "z": [
+      5212,
+      6144
+     ],
+     "angle": 284.6,
+     "area": 0.666,
+     "on_sheet": 0.9391,
+     "second_diff_max": 7.91,
+     "vertical": 0.6482,
+     "control": 0.1357,
+     "outward": 0.9881,
+     "switches": 7,
+     "lines": 33,
+     "peak": 24,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px56_z5616_a293",
+     "seed_key": 5616,
+     "z": [
+      5240,
+      6252
+     ],
+     "angle": 292.9,
+     "area": 0.649,
+     "on_sheet": 0.9618,
+     "second_diff_max": 8.0,
+     "vertical": 0.7071,
+     "control": 0.0792,
+     "outward": 0.9995,
+     "switches": 3,
+     "lines": 30,
+     "peak": 25,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px60_z5616_a311",
+     "seed_key": 5616,
+     "z": [
+      5000,
+      6512
+     ],
+     "angle": 311.4,
+     "area": 0.836,
+     "on_sheet": 0.9126,
+     "second_diff_max": 7.71,
+     "vertical": 0.6159,
+     "control": 0.1386,
+     "outward": 0.9907,
+     "switches": 8,
+     "lines": 23,
+     "peak": 35,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px68_z5760_a275",
+     "seed_key": 5760,
+     "z": [
+      5336,
+      6244
+     ],
+     "angle": 275.4,
+     "area": 0.557,
+     "on_sheet": 0.9551,
+     "second_diff_max": 7.97,
+     "vertical": 0.6293,
+     "control": 0.1429,
+     "outward": 1.0,
+     "switches": 4,
+     "lines": 28,
+     "peak": null,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px94_z6016_a288",
+     "seed_key": 6016,
+     "z": [
+      5632,
+      6340
+     ],
+     "angle": 287.8,
+     "area": 0.592,
+     "on_sheet": 0.9399,
+     "second_diff_max": 7.81,
+     "vertical": 0.7255,
+     "control": 0.0963,
+     "outward": 0.9903,
+     "switches": 0,
+     "lines": 32,
+     "peak": null,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px109_z6016_a320",
+     "seed_key": 6016,
+     "z": [
+      5440,
+      6512
+     ],
+     "angle": 319.7,
+     "area": 0.608,
+     "on_sheet": 0.9491,
+     "second_diff_max": 7.85,
+     "vertical": 0.6449,
+     "control": 0.1388,
+     "outward": 1.0,
+     "switches": 2,
+     "lines": 16,
+     "peak": 0,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px119_z6144_a282",
+     "seed_key": 6144,
+     "z": [
+      5512,
+      6512
+     ],
+     "angle": 282.1,
+     "area": 0.572,
+     "on_sheet": 0.9336,
+     "second_diff_max": 7.66,
+     "vertical": 0.5864,
+     "control": 0.1981,
+     "outward": 0.9837,
+     "switches": 48,
+     "lines": 37,
+     "peak": null,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px130_z6144_a294",
+     "seed_key": 6144,
+     "z": [
+      5564,
+      6368
+     ],
+     "angle": 294.5,
+     "area": 0.72,
+     "on_sheet": 0.9092,
+     "second_diff_max": 7.94,
+     "vertical": 0.605,
+     "control": 0.1501,
+     "outward": 0.9931,
+     "switches": 16,
+     "lines": 37,
+     "peak": 35,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px133_z6144_a310",
+     "seed_key": 6144,
+     "z": [
+      5840,
+      6512
+     ],
+     "angle": 309.5,
+     "area": 0.618,
+     "on_sheet": 0.9202,
+     "second_diff_max": 7.99,
+     "vertical": 0.6381,
+     "control": 0.168,
+     "outward": 1.0,
+     "switches": 1,
+     "lines": 27,
+     "peak": 12,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px143_z6272_a266",
+     "seed_key": 6272,
+     "z": [
+      5600,
+      6512
+     ],
+     "angle": 265.6,
+     "area": 0.566,
+     "on_sheet": 0.9522,
+     "second_diff_max": 7.94,
+     "vertical": 0.4957,
+     "control": 0.2024,
+     "outward": 0.9929,
+     "switches": 12,
+     "lines": 32,
+     "peak": null,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px160_z6272_a309",
+     "seed_key": 6272,
+     "z": [
+      5684,
+      6512
+     ],
+     "angle": 309.2,
+     "area": 0.73,
+     "on_sheet": 0.9211,
+     "second_diff_max": 7.72,
+     "vertical": 0.6031,
+     "control": 0.1667,
+     "outward": 0.9945,
+     "switches": 149,
+     "lines": 43,
+     "peak": 34,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px189_z6352_a292",
+     "seed_key": 6352,
+     "z": [
+      5480,
+      6512
+     ],
+     "angle": 292.5,
+     "area": 0.973,
+     "on_sheet": 0.9295,
+     "second_diff_max": 8.0,
+     "vertical": 0.5224,
+     "control": 0.1752,
+     "outward": 0.9499,
+     "switches": 228,
+     "lines": 55,
+     "peak": 60,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px190_z6352_a293",
+     "seed_key": 6352,
+     "z": [
+      5564,
+      6512
+     ],
+     "angle": 293.4,
+     "area": 0.672,
+     "on_sheet": 0.9664,
+     "second_diff_max": 7.93,
+     "vertical": 0.7062,
+     "control": 0.0919,
+     "outward": 0.9922,
+     "switches": 1,
+     "lines": 32,
+     "peak": 35,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px196_z6352_a303",
+     "seed_key": 6352,
+     "z": [
+      5748,
+      6512
+     ],
+     "angle": 303.4,
+     "area": 0.688,
+     "on_sheet": 0.9445,
+     "second_diff_max": 7.9,
+     "vertical": 0.5504,
+     "control": 0.1096,
+     "outward": 0.9886,
+     "switches": 85,
+     "lines": 28,
+     "peak": 9,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px230_z6448_a308",
+     "seed_key": 6448,
+     "z": [
+      5944,
+      6512
+     ],
+     "angle": 308.1,
+     "area": 0.679,
+     "on_sheet": 0.9259,
+     "second_diff_max": 7.96,
+     "vertical": 0.5258,
+     "control": 0.1573,
+     "outward": 0.9985,
+     "switches": 24,
+     "lines": 28,
+     "peak": 0,
+     "passed": true,
+     "sheet": null
+    },
+    {
+     "name": "px244_z6448_a330",
+     "seed_key": 6448,
+     "z": [
+      6016,
+      6512
+     ],
+     "angle": 329.8,
+     "area": 0.599,
+     "on_sheet": 0.9428,
+     "second_diff_max": 7.93,
+     "vertical": 0.6087,
+     "control": 0.0846,
+     "outward": 1.0,
+     "switches": 0,
+     "lines": 23,
+     "peak": null,
+     "passed": true,
+     "sheet": null
     }
    ],
    "selection": {
@@ -558,24 +1038,24 @@
    "limits": {
     "top_switches": [
      [
+      "px189_z6352_a292",
+      228,
+      55
+     ],
+     [
       "pt11_z6272_a290",
       208,
       54
      ],
      [
+      "px160_z6272_a309",
+      149,
+      43
+     ],
+     [
       "pt10_z6448_a300",
       96,
       46
-     ],
-     [
-      "pt6_z6272_a316",
-      76,
-      83
-     ],
-     [
-      "pt15_z5472_a305",
-      70,
-      49
      ]
     ],
     "n_top": 4,
@@ -591,11 +1071,60 @@
      [
       "pt19_z5472_a147",
       65
+     ],
+     [
+      "px41_z5472_a316",
+      6
+     ],
+     [
+      "px109_z6016_a320",
+      0
+     ],
+     [
+      "px133_z6144_a310",
+      12
+     ],
+     [
+      "px189_z6352_a292",
+      60
+     ],
+     [
+      "px196_z6352_a303",
+      9
+     ],
+     [
+      "px230_z6448_a308",
+      0
      ]
     ],
-    "at_off_centre": [],
-    "at_bar": [],
-    "not_rendered": [],
+    "at_off_centre": [
+     [
+      "px51_z5616_a282",
+      23
+     ]
+    ],
+    "at_bar": [
+     [
+      "px51_z5616_a282",
+      8.0
+     ],
+     [
+      "px56_z5616_a293",
+      8.0
+     ],
+     [
+      "px189_z6352_a292",
+      8.0
+     ]
+    ],
+    "not_rendered": [
+     "px24_z5472_a271",
+     "px68_z5760_a275",
+     "px94_z6016_a288",
+     "px119_z6144_a282",
+     "px143_z6272_a266",
+     "px244_z6448_a330"
+    ],
     "axis_hull_median": 45.0,
     "axis_hull_max": 137.5
    },
@@ -616,19 +1145,19 @@
     ],
     "top_switch_passes": [
      [
+      "px189_z6352_a292",
+      null
+     ],
+     [
       "pt11_z6272_a290",
       true
      ],
      [
+      "px160_z6272_a309",
+      null
+     ],
+     [
       "pt10_z6448_a300",
-      true
-     ],
-     [
-      "pt6_z6272_a316",
-      true
-     ],
-     [
-      "pt15_z5472_a305",
       true
      ]
     ],
@@ -751,17 +1280,103 @@
    },
    "script_sha256": "03ef8c59e525e8cc77e6caa9e55435e1c53266fd31a4e4d35e70188ade2e1f57",
    "totals": {
-    "n": 21,
-    "n_pass": 21,
-    "area": 19.884,
+    "n": 45,
+    "n_pass": 45,
+    "area": 36.497,
     "largest": 2.016,
     "z_min": 4992,
     "z_max": 6512,
-    "n_keys": 7,
-    "on_sheet_min": 0.9191,
-    "outward_min": 0.9592,
-    "vertical_over_control_min": 2.3
-   }
+    "n_keys": 10,
+    "on_sheet_min": 0.9092,
+    "outward_min": 0.9499,
+    "vertical_over_control_min": 2.2
+   },
+   "expansions": [
+    {
+     "folder": "research/uncontested/patch_0483B_ext",
+     "prefix": "px",
+     "n": 24,
+     "n_pass": 24,
+     "area": 16.613,
+     "cli": {
+      "band": [
+       4992,
+       6512,
+       16
+      ],
+      "voxel_um": 8.64
+     },
+     "n_sheet_unscored": 24,
+     "selection": {
+      "kind": "sector_expansion",
+      "keys": [
+       5056,
+       5216,
+       5344,
+       5472,
+       5616,
+       5760,
+       6016,
+       6144,
+       6272,
+       6352,
+       6448
+      ],
+      "n_keys_searched": 11,
+      "sector": [
+       260.0,
+       346.0
+      ],
+      "built": 250,
+      "failed_bars": 69,
+      "failed_validation": 7,
+      "errors": 0,
+      "duplicates": 91,
+      "duplicates_of_first": 54,
+      "n_first": 21,
+      "rebuilt_first": 12,
+      "rebuilt_identical_refused": 12,
+      "passed_not_duplicate": 83,
+      "kept": 24,
+      "cap": 24,
+      "per_region": [
+       [
+        "pt6_z6272_a316",
+        11
+       ],
+       [
+        "pt7_z5472_a290",
+        13
+       ]
+      ],
+      "gates": "the tracer build bars (geom_ok, outward >= MIN_OUT, area >= MIN_AREA) and pass from the public validate",
+      "duplicate_rule": "refused when more than 0.1 of the vertices lie within 3.0 voxels of the surface of the 21 existing PHerc0483B patches or of a new patch accepted before it (largest validated area first, all keys pooled)",
+      "cap_rule": "at most 24 new patches, largest validated area first"
+     },
+     "ink": {
+      "prereg": {
+       "file": "results/fl/PREREGISTRATION_FL_0483B_EXT.md",
+       "sha256": "633713e8add9c5cb525c32c0528da57630846e10e3508fa694711855d966b184",
+       "recorded": true
+      },
+      "review": {
+       "folder": "results/fl/review_0483Bext",
+       "valid": true,
+       "rule": "VALID only if at least one flagged control window overlaps his letter boxes",
+       "n_control_windows_with_letters": 8,
+       "n_flagged_control_on_letters": 2,
+       "n_flagged_screen": 0,
+       "n_regions": 0,
+       "regions": [],
+       "n_windows_screen": 28,
+       "n_patches": 24,
+       "n_patches_with_windows": 17,
+       "n_patches_without_windows": 7
+      }
+     },
+     "script_sha256": "03ef8c59e525e8cc77e6caa9e55435e1c53266fd31a4e4d35e70188ade2e1f57"
+    }
+   ]
   },
   {
    "scroll": "PHerc0175B",
@@ -1988,12 +2603,12 @@
  ],
  "totals": {
   "n_scrolls": 3,
-  "n": 56,
-  "n_pass": 56,
-  "area": 38.219,
-  "on_sheet_min": 0.9191,
+  "n": 80,
+  "n_pass": 80,
+  "area": 54.832,
+  "on_sheet_min": 0.9092,
   "outward_min": 0.9483,
-  "vertical_over_control_min": 2.3,
+  "vertical_over_control_min": 2.2,
   "sheet_scored": 56,
   "sheet_pass": 39,
   "sheet_fail": 17

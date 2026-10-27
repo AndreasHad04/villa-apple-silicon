@@ -594,6 +594,14 @@ else:
     _PRIOR = sorted(_PA.glob("*survey_README*.md")) if _PA.exists() else []
     _PBODY = sorted(_PA.glob("villa_*_body_*.md")) if _PA.exists() else []
 
+    _UD, _disk = R / "research" / "uncontested", {}
+    for _d in (sorted(_UD.glob("patch*")) if _UD.exists() else []):
+        if _d.is_dir() and (_d / "validation.json").exists() and not (_d / "WRITEUP_EXCLUDE").exists():
+            _dv = json.loads((_d / "validation.json").read_text())
+            _db = json.loads((_d / "build.json").read_text()) if (_d / "build.json").exists() else {}
+            _dr = json.loads((_d / "run.json").read_text()) if (_d / "run.json").exists() else None
+            _disk.setdefault(_pm._scroll_name(R, _dv, _db, _dr), []).append((_d, _dv, _db, _dr))
+
     def _raw(x):
         """validation.json and build.json of one scroll's patch folder, (None, None) in the published repo"""
         d = R / x["folder"]
@@ -625,14 +633,24 @@ else:
                 raw_all = False
                 continue
             P, suf = V["patches"], sn[len("PHerc"):]
-            recs += [B["params"]] if "params" in B else [r["params"] for r in (B.get("per_key_records") or {}).values()]
+            EXP = [z for z in _disk.get(sn, []) if str(z[0].relative_to(R)) != x["folder"]]
+            out.append((f"PATCHES {sn}: its patch folders on disk (a validation.json, no WRITEUP_EXCLUDE) are the summary's, all "
+                        "but the first an expansion", sorted(str(z[0].relative_to(R)) for z in _disk.get(sn, [])) ==
+                        sorted([x["folder"]] + [e["folder"] for e in x.get("expansions") or []])
+                        and all(z[2].get("existing_keys") for z in EXP), ", ".join(z[0].name for z in _disk.get(sn, []))))
+            PA, clash = dict(P), []
+            for z in EXP:
+                clash += sorted(set(PA) & set(z[1]["patches"]))
+                PA.update(z[1]["patches"])
+            recs += ([B["params"]] if "params" in B else [r["params"] for r in (B.get("per_key_records") or {}).values()]) + \
+                [r["params"] for z in EXP for r in (z[2].get("per_key_listing_records") or {}).values()]
             seed0 = (B.get("params") or {}).get("Z0")
             Q = ((_SC or {}).get("scrolls") or {}).get(sn)
             shp = {q["patch"]: q for q in (Q or {}).get("patches", [])}
             rows = {l.split("|")[1].strip(): [c.strip() for c in l.split("|")[2:-1]]
-                    for l in parts.get(sn, "").splitlines() if l.startswith("| pt")}
+                    for l in parts.get(sn, "").splitlines() if re.match(r"\| p[a-z]\d+_", l)}
             bad = []
-            for n, p in P.items():
+            for n, p in PA.items():
                 vt, q = p["vertical"], shp.get(n)
                 want = [p.get("seed_key", seed0), f"{p['keys'][0]} to {p['keys'][1]}", p["angle_deg"], p["area_cm2"],
                         p["m7"]["on_sheet_vertices"], p["keys_check"]["second_diff_max"], vt["on_track_of_covered_all"],
@@ -652,14 +670,16 @@ else:
                         same = False
                     if not same:
                         bad.append(f"{n}: {g} != {w}")
-            out.append((f"PATCHES {sn}: one table row per patch of validation.json, every cell equal to it and to "
-                        "survey_sheetcheck.json (re-read here)", sorted(rows) == sorted(P) and not bad, "; ".join(bad[:4])))
-            area = round(sum(p["area_cm2"] for p in P.values()), 3)
-            npass = sum(bool(p["pass"]) for p in P.values())
-            tot_n, tot_pass, tot_area = tot_n + len(P), tot_pass + npass, tot_area + sum(p["area_cm2"] for p in P.values())
-            out.append((f"PATCHES {sn}: the patch count, the pass count and the total area, summed here, are the README's",
-                        f"{len(P)} patches, {npass} passing every gate, {area:.3f} cm2 in all" in pflat and npass == V["n_pass"],
-                        f"{len(P)}, {npass}, {area:.3f}"))
+            out.append((f"PATCHES {sn}: one table row per patch of every folder's validation.json, every cell equal to it and to "
+                        "survey_sheetcheck.json (re-read here)", sorted(rows) == sorted(PA) and not bad and not clash,
+                        "; ".join((bad + clash)[:4])))
+            area = round(sum(p["area_cm2"] for p in PA.values()), 3)
+            npass = sum(bool(p["pass"]) for p in PA.values())
+            tot_n, tot_pass, tot_area = tot_n + len(PA), tot_pass + npass, tot_area + sum(p["area_cm2"] for p in PA.values())
+            out.append((f"PATCHES {sn}: the patch count, the pass count and the total area, summed here over its {1 + len(EXP)} "
+                        f"patch folder{'s' if EXP else ''} on disk, are the README's",
+                        f"{len(PA)} patches, {npass} passing every gate, {area:.3f} cm2 in all" in pflat
+                        and npass == V["n_pass"] + sum(z[1]["n_pass"] for z in EXP), f"{len(PA)}, {npass}, {area:.3f}"))
             e = V["extension"]
             if "passed_not_written_cap" in e:
                 fa = round(sum(P[n]["area_cm2"] for n in B["selected"]), 3)
@@ -673,12 +693,30 @@ else:
                           f"{nd} {'was' if nd == 1 else 'were'} refused as duplicates", f"so {len(e['accepted'])} were kept") \
                     and sorted(e["accepted"]) == sorted(P)
             out.append((f"PATCHES {sn}: how the patches were selected is quoted from build.json and validation.json", sel, ""))
+            for d, Ve, Be, Re in EXP:
+                e2, Pe = Ve["extension"], Ve["patches"]
+                na, nc, dc = len(e2["accepted"]), len(e2["refused_cap"]), e2["duplicate_control"]
+                frag = [f"The last {len(Pe)} ({round(sum(q['area_cm2'] for q in Pe.values()), 3):.3f} cm2",
+                        f"{len(Be['candidates_built'])} in all; {len(e2['failed_bars'])} failed the tracer's own bars, "
+                        f"{len(e2['failed_gates'])} failed validation",
+                        f"{len(e2['refused_duplicate'])} were refused as duplicates "
+                        f"({sum(q['duplicate_of'] in P for q in e2['refused_duplicate'].values())} of them of the {len(P)} earlier patches",
+                        f"the {na} largest of the other {na + nc} were kept" if nc else f"and the other {na} were kept"] + \
+                    [f"{e2['per_region'][m]} nearer {m}" for m in sorted(e2["per_region"])] + \
+                    ([f"the {len(dc)} candidates that rebuild an earlier patch came out identical to it"]
+                     if dc and all(q["identical"] and q["rebuilt"] in e2["refused_duplicate"] for q in dc) else [])
+                parts_n = sum(len(e2[k]) for k in ("accepted", "refused_cap", "refused_duplicate", "failed_gates", "failed_bars",
+                                                     "failed_build", "failed_validate"))
+                out.append((f"PATCHES {sn}: how the expansion {d.name} was selected is quoted from its build.json and validation.json",
+                            has(pflat, *frag) and sorted(e2["accepted"]) == sorted(Pe) and parts_n == len(Be["candidates_built"]),
+                            " | ".join(frag)[:160]))
             cr = V["criteria"]
             out.append((f"PATCHES {sn}: the gates quoted are the criteria in its validation.json",
                         has(flat, f"at least {cr['on_sheet_vertices_min']:g} of its vertices",
                             f"never exceeds {cr['key_second_difference_max_max']:g} voxels",
                             f"at least {cr['vertical_on_track_vs_control']:g} times as often",
-                            f"at least {cr['outward_fraction_min']:g} of its normals"), ""))
+                            f"at least {cr['outward_fraction_min']:g} of its normals")
+                        and all(z[1]["criteria"] == cr and z[1]["on_sheet_rule"] == V["on_sheet_rule"] for z in EXP), ""))
             pre = R / "results" / "fl" / f"PREREGISTRATION_FL_{suf}.md"
             if pre.exists():
                 psha = _hlp.sha256(pre.read_bytes()).hexdigest()
@@ -708,6 +746,39 @@ else:
                 ink.append("The blind-side confirmation is running; its result is not in yet.")
             out.append((f"PATCHES {sn}: the ink screen quoted is UNSEALED.json, the neighbour RESULT.json and the confirmation "
                         "state (re-read here)", has(flat, *ink), " | ".join(ink)[:160]))
+            for d, Ve, Be, Re in EXP:
+                fo, Pe = str(d.relative_to(R)), Ve["patches"]
+                prs = [q for q in sorted(fl.glob("PREREGISTRATION_FL_*.md")) if f"{fo}/validation.json" in q.read_text()]
+                rvs = [q.parent for q in sorted(fl.glob("review_*/build.json"))
+                       if {m for m in json.loads(q.read_text()).get("meshes") or [] if isinstance(m, str)} == set(Pe)]
+                ok = len(prs) == 1 and len(rvs) == 1 and (rvs[0] / "UNSEALED.json").exists()
+                det = f"{len(prs)} registrations, {len(rvs)} reviews"
+                if ok:
+                    esha = _hlp.sha256(prs[0].read_bytes()).hexdigest()
+                    U, wk = json.loads((rvs[0] / "UNSEALED.json").read_text()), {}
+                    for sh_ in json.loads((rvs[0] / "key.json").read_text())["sheets"].values():
+                        if not sh_["control"]:
+                            wk[sh_["mesh"]] = wk.get(sh_["mesh"], 0) + len(sh_["windows"])
+                    a_, b_ = U["n_flagged_control_on_letters"], U["n_control_windows_with_letters"]
+                    frag = [f"{sn} expansion, the {len(Pe)}", f"(registration sha256 `{esha[:16]}`)",
+                            f"as a follow-up of the {sn} candidates above and not as an independent test",
+                            f"The review is {'VALID' if U['valid'] else 'VOID'} ({a_} of the {b_} control windows on known "
+                            "letters flagged)"]
+                    if U["valid"] and U["n_flagged_screen"] == 0:
+                        frag += [f"flagged none of the {sum(wk.values())} windows from {sum(1 for k_ in wk.values() if k_)} of "
+                                 f"the {len(Pe)} patches", ": a null."]
+                        frag += ["its sensitivity is low, so the null is weak evidence against text continuing there, not proof"
+                                 ] if 2 * a_ < b_ else []
+                    elif U["valid"]:
+                        frag += [f"flagged {U['n_flagged_screen']} window"]
+                    ok = has(flat, *frag) and esha in (fl / "prereg.sha256").read_text() and set(wk) <= set(Pe)
+                    det = " | ".join(frag)[:160]
+                out.append((f"PATCHES {sn}: the screen of the expansion {d.name} quoted is its registration (hash in "
+                            "prereg.sha256), UNSEALED.json and key.json, found and re-counted here", ok, det))
+                rs = (Re or {}).get("sheet_patches_sha256") or "unrecorded"
+                out.append((f"PATCHES {sn}: the run record of the expansion {d.name} gives the sheet_patches.py shipped now, as "
+                            "the section says", rs == psh and f"The {sn} expansion is a further run of the same file, unchanged"
+                            in flat, rs[:16]))
             rp, run = R / x["folder"] / "public_repro.json", R / x["folder"] / "run.json"
             if rp.exists():
                 rr = json.loads(rp.read_text())
@@ -722,17 +793,20 @@ else:
                 fails = [z["patch"] for z in Q["patches"] if not z["passes"]]
                 out.append((f"PATCHES {sn}: the survey sheet-check counts quoted are survey_sheetcheck.json's (re-counted here)",
                             f"{Q['n_pass']} of the {Q['n']} {sn} patches" in flat and Q["n_pass"] == len(Q["patches"]) - len(fails)
-                            and all(f"{z['patch']} ({z['tiles']} tile" in flat for z in Q["patches"] if z["tiles"] <= 1),
-                            f"{Q['n_pass']} of {Q['n']}"))
+                            and all(f"{z['patch']} ({z['tiles']} tile" in flat for z in Q["patches"] if z["tiles"] <= 1)
+                            and all((f"It has not been run on the {m} {sn} expansion patches" if k == m else
+                                     f"{k} of the {m} {sn} expansion patches") in flat
+                                    for k, m in ((sum(n not in shp for n in z[1]["patches"]), len(z[1]["patches"])) for z in EXP)
+                                    if k), f"{Q['n_pass']} of {Q['n']}"))
                 if len(fails) >= 2:
-                    top = sorted(P, key=lambda n: (-P[n]["vertical"]["switch_events"], int(n.split("_")[0][2:])))[:4]
+                    top = sorted(PA, key=lambda n: (-PA[n]["vertical"]["switch_events"], int(n.split("_")[0][2:])))[:4]
                     res = {z["patch"]: z["passes"] for z in Q["patches"]}
                     ok = [n for n in top if res.get(n)]
                     ko = [n for n in top if res.get(n) is False]
                     rest = [n for n in fails if n not in top]
                     frag = ([f"{_pm._fmt_list(ok)} pass"] if ok else []) + ([f"{_pm._fmt_list(ko)} fail"] if ko else []) + \
                         ([f"the other {len(rest)} failing patches have at most "
-                          f"{max(P[n]['vertical']['switch_events'] for n in rest)} switch events each"] if rest else [])
+                          f"{max(PA[n]['vertical']['switch_events'] for n in rest)} switch events each"] if rest else [])
                     out.append((f"PATCHES {sn}: the overlap of the survey's failures with the most switch events, recomputed "
                                 "here from validation.json and survey_sheetcheck.json, is the one quoted", has(flat, *frag),
                                 " | ".join(frag)[:160]))
@@ -751,6 +825,8 @@ else:
             out.append(("PATCHES: the totals across scrolls, summed here, are the README's lead and its table",
                         f"{lead}, {round(tot_area, 3):.3f} cm2 in all, on {len(names)} First Letters scrolls" in flat
                         and f"| all | {tot_n} | {tot_pass} | {round(tot_area, 3):.3f} |" in sec, f"{tot_n}, {tot_pass}, {tot_area:.3f}"))
+            out.append(("PATCHES: every scroll with a patch folder on disk is in the summary", sorted(_disk) == sorted(names),
+                        ", ".join(sorted(_disk))))
         if recs:
             pr, mk = recs[0], ("STEP_Z", "RAY", "DMAX", "FRAC_SP", "WMAX", "SP_MIN", "MIN_MATCH", "K2K_MAX", "COL_EVERY", "DS")
             out.append(("PATCHES: every build record of every scroll has the parameters the Method paragraph quotes",
@@ -787,10 +863,17 @@ else:
     _pl = next(l for l in _psec.splitlines() if l.startswith("| pt"))
     _pc = _pl.split("|"); _pc[5] = f" {float(_pc[5]) + 0.001:.3f} "
     _plant = _psec.replace(_pl, "|".join(_pc))
+    _mx = next((x for x in _ps["scrolls"] if x.get("expansions")), None)
+    _tn = f"**Totals.** {_mx['totals']['n']} patches," if _mx else None
+    _plant2 = _psec.replace(_tn, f"**Totals.** {_mx['totals']['n'] - 1} patches,", 1) if _mx else None
     if _osp.environ.get("VERIFY_PLANT") == "PATCHES":
         print("  NOTE: VERIFY_PLANT=PATCHES, the checks below run on a copy with the first patch row's area raised by 0.001 cm2 "
               "and must FAIL")
         _psec = _plant
+    if _osp.environ.get("VERIFY_PLANT") == "PATCHES_COUNT" and _mx:
+        print(f"  NOTE: VERIFY_PLANT=PATCHES_COUNT, the checks below run on a copy whose {_mx['scroll']} totals say "
+              f"{_mx['totals']['n'] - 1} patches instead of {_mx['totals']['n']}, and its merged-count check must FAIL")
+        _psec = _plant2
     for _n, _ok, _d in _patches_checks(_psec):
         ck(_n, _ok, _d)
     if all(_raw(x)[0] is not None for x in _ps["scrolls"]):
@@ -800,6 +883,12 @@ else:
     _caught = [n for n, ok, _ in _patches_checks(_plant) if not ok]
     ck("PATCHES control: a planted defect (the first patch row's area raised by 0.001 cm2) is caught by this block", bool(_caught),
        f"{len(_caught)} checks failed on it")
+    if _mx and _raw(_mx)[0] is not None:
+        _c2 = [n for n, ok, _ in _patches_checks(_plant2) if not ok and n.startswith(f"PATCHES {_mx['scroll']}: the patch count")]
+        ck(f"PATCHES control: a planted wrong merged count ({_mx['scroll']} written as {_mx['totals']['n'] - 1} patches, not "
+           f"{_mx['totals']['n']}) is caught by the merged-count check", _tn in README and len(_c2) == 1, f"{len(_c2)} caught")
+    elif _mx:
+        print("  NOTE: the raw patch folders are not in this repo, so the merged-count control is not run here")
 
 print("\nHYGIENE")
 for k, t in ALL.items():
