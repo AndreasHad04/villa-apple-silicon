@@ -680,7 +680,48 @@
      ]
     },
     "confirm": {
-     "state": "running"
+     "state": "done",
+     "valid": true,
+     "rule": "pass = present in READ, absent in BLIND and absent in the 180 degree negative; BLIND_OWN is description only; unclear can only fail; the control window must pass or the confirmation is VOID (Amendment 1, results/fl/PREREGISTRATION_FL_0483B.md)",
+     "n_screen": 4,
+     "n_pass_screen": 4,
+     "n_control": 1,
+     "control_passed": 1
+    },
+    "facecheck": {
+     "models": [
+      "dnative",
+      "hybrid_3d2d-seed42"
+     ],
+     "rows": [
+      {
+       "scroll": "PHerc0343",
+       "mesh": "concat_w047-w048_R5B2_z9500-11000",
+       "control": true,
+       "reading": true,
+       "asym": 2.316,
+       "consistency": 0.625,
+       "same_side_both_masks": true
+      },
+      {
+       "scroll": "PHerc0483B",
+       "mesh": "pt6_z6272_a316",
+       "control": false,
+       "reading": false,
+       "asym": 2.406,
+       "consistency": 0.0,
+       "same_side_both_masks": true
+      },
+      {
+       "scroll": "PHerc0483B",
+       "mesh": "pt7_z5472_a290",
+       "control": false,
+       "reading": true,
+       "asym": 1.652,
+       "consistency": 0.25,
+       "same_side_both_masks": true
+      }
+     ]
     }
    },
    "repro": {
@@ -1917,7 +1958,15 @@
      "recorded": true,
      "amendment1_rule": null
     },
-    "review": null,
+    "review": {
+     "valid": true,
+     "rule": "VALID only if at least one flagged control window overlaps his letter boxes",
+     "n_control_windows_with_letters": 8,
+     "n_flagged_control_on_letters": 3,
+     "n_flagged_screen": 0,
+     "n_regions": 0,
+     "regions": []
+    },
     "neighbour": null,
     "confirm": null
    },

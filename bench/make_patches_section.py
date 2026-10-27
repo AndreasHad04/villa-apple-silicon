@@ -127,6 +127,16 @@ def _ink(root, scroll):
                               control_passed=sum(bool(r['passed']) for r in res if r['control']))
     elif cdir.exists():
         out['confirm'] = dict(state='running')
+    fc = _load(cdir / 'facecheck.json')
+    if fc:
+        pair = '/'.join(fc['models'])
+        rows = []
+        for c in fc['crops']:
+            a, b = c['own_valid_mask']['pairs'][pair], c['pr_sheet_check']['pairs'][pair]
+            rows.append(dict(scroll=c['scroll'], mesh=c['mesh'], control=c['scroll'] != scroll,
+                             reading=a['best_face'] == fc['reading_side'], asym=a['face_asymmetry'],
+                             consistency=a['face_consistency'], same_side_both_masks=a['best_face'] == b['best_face']))
+        out['facecheck'] = dict(models=fc['models'], rows=rows)
     return out
 
 
@@ -244,7 +254,7 @@ def build_summary(root: Path) -> dict:
     md_all = json.loads((p2 / 'dl/metadata.json').read_text())['samples']
     sheets = _load(root / 'results/patches/survey_sheetcheck.json')
     built = [_scroll(root, d, md_all, sheets) for d in sorted(p2.glob('patch*'))
-             if d.is_dir() and (d / 'validation.json').exists()]
+             if d.is_dir() and (d / 'validation.json').exists() and not (d / 'WRITEUP_EXCLUDE').exists()]
     if not built:
         raise SystemExit('no patch folder with a validation.json')
     if len({x[0]['scroll'] for x in built}) != len(built):
@@ -457,7 +467,34 @@ def _ink_text(s):
                          "blinded reviewer marks it present in the reading-side image and absent both in the blind-side "
                          "image (the same models in the opposite depth order, shown with the reading side's statistics) "
                          "and in the 180 degree negative, with the control required to pass and one attempt allowed.")
+        fk = k.get('facecheck')
+        if fk:
+            def _fc(r):
+                nm = 'the control' if r['control'] else r['mesh'].split('_')[0]
+                return f"{nm} (face asymmetry {r['asym']}, face consistency {r['consistency']})"
+            rd = [r for r in fk['rows'] if r['reading']]
+            bl = [r for r in fk['rows'] if not r['reading']]
+            line += (" Description only, registered as Amendment 2 before the blind-side images were seen: the face "
+                     "check of villa PR #2318, run unchanged on the dnative and seed42 maps, puts the two models' "
+                     "agreement on the reading side for " + _fmt_list([_fc(r) for r in rd]))
+            if bl:
+                line += ', and on the blind side for ' + _fmt_list([_fc(r) for r in bl])
+            same = all(r['same_side_both_masks'] for r in fk['rows'])
+            sup = [r['mesh'].split('_')[0] for r in rd if not r['control']]
+            nsup = [r['mesh'].split('_')[0] for r in bl if not r['control']]
+            line += ('; the same side comes out with its own sheet check as the mask' if same else '') + '.'
+            if sup or nsup:
+                line += ' So it supports ' + (_fmt_list(sup) if sup else 'no window') + (
+                    ' and goes against ' + _fmt_list(nsup) if nsup else '') + '; it gates nothing.'
         out.append(line)
+    fig = Path(__file__).resolve().parents[1] / 'public/results/patches/candidates_PHerc0483B.png'
+    if not fig.exists():
+        fig = Path(__file__).resolve().parents[1] / 'results/patches/candidates_PHerc0483B.png'
+    if fig.exists():
+        out += ['', '![PHerc0483B blind-side confirmation crops](results/patches/candidates_PHerc0483B.png)', '',
+                'The crops the blinded reviewer judged in the blind-side confirmation, each about 1 cm: the CT, the '
+                'four-model ensemble on the reading side and the same models on the blind side (reading-side '
+                'statistics), for the known-letter control and the two PHerc0483B candidate regions.']
     out += ['', "Flagged windows are candidates, places to look, not readings, and no letters are claimed." +
             (" A window without a flag is not a window without ink: the reviews miss some of the control's known letters."
              if miss else '')]
