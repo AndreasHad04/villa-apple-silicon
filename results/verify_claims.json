@@ -1413,7 +1413,7 @@
     {
       "name": "PATCHES: one table per scroll of the summary, in its order",
       "ok": true,
-      "detail": "['PHerc0483B', 'PHerc0175B', 'PHerc0490A'] vs ['PHerc0483B', 'PHerc0175B', 'PHerc0490A']"
+      "detail": "['PHerc0483B', 'PHerc0175A', 'PHerc0175B', 'PHerc0490A'] vs ['PHerc0483B', 'PHerc0175A', 'PHerc0175B', 'PHerc0490A']"
     },
     {
       "name": "PATCHES: the limits are stated",

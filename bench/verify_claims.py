@@ -633,17 +633,35 @@ else:
                 raw_all = False
                 continue
             P, suf = V["patches"], sn[len("PHerc"):]
-            EXP = [z for z in _disk.get(sn, []) if str(z[0].relative_to(R)) != x["folder"]]
-            out.append((f"PATCHES {sn}: its patch folders on disk (a validation.json, no WRITEUP_EXCLUDE) are the summary's, all "
-                        "but the first an expansion", sorted(str(z[0].relative_to(R)) for z in _disk.get(sn, [])) ==
-                        sorted([x["folder"]] + [e["folder"] for e in x.get("expansions") or []])
-                        and all(z[2].get("existing_keys") for z in EXP), ", ".join(z[0].name for z in _disk.get(sn, []))))
+            _ex = sorted(e["folder"] for e in x.get("expansions") or [])
+            _pf = [p["folder"] for p in x.get("passes") or []][1:]
+            _sf = list((x.get("sheet") or {}).get("folders") or [])
+            _pick = lambda fs: [z for z in _disk.get(sn, []) if str(z[0].relative_to(R)) in fs]
+            EXP, PAS, SHF = _pick(_ex), _pick(_pf), _pick(_sf)
+            SHP = [(q.parent, json.loads(q.read_text())) for z in SHF for q in [z[0] / "validation.json"] +
+                   [q2 for q2 in sorted(z[0].glob("*/validation.json")) if "patch_folder" in json.loads(q2.read_text())]]
+            _shn = sorted(n for _, v_ in SHP for n in v_["patches"])
+            _tgs = [json.loads((z[0] / "target.json").read_text()) for z in SHF if (z[0] / "target.json").exists()]
+            _tg = next((t_ for t_ in _tgs if "membership" in t_ and "trim" in t_), None)
+            _short = next((k for k, t_ in (_tg or {}).items() if isinstance(t_, dict)
+                           and str(t_.get("name", "")).startswith(k + "_")), None)
+            out.append((f"PATCHES {sn}: its patch folders on disk (a validation.json, no WRITEUP_EXCLUDE) are the summary's: the "
+                        "first, further passes, expansions (existing_keys in build.json) and folders on one candidate's sheet "
+                        "(a target in run.json)", sorted(str(z[0].relative_to(R)) for z in _disk.get(sn, [])) ==
+                        sorted([x["folder"]] + _pf + _ex + _sf)
+                        and all(z[2].get("existing_keys") for z in EXP)
+                        and all((z[3] or {}).get("target_sha256") and not z[2].get("existing_keys") for z in SHF)
+                        and all(not z[2].get("existing_keys") and not (z[3] or {}).get("target_sha256") for z in PAS),
+                        ", ".join(z[0].name for z in _disk.get(sn, []))))
             PA, clash = dict(P), []
-            for z in EXP:
-                clash += sorted(set(PA) & set(z[1]["patches"]))
-                PA.update(z[1]["patches"])
-            recs += ([B["params"]] if "params" in B else [r["params"] for r in (B.get("per_key_records") or {}).values()]) + \
-                [r["params"] for z in EXP for r in (z[2].get("per_key_listing_records") or {}).values()]
+            for pv_ in [z[1] for z in EXP + PAS] + [v_ for _, v_ in SHP]:
+                clash += sorted(set(PA) & set(pv_["patches"]))
+                PA.update(pv_["patches"])
+            for B_ in [B] + [z[2] for z in PAS]:
+                recs += [B_["params"]] if "params" in B_ else [r["params"] for r in (B_.get("per_key_records") or {}).values()]
+            recs += [r["params"] for z in EXP for r in (z[2].get("per_key_listing_records") or {}).values()]
+            recs += [r["params"] for z in SHF for f_ in sorted(z[0].glob("build*.json"))
+                     for r in (json.loads(f_.read_text()).get("per_key_listing_records") or {}).values()]
             seed0 = (B.get("params") or {}).get("Z0")
             Q = ((_SC or {}).get("scrolls") or {}).get(sn)
             shp = {q["patch"]: q for q in (Q or {}).get("patches", [])}
@@ -656,7 +674,7 @@ else:
                         p["m7"]["on_sheet_vertices"], p["keys_check"]["second_diff_max"], vt["on_track_of_covered_all"],
                         max(v or 0 for v in vt["control_half_spacing_shift_on_track"].values()),
                         p["orientation"]["outward_fraction_chosen"], f"{vt['switch_events']} / {vt['lines']}",
-                        (p.get("render") or {}).get("peak_layer", "not rendered"),
+                        (p.get("render") or {}).get("peak_layer", "not measured"),
                         "not scored" if q is None else
                         f"{q['good_fraction']:g} ({q['tiles']} tiles), {'pass' if q['passes'] else 'fail'}"]
                 got = rows.get(n, [])
@@ -676,10 +694,12 @@ else:
             area = round(sum(p["area_cm2"] for p in PA.values()), 3)
             npass = sum(bool(p["pass"]) for p in PA.values())
             tot_n, tot_pass, tot_area = tot_n + len(PA), tot_pass + npass, tot_area + sum(p["area_cm2"] for p in PA.values())
-            out.append((f"PATCHES {sn}: the patch count, the pass count and the total area, summed here over its {1 + len(EXP)} "
-                        f"patch folder{'s' if EXP else ''} on disk, are the README's",
+            _nf = 1 + len(EXP) + len(PAS) + len(SHF)
+            out.append((f"PATCHES {sn}: the patch count, the pass count and the total area, summed here over its {_nf} "
+                        f"patch folder{'s' if _nf > 1 else ''} on disk, are the README's",
                         f"{len(PA)} patches, {npass} passing every gate, {area:.3f} cm2 in all" in pflat
-                        and npass == V["n_pass"] + sum(z[1]["n_pass"] for z in EXP), f"{len(PA)}, {npass}, {area:.3f}"))
+                        and npass == V["n_pass"] + sum(z[1]["n_pass"] for z in EXP + PAS) + sum(v_["n_pass"] for _, v_ in SHP),
+                        f"{len(PA)}, {npass}, {area:.3f}"))
             e = V["extension"]
             if "passed_not_written_cap" in e:
                 fa = round(sum(P[n]["area_cm2"] for n in B["selected"]), 3)
@@ -693,6 +713,67 @@ else:
                           f"{nd} {'was' if nd == 1 else 'were'} refused as duplicates", f"so {len(e['accepted'])} were kept") \
                     and sorted(e["accepted"]) == sorted(P)
             out.append((f"PATCHES {sn}: how the patches were selected is quoted from build.json and validation.json", sel, ""))
+            for d, Vp, Bp, Rp in PAS:
+                ep = Vp["extension"]
+                pk2, nd2 = list(ep["per_key"].values()), len(ep["refused_duplicate"])
+                out.append((f"PATCHES {sn}: how the patches of its further pass {d.name} were selected is quoted from its "
+                            "build.json and validation.json",
+                            has(pflat, f"wrote {sum(k['n_selected'] for k in pk2)} patches and {sum(k['n_pass'] for k in pk2)} passed",
+                                f"{nd2} {'was' if nd2 == 1 else 'were'} refused as duplicates", f"so {len(ep['accepted'])} were kept")
+                            and sorted(ep["accepted"]) == sorted(Vp["patches"]), d.name))
+            if PAS:
+                _bpf = sorted((R / x["folder"]).glob("band_profile_*.json"))
+                ok_, det_ = len(_bpf) == 1 and len(PAS) == 1, ""
+                if ok_:
+                    bp_ = json.loads(_bpf[0].read_text())
+                    top_ = [bp_["chosen"]] + bp_["runner_up"][:4]
+                    best_ = max(top_, key=lambda c_: c_["median_slice"])
+                    ch_ = bp_["chosen"]
+                    frag = [f"The first, z {ch_['z0']} to {ch_['z1']}, has the largest summed occupancy of the m7 prediction",
+                            f"The second, z {best_['z0']} to {best_['z1']}, has the highest median slice occupancy of the "
+                            f"{len(top_)} bands with the largest sums ({best_['median_slice']:g} predicted voxels per level-3 "
+                            f"slice against {ch_['median_slice']:g} in the first)"]
+                    ok_ = has(pflat, *frag) and bp_["rule"].startswith("largest summed") and \
+                        [(z[3] or {}).get("band") for z in _disk[sn] if str(z[0].relative_to(R)) == x["folder"]] == [[ch_["z0"], ch_["z1"]]] \
+                        and (PAS[0][3] or {}).get("band") == [best_["z0"], best_["z1"]]
+                    det_ = " | ".join(frag)[:160]
+                out.append((f"PATCHES {sn}: why it has a second band is re-derived here from the first pass's band profile",
+                            ok_, det_))
+            if SHF:
+                ok_ = _tg is not None and _short is not None
+                frag = []
+                if ok_:
+                    t_, mb_, tr_ = _tg[_short], _tg["membership"], _tg["trim"]
+                    frag = [f"lie on the sheet of {t_['name']}",
+                            f"(z {t_['z_min']:g} to {t_['z_max']:g}, {t_.get('angle_lo_deg', t_.get('angle_min_deg')):g} to "
+                            f"{t_.get('angle_hi_deg', t_.get('angle_max_deg')):g} degrees)",
+                            f"shares at least {mb_['n_min_shared']} vertices with {_short}",
+                            f"at least {mb_['frac_on']:g} of them lie within half a pitch ({mb_['threshold_vx']:g} voxels)",
+                            f"kept only with at least {tr_['min_cm2']:g} cm2 left"]
+                    for p_, v_ in SHP:
+                        w_ = v_.get(f"{_short}_winding")
+                        r_ = json.loads((p_ / "run.json").read_text()) if (p_ / "run.json").exists() else {}
+                        if w_:
+                            frag.append(f"{w_['n_on_winding']} of {w_['n_validated']} validated candidates were on the sheet: "
+                                        f"{_pm._fmt_list(w_['accepted'])} was kept and the other {len(w_['refused_duplicate'])} "
+                                        "were refused as duplicates")
+                        elif r_.get("per_band"):
+                            for bn in _tg["order"]:
+                                pb_, bd_ = r_["per_band"][bn], _tg["bands"][bn]
+                                wh_ = f"(z {bd_['z0']} to {bd_['z1'] - 1})"
+                                frag += ([f"{wh_} {pb_['n_on_winding']} of {pb_['n_validated']} validated candidates were on the "
+                                          f"sheet and {_pm._fmt_list(pb_['accepted'])} was kept"] if pb_["accepted"] else
+                                         [f"{wh_} gave no surface", f"of its {pb_['n_on_winding']} candidates on the sheet fell "
+                                          f"under {tr_['min_cm2']:g} cm2 after trimming"])
+                        elif isinstance(v_.get("band"), dict):
+                            s_ = json.loads((p_ / f"build_{v_['band']['name']}.json").read_text())["summary"]
+                            frag.append(f"trimmed against {_pm._fmt_list(s_['earlier_selections'])} as well, "
+                                        f"{_pm._fmt_list(s_['accepted'])} was kept")
+                        else:
+                            ok_ = False
+                    ok_ = ok_ and has(pflat, *frag)
+                out.append((f"PATCHES {sn}: how the patches on one candidate's sheet were selected is quoted from target.json, "
+                            "run.json, validation.json and the build records", ok_, " | ".join(frag)[:160]))
             for d, Ve, Be, Re in EXP:
                 e2, Pe = Ve["extension"], Ve["patches"]
                 na, nc, dc = len(e2["accepted"]), len(e2["refused_cap"]), e2["duplicate_control"]
@@ -716,13 +797,15 @@ else:
                             f"never exceeds {cr['key_second_difference_max_max']:g} voxels",
                             f"at least {cr['vertical_on_track_vs_control']:g} times as often",
                             f"at least {cr['outward_fraction_min']:g} of its normals")
-                        and all(z[1]["criteria"] == cr and z[1]["on_sheet_rule"] == V["on_sheet_rule"] for z in EXP), ""))
+                        and all(z[1]["criteria"] == cr and z[1]["on_sheet_rule"] == V["on_sheet_rule"] for z in EXP + PAS)
+                        and all(v_["criteria"] == cr and v_["on_sheet_rule"] == V["on_sheet_rule"] for _, v_ in SHP), ""))
             pre = R / "results" / "fl" / f"PREREGISTRATION_FL_{suf}.md"
             if pre.exists():
                 psha = _hlp.sha256(pre.read_bytes()).hexdigest()
                 out.append((f"PATCHES {sn}: the registration quoted hashes to the file and to prereg.sha256",
                             f"{sn} (registration sha256 `{psha[:16]}`)" in sec
                             and psha in (R / "results" / "fl" / "prereg.sha256").read_text(), psha[:16]))
+            if pre.exists() and "off centre for" in pre.read_text():
                 pl = dict(re.findall(r"(pt\d+) \((\d+)\)", pre.read_text().split("off centre for", 1)[1].split(";")[0]))
                 oc = {n.split("_")[0]: str(p["render"]["peak_layer"]) for n, p in P.items()
                       if "render" in p and abs(p["render"]["peak_layer"] - 33) >= _pm.OFF_CENTRE}
@@ -734,7 +817,21 @@ else:
                 U = json.loads((fl / f"review_{suf}" / "UNSEALED.json").read_text())
                 ink.append(f"the review is {'VALID' if U['valid'] else 'VOID'} ({U['n_flagged_control_on_letters']} of the "
                            f"{U['n_control_windows_with_letters']} control windows")
-                ink.append(f"flagged no {sn} window" if U["n_flagged_screen"] == 0 else f"flagged {U['n_flagged_screen']} {sn} window")
+                _wk, _nm = {}, []
+                if (fl / f"review_{suf}" / "key.json").exists() and (fl / f"review_{suf}" / "build.json").exists():
+                    for _s in json.loads((fl / f"review_{suf}" / "key.json").read_text())["sheets"].values():
+                        if not _s["control"]:
+                            _wk[_s["mesh"]] = _wk.get(_s["mesh"], 0) + len(_s["windows"])
+                    _nm = [m for m in json.loads((fl / f"review_{suf}" / "build.json").read_text()).get("meshes") or []
+                           if isinstance(m, str)]
+                if U["n_flagged_screen"] == 0 and _nm:
+                    ink.append(f"flagged none of the {sum(_wk.values())} {sn} windows, from "
+                               f"{sum(1 for k_ in _wk.values() if k_)} of the {len(_nm)} patches")
+                    if 2 * U["n_flagged_control_on_letters"] < U["n_control_windows_with_letters"]:
+                        ink.append("its sensitivity is low, so the null is weak evidence against text there, not proof")
+                else:
+                    ink.append(f"flagged no {sn} window" if U["n_flagged_screen"] == 0 else
+                               f"flagged {U['n_flagged_screen']} {sn} window")
             if (fl / f"neighbour_{suf}" / "RESULT.json").exists():
                 N = json.loads((fl / f"neighbour_{suf}" / "RESULT.json").read_text())
                 ink.append(f"is {'VALID' if N['valid'] else 'VOID'}, and {N['n_pass_screen']} of "
@@ -779,6 +876,43 @@ else:
                 out.append((f"PATCHES {sn}: the run record of the expansion {d.name} gives the sheet_patches.py shipped now, as "
                             "the section says", rs == psh and f"The {sn} expansion is a further run of the same file, unchanged"
                             in flat, rs[:16]))
+            if SHF:
+                _pp = [str(p_.relative_to(R)) for p_, _ in SHP]
+                prs = [q for q in sorted(fl.glob("PREREGISTRATION_FL_*.md")) if all(f"{p_}/validation.json" in q.read_text() for p_ in _pp)]
+                rvs = [q.parent for q in sorted(fl.glob("review_*/build.json"))
+                       if {m for m in json.loads(q.read_text()).get("meshes") or [] if isinstance(m, str)} == set(_shn)]
+                ok = len(prs) == 1 and len(rvs) == 1 and (rvs[0] / "UNSEALED.json").exists() and _short is not None
+                det = f"{len(prs)} registrations, {len(rvs)} reviews"
+                if ok:
+                    ssha = _hlp.sha256(prs[0].read_bytes()).hexdigest()
+                    ptxt = " ".join(prs[0].read_text().split()).lower()
+                    U, wk = json.loads((rvs[0] / "UNSEALED.json").read_text()), {}
+                    for sh_ in json.loads((rvs[0] / "key.json").read_text())["sheets"].values():
+                        if not sh_["control"]:
+                            wk[sh_["mesh"]] = wk.get(sh_["mesh"], 0) + len(sh_["windows"])
+                    a_, b_ = U["n_flagged_control_on_letters"], U["n_control_windows_with_letters"]
+                    frag = [f"{sn}, the {len(_shn)} patches on {_short}'s sheet", f"(registration sha256 `{ssha[:16]}`)",
+                            f"as a follow-up of the {_short} candidate above and not as an independent test",
+                            f"The review is {'VALID' if U['valid'] else 'VOID'} ({a_} of the {b_} control windows on known "
+                            "letters flagged)", f"{_short} itself is unchanged: a candidate, not letters."]
+                    if U["valid"] and U["n_flagged_screen"] == 0:
+                        frag += [f"flagged none of the {sum(wk.values())} windows from {sum(1 for k_ in wk.values() if k_)} of "
+                                 f"the {len(_shn)} patches", ": a null."]
+                        frag += ["its sensitivity is low, so the null is weak evidence against text continuing there, not proof"
+                                 ] if 2 * a_ < b_ else []
+                    elif U["valid"]:
+                        frag += [f"flagged {U['n_flagged_screen']} window"]
+                    ok = has(flat, *frag) and ssha in (fl / "prereg.sha256").read_text() and set(wk) <= set(_shn) and \
+                        f"a follow-up of the {_short} candidate, not an independent test" in ptxt and "before any ink map" in ptxt
+                    det = " | ".join(frag)[:160]
+                out.append((f"PATCHES {sn}: the screen of the patches on one candidate's sheet quoted is its registration (hash "
+                            "in prereg.sha256, naming every folder), UNSEALED.json and key.json, found and re-counted here", ok, det))
+                _hs = {(z[3] or {}).get("sheet_patches_sha256") for z in SHF} | \
+                    {(v_.get("sha256") or {}).get("tool") for p_, v_ in SHP if p_ not in [z[0] for z in SHF]}
+                out.append((f"PATCHES {sn}: the run records of the patches on one candidate's sheet give the sheet_patches.py "
+                            "shipped now, as the section says", _hs == {psh} and
+                            f"The {len(_shn)} patches on {_short}'s sheet are a further run of the same file, unchanged" in flat,
+                            ", ".join(sorted(str(h)[:16] for h in _hs))))
             rp, run = R / x["folder"] / "public_repro.json", R / x["folder"] / "run.json"
             if rp.exists():
                 rr = json.loads(rp.read_text())
@@ -810,6 +944,12 @@ else:
                     out.append((f"PATCHES {sn}: the overlap of the survey's failures with the most switch events, recomputed "
                                 "here from validation.json and survey_sheetcheck.json, is the one quoted", has(flat, *frag),
                                 " | ".join(frag)[:160]))
+            if _SC:
+                _uf = ([f"the {len(PA)} {sn} patches"] if not Q else []) + \
+                    ([f"the {len(_shn)} {sn} patches on {_short}'s sheet"] if Q and SHF and not any(n in shp for n in _shn) else [])
+                if _uf:
+                    out.append((f"PATCHES {sn}: the patches the survey sheet check has not scored are named as such",
+                                has(flat, "It has not been run on", *_uf), " | ".join(_uf)))
             if _PRIOR:
                 pt = _PRIOR[-1].read_text()
                 m = re.fullmatch(r"(\d+)(\w*)", suf)
