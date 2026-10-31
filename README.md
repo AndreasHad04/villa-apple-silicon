@@ -1320,7 +1320,7 @@ The 3 patches on pt7's sheet are a further run of the same file, unchanged (thei
 <!-- PATCHES:END -->
 
 <!-- R1:BEGIN -->
-## Every valid pixel reviewed: the R1 re-reviews (2026-10-31)
+## The R1 re-reviews: at least 99.7% of the valid surface reviewed (2026-10-31)
 
 The earlier screens kept a 1 cm review window only when at least half of it was valid, which leaves thin patches with no
 window at all. R1 keeps a window when at least 10% of it is valid and changes nothing else (same grid, display, sheets,
