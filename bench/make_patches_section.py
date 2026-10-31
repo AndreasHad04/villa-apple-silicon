@@ -106,7 +106,13 @@ def _ink(root, scroll):
         rec = fl / 'prereg.sha256'
         out['prereg'] = dict(file=str(pre.relative_to(root)), sha256=sha, recorded=rec.exists() and sha in rec.read_text(),
                              amendment1_rule=am)
-    u = _load(fl / f'review_{suf}' / 'UNSEALED.json')
+    rdir, r1 = fl / f'review_{suf}', False
+    u = _load(rdir / 'UNSEALED.json')
+    if not u and (fl / 'review_r1' / scroll / 'UNSEALED.json').exists():
+        # a scroll reviewed under R1 from the start (PREREGISTRATION_FL_R1.md): its review and follow-up checks live in
+        # the R1 folders, and a follow-up folder there may hold several scrolls, so only this scroll's windows are read
+        rdir, r1 = fl / 'review_r1' / scroll, True
+        u = _load(rdir / 'UNSEALED.json')
     if u:
         by = {}
         for f in u['flagged']:
@@ -116,20 +122,37 @@ def _ink(root, scroll):
                              n_flagged_control_on_letters=u['n_flagged_control_on_letters'],
                              n_flagged_screen=u['n_flagged_screen'], n_regions=len(by),
                              regions=[[k, sorted(w)] for k, w in by.items()])
-        out['review'].update(_windows(fl / f'review_{suf}'))
-    nb = _load(fl / f'neighbour_{suf}' / 'RESULT.json')
+        out['review'].update(_windows(rdir))
+        out['review']['r1'] = r1
+        out['review']['void_first'] = r1 and (rdir / 'void_review1' / 'UNSEALED.json').exists()
+
+    def mine(r):
+        return r['control'] or not r1 or r['scroll'] == scroll
+
+    def pick(kind):
+        if not r1:
+            return _load(fl / f'{kind}_{suf}' / 'RESULT.json'), fl / f'{kind}_{suf}'
+        for d in sorted(fl.glob(f'{kind}_r1*')):
+            r = _load(d / 'RESULT.json')
+            if r and any(x['scroll'] == scroll and not x['control'] for x in r['results']):
+                return r, d
+        open_ = [d for d in sorted(fl.glob(f'{kind}_r1*')) if d.is_dir() and not (d / 'RESULT.json').exists()]
+        return None, (open_[0] if open_ else fl / f'{kind}_{suf}')
+
+    nb, _ = pick('neighbour')
     if nb:
-        res = nb['results']
+        res = [r for r in nb['results'] if mine(r)]
         out['neighbour'] = dict(valid=nb['valid'], rule=nb['rule'], n_screen=sum(not r['control'] for r in res),
-                                n_pass_screen=nb['n_pass_screen'], n_control=nb['n_control'],
+                                n_pass_screen=sum(bool(r['passed']) for r in res if not r['control']), n_control=nb['n_control'],
                                 control_passed=sum(bool(r['passed']) for r in res if r['control']),
                                 depths=sorted({int(k[1:]) for r in res for k in r['marks_by_depth'] if k.startswith('d')}))
-    cdir = fl / f'confirm_{suf}'
-    cf = _load(cdir / 'RESULT.json')
+        if not r1 and out['neighbour']['n_pass_screen'] != nb['n_pass_screen']:
+            raise SystemExit(f'neighbour_{suf}: n_pass_screen disagrees with its results')
+    cf, cdir = pick('confirm')
     if cf:
-        res = cf['results']
+        res = [r for r in cf['results'] if mine(r)]
         out['confirm'] = dict(state='done', valid=cf['valid'], rule=cf['rule'], n_screen=sum(not r['control'] for r in res),
-                              n_pass_screen=cf['n_pass_screen'], n_control=cf['n_control'],
+                              n_pass_screen=sum(bool(r['passed']) for r in res if not r['control']), n_control=cf['n_control'],
                               control_passed=sum(bool(r['passed']) for r in res if r['control']))
     elif cdir.exists():
         out['confirm'] = dict(state='running')
@@ -897,8 +920,10 @@ def _ink_text(s):
             out += _expansion_ink_lines(x) + _sheet_ink_lines(x)
             continue
         miss = miss or rv['n_flagged_control_on_letters'] < rv['n_control_windows_with_letters']
+        r1n = ('' if not rv.get('r1') else '; under the R1 window rule, see the R1 section below' +
+               ('; it is the one further review Amendment 2 allowed after a VOID first review' if rv.get('void_first') else ''))
         line += (f"the review is {'VALID' if rv['valid'] else 'VOID'} ({rv['n_flagged_control_on_letters']} of the "
-                 f"{rv['n_control_windows_with_letters']} control windows on known letters flagged)")
+                 f"{rv['n_control_windows_with_letters']} control windows on known letters flagged{r1n})")
         if rv['n_flagged_screen'] == 0:
             a_, b_ = rv['n_flagged_control_on_letters'], rv['n_control_windows_with_letters']
             cover = (f"none of the {rv['n_windows_screen']} {n} windows, from {rv['n_patches_with_windows']} of the "

@@ -1030,6 +1030,27 @@ else:
     elif _mx:
         print("  NOTE: the raw patch folders are not in this repo, so the merged-count control is not run here")
 
+print("\nR1 RE-REVIEWS (every valid window reviewed again)")
+_r1p = R/"ops"/"make_r1_section.py"
+if "<!-- R1:BEGIN -->" not in README:
+    print("  NOTE: no R1 section published here, not checked")
+elif not _r1p.exists() or not (R/"results"/"fl"/"review_r1").exists():
+    print("  NOTE: the review records are not in this repo; the R1 section is checked in the working tree")
+else:
+    import copy as _cp, importlib.util as _ilu
+    _sp1 = _ilu.spec_from_file_location("make_r1_section", _r1p)
+    _m1 = _ilu.module_from_spec(_sp1)
+    _sp1.loader.exec_module(_m1)
+    _r1t = README[README.index("<!-- R1:BEGIN -->"):README.index("<!-- R1:END -->") + len("<!-- R1:END -->")]
+    _f1 = _m1.facts()
+    ck("R1: the README section is exactly what the review records generate now", _r1t == _m1.section(_f1))
+    _f1b = _cp.deepcopy(_f1)
+    _f1b["hits"] += 1
+    ck("R1 control: a planted defect (one more control window counted as caught) is caught", _m1.section(_f1b) != _r1t)
+    _f1c = _cp.deepcopy(_f1)
+    _f1c["a483"]["cf"]["ok"] = _f1c["a483"]["cf"]["ok"][:1]
+    ck("R1 control: a planted defect (one PHerc0483A candidate region dropped) is caught", _m1.section(_f1c) != _r1t)
+
 print("\nHYGIENE")
 for k, t in ALL.items():
     ck(f"{k}: no em or en dashes",
